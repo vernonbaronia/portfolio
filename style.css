@@ -282,15 +282,15 @@ body {
 .orb {
 	position: absolute;
 	border-radius: 50%;
-	filter: blur(60px);
+	filter: blur(32px);
 	will-change: transform;
 }
 
 .orb-1 {
-	width: 46vw;
-	height: 46vw;
-	min-width: 380px;
-	min-height: 380px;
+	width: 40vw;
+	height: 40vw;
+	min-width: 340px;
+	min-height: 340px;
 	top: -16%;
 	left: -6%;
 	background: radial-gradient(circle at 40% 40%, var(--orb-a), transparent 70%);
@@ -298,10 +298,10 @@ body {
 }
 
 .orb-2 {
-	width: 40vw;
-	height: 40vw;
-	min-width: 320px;
-	min-height: 320px;
+	width: 34vw;
+	height: 34vw;
+	min-width: 280px;
+	min-height: 280px;
 	bottom: -18%;
 	right: -8%;
 	background: radial-gradient(circle at 55% 45%, var(--orb-b), transparent 70%);
@@ -309,10 +309,10 @@ body {
 }
 
 .orb-3 {
-	width: 30vw;
-	height: 30vw;
-	min-width: 260px;
-	min-height: 260px;
+	width: 26vw;
+	height: 26vw;
+	min-width: 220px;
+	min-height: 220px;
 	top: 44%;
 	left: 52%;
 	background: radial-gradient(circle at 50% 50%, var(--orb-c), transparent 70%);
@@ -481,8 +481,8 @@ html.has-custom-cursor * {
 	overflow: hidden;
 	cursor: pointer;
 	background: var(--intro-bg);
-	-webkit-backdrop-filter: blur(30px) saturate(1.25);
-	backdrop-filter: blur(30px) saturate(1.25);
+	-webkit-backdrop-filter: blur(20px) saturate(1.25);
+	backdrop-filter: blur(20px) saturate(1.25);
 	opacity: 1;
 	visibility: visible;
 	transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
@@ -493,9 +493,9 @@ html.has-custom-cursor * {
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
-	transform: scale(1.12);
-	transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-		opacity 0.5s ease, visibility 0s linear 0.65s;
+	transform: scale(1.18);
+	transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+		opacity 0.55s ease, visibility 0s linear 0.7s;
 }
 
 .intro[hidden] {
@@ -564,7 +564,33 @@ html.has-custom-cursor * {
 
 .intro.is-leaving .intro-content {
 	opacity: 0;
-	transform: translateY(-30px) scale(1.22);
+	transform: translateY(-40px) scale(1.35);
+}
+
+/* Click ripple — a bright accent ring that bursts from the click point */
+.intro-ripple {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 220px;
+	height: 220px;
+	margin: -110px 0 0 -110px;
+	border-radius: 50%;
+	background: radial-gradient(circle, transparent 64%, rgba(var(--accent-rgb), 0.65) 68%, rgba(var(--accent-rgb), 0) 73%);
+	opacity: 0;
+	transform: scale(0.2);
+	pointer-events: none;
+	will-change: transform, opacity;
+}
+
+.intro-ripple.is-burst {
+	animation: intro-ripple 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes intro-ripple {
+	0% { opacity: 0; transform: scale(0.2); }
+	10% { opacity: 1; }
+	100% { opacity: 0; transform: scale(9); }
 }
 
 .intro-kicker {
@@ -714,8 +740,8 @@ nav {
 	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
 	align-items: center;
 	background: var(--nav-bg);
-	-webkit-backdrop-filter: blur(16px) saturate(1.25);
-	backdrop-filter: blur(16px) saturate(1.25);
+	-webkit-backdrop-filter: blur(10px) saturate(1.25);
+	backdrop-filter: blur(10px) saturate(1.25);
 	border-bottom: 1px solid var(--line);
 }
 

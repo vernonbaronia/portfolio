@@ -416,6 +416,15 @@
 				/* Zoom the intro open from where the visitor clicked. */
 				introEl.style.transformOrigin = x + 'px ' + y + 'px';
 
+				var ripple = document.getElementById('intro-ripple');
+				if (ripple) {
+					ripple.style.left = x + 'px';
+					ripple.style.top = y + 'px';
+					ripple.classList.remove('is-burst');
+					void ripple.offsetWidth;
+					ripple.classList.add('is-burst');
+				}
+
 				introEl.classList.add('is-leaving');
 				document.body.classList.remove('is-intro');
 				document.body.classList.add('is-entered');
@@ -429,7 +438,7 @@
 						var firstTab = document.getElementById('nav-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 720);
+				}, 760);
 			};
 
 			/* If a font is still in flight, let it land first (with
@@ -571,7 +580,7 @@
 		});
 
 		(function trail() {
-			var ease = prefersReduced ? 1 : 0.16;
+			var ease = prefersReduced ? 1 : 0.45;
 			ringX += (mouseX - ringX) * ease;
 			ringY += (mouseY - ringY) * ease;
 			ring.style.transform = 'translate3d(' + ringX.toFixed(2) + 'px,' + ringY.toFixed(2) + 'px,0)';
@@ -615,7 +624,7 @@
 	if (sparkleLayer && !prefersReduced) {
 		var frag = document.createDocumentFragment();
 
-		for (var i = 0; i < 18; i++) {
+		for (var i = 0; i < 8; i++) {
 			var spark = document.createElement('span');
 			var size = 4 + Math.random() * 5;
 
