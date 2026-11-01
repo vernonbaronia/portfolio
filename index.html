@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Jade Vernon A. Baronia | Portfolio</title>
+	<meta name="description" content="Portfolio of Jade Vernon A. Baronia, a 1st Year Computer Science Student.">
+	<meta name="color-scheme" content="light dark">
+	<meta name="theme-color" content="#2563eb" id="meta-theme">
+	<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+
+	<!-- Set the theme before first paint so there is no flash -->
+	<script>
+		(function () {
+			var theme;
+			try {
+				var stored = window.localStorage.getItem('jvb-theme');
+				theme = (stored === 'dark' || stored === 'light')
+					? stored
+					: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+			} catch (e) {
+				theme = 'light';
+			}
+			document.documentElement.setAttribute('data-theme', theme);
+		})();
+	</script>
+
+	<link rel="stylesheet" href="fonts.css">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body class="is-intro">
+
+	<noscript>
+		<style>
+			.intro { display: none !important; }
+			.nav-meta { display: none !important; }
+			body.is-intro main,
+			body.is-intro nav,
+			body.is-intro .deck-controls,
+			body.is-intro .corner-controls { opacity: 1 !important; }
+		</style>
+	</noscript>
+
+	<!-- ===== Opening page ===== -->
+	<div class="intro" id="intro" role="button" tabindex="0" aria-label="Enter the portfolio">
+		<div class="intro-orbit" aria-hidden="true"></div>
+		<button class="orb-btn theme-toggle intro-theme-toggle" id="intro-theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+			<i class="fa-solid fa-moon" aria-hidden="true"></i>
+		</button>
+		<div class="intro-content">
+			<p class="intro-kicker">welcome</p>
+			<p class="intro-to">to</p>
+			<h2 class="intro-name">
+				<span class="intro-title">Jade Vernon A. Baronia's</span>
+				<span class="intro-title intro-title--portfolio">Portfolio</span>
+			</h2>
+			<span class="intro-cta">
+				click anywhere to enter
+				<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+			</span>
+		</div>
+	</div>
+
+	<!-- ===== Animated background ===== -->
+	<div class="bg-scene" aria-hidden="true">
+		<div class="orb orb-1"></div>
+		<div class="orb orb-2"></div>
+		<div class="orb orb-3"></div>
+		<div class="bg-lines"></div>
+		<div class="sparkles" id="sparkles"></div>
+		<div class="grain"></div>
+	</div>
+
+	<!-- ===== Cursor spotlight ===== -->
+	<div class="spotlight" id="spotlight" aria-hidden="true"></div>
+
+	<!-- ===== Custom cursor ===== -->
+	<div class="cursor-ring is-hidden" id="cursor-ring" aria-hidden="true"></div>
+	<div class="cursor-dot is-hidden" id="cursor-dot" aria-hidden="true"></div>
+
+	<nav>
+		<div class="nav-meta nav-meta--time">
+			<span class="pulse-dot nav-pulse" aria-hidden="true"></span>
+			<time id="live-time" datetime="">--:--</time>
+			<span class="nav-greeting" id="greeting" aria-live="polite"><span id="greeting-text">a pleasant evening</span></span>
+		</div>
+
+		<ul role="tablist" aria-label="Portfolio sections">
+			<li class="active" id="nav-about" role="tab" tabindex="0" aria-selected="true" aria-controls="about">
+				<span class="full">About Me</span><span class="short">About</span>
+			</li>
+			<li id="nav-education" role="tab" tabindex="-1" aria-selected="false" aria-controls="education">
+				<span class="full">Educational Attainment</span><span class="short">Education</span>
+			</li>
+			<li id="nav-achievements" role="tab" tabindex="-1" aria-selected="false" aria-controls="achievements">
+				<span class="full">Achievements</span><span class="short">Awards</span>
+			</li>
+			<li id="nav-family" role="tab" tabindex="-1" aria-selected="false" aria-controls="family">
+				<span class="full">My Family</span><span class="short">Family</span>
+			</li>
+			<li id="nav-batchmates" role="tab" tabindex="-1" aria-selected="false" aria-controls="batchmates">
+				<span class="full">My Batchmates</span><span class="short">Batchmates</span>
+			</li>
+		</ul>
+
+		<div class="nav-meta nav-meta--date">
+			<time id="live-date" datetime="">--</time>
+		</div>
+	</nav>
+
+	<main>
+		<!-- ===== ABOUT ME ===== -->
+		<section id="about" class="section active" role="tabpanel" aria-labelledby="nav-about">
+			<div class="about-container">
+				<div class="about-visual">
+					<div class="orbit-badge" aria-hidden="true">
+						<svg viewBox="0 0 120 120" focusable="false">
+							<defs>
+								<path id="orbit-path" d="M60,60 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"></path>
+							</defs>
+							<text text-anchor="middle"><textPath href="#orbit-path" startOffset="2.5%">learn</textPath></text>
+							<text text-anchor="middle"><textPath href="#orbit-path" startOffset="27.5%">build</textPath></text>
+							<text text-anchor="middle"><textPath href="#orbit-path" startOffset="52.5%">enjoy</textPath></text>
+							<text text-anchor="middle"><textPath href="#orbit-path" startOffset="77.5%">explore</textPath></text>
+						</svg>
+					</div>
+					<div class="photo-frame" id="photo-frame">
+						<img src="./images/profile.png" alt="Jade Vernon A. Baronia" class="profile-img">
+					</div>
+				</div>
+
+				<div class="about-info">
+					<h1>Jade Vernon A. Baronia</h1>
+					<p class="subheader">
+						<span class="pulse-dot" aria-hidden="true"></span>
+						<span class="role-line" aria-hidden="true">
+							<span class="role-prefix">Aspiring</span>
+							<span class="role-text"><span class="typed-role" id="typed-role">Software Engineer</span><span class="type-caret"></span></span>
+						</span>
+						<span class="sr-only">Aspiring Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect.</span>
+					</p>
+					<div class="bio">
+						<p>1st-year Computer Science student at the University of the Cordilleras exploring career pathways as a Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect. Endlessly amazed by how rapidly technology evolves and continues to transform our world.</p>
+						<p>I am driven by a deep curiosity for low-level systems and understanding how hardware and software work together under the hood. Inspired by this continuous evolution, I am dedicated to working hard and growing into a computer scientist who actively builds high-impact technology for the future.</p>
+					</div>
+					<div class="about-links">
+						<a href="#" class="icon-btn" data-label="Mail" title="Mail" aria-label="Mail">
+							<i class="fa-solid fa-envelope"></i>
+						</a>
+						<a href="#" class="icon-btn" data-label="GitHub" title="GitHub" aria-label="GitHub">
+							<i class="fa-brands fa-github"></i>
+						</a>
+						<a href="#" class="icon-btn" data-label="Facebook" title="Facebook" aria-label="Facebook">
+							<i class="fa-brands fa-facebook"></i>
+						</a>
+						<a href="#" class="icon-btn" data-label="Instagram" title="Instagram" aria-label="Instagram">
+							<i class="fa-brands fa-instagram"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- ===== EDUCATIONAL ATTAINMENT (empty - add content here) ===== -->
+		<section id="education" class="section" role="tabpanel" aria-labelledby="nav-education" aria-hidden="true">
+			<div class="coming-soon" data-index="02">
+				<div class="coming-soon-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+				<p class="coming-soon-title">Coming soon</p>
+				<span class="coming-soon-text">Educational attainment will be added here.</span>
+				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
+			</div>
+		</section>
+
+		<!-- ===== ACHIEVEMENTS (empty - add content here) ===== -->
+		<section id="achievements" class="section" role="tabpanel" aria-labelledby="nav-achievements" aria-hidden="true">
+			<div class="coming-soon" data-index="03">
+				<div class="coming-soon-icon"><i class="fa-solid fa-trophy"></i></div>
+				<p class="coming-soon-title">Coming soon</p>
+				<span class="coming-soon-text">Achievements will be added here.</span>
+				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
+			</div>
+		</section>
+
+		<!-- ===== MY FAMILY (empty - add content here) ===== -->
+		<section id="family" class="section" role="tabpanel" aria-labelledby="nav-family" aria-hidden="true">
+			<div class="coming-soon" data-index="04">
+				<div class="coming-soon-icon"><i class="fa-solid fa-people-group"></i></div>
+				<p class="coming-soon-title">Coming soon</p>
+				<span class="coming-soon-text">My family will be added here.</span>
+				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
+			</div>
+		</section>
+
+		<!-- ===== MY BATCHMATES (empty - add content here) ===== -->
+		<section id="batchmates" class="section" role="tabpanel" aria-labelledby="nav-batchmates" aria-hidden="true">
+			<div class="coming-soon" data-index="05">
+				<div class="coming-soon-icon"><i class="fa-solid fa-users"></i></div>
+				<p class="coming-soon-title">Coming soon</p>
+				<span class="coming-soon-text">My batchmates will be added here.</span>
+				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
+			</div>
+		</section>
+	</main>
+
+	<!-- ===== Deck controls ===== -->
+	<div class="deck-controls" role="group" aria-label="Section navigation">
+		<span class="deck-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> to explore</span>
+		<button class="nav-btn prev-btn disabled" id="prev-btn" type="button" aria-label="Previous section" title="Previous (Left arrow)" disabled>
+			<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+		</button>
+		<div class="deck-counter" aria-hidden="true">
+			<span id="current-num">01</span><span class="sep">/</span><span>05</span>
+		</div>
+		<button class="nav-btn next-btn" id="next-btn" type="button" aria-label="Next section" title="Next (Right arrow)">
+			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+		</button>
+	</div>
+
+	<!-- ===== Interface settings ===== -->
+	<div class="corner-controls" role="group" aria-label="Interface settings">
+		<button class="orb-btn sound-toggle" id="sound-toggle" type="button" data-label="Sound on" aria-pressed="true" aria-label="Mute interface sounds" title="Sound on — click to mute">
+			<i class="fa-solid fa-volume-high" aria-hidden="true"></i>
+		</button>
+		<button class="orb-btn theme-toggle" id="theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+			<i class="fa-solid fa-moon" aria-hidden="true"></i>
+		</button>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>
