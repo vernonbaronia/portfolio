@@ -18,7 +18,8 @@
 	   ===================================================== */
 	var Theme = (function () {
 		var KEY = 'jvb-theme';
-		var COLORS = { light: '#2563eb', dark: '#0a1424' };
+		var ACCENT_KEY = 'jvb-accent';
+		var ACCENTS = ['blue', 'violet', 'emerald', 'rose', 'amber', 'teal'];
 		var meta = document.getElementById('meta-theme');
 		var button = document.getElementById('theme-toggle');
 		var introButton = document.getElementById('intro-theme-toggle');
@@ -47,15 +48,58 @@
 			}
 		}
 
+		function paintMeta() {
+			if (!meta) return;
+			var dark = current() === 'dark';
+			var value;
+			if (dark) {
+				value = getComputedStyle(docEl).getPropertyValue('--body-bg').trim() || '#0a1424';
+			} else {
+				value = getComputedStyle(docEl).getPropertyValue('--accent').trim() || '#2563eb';
+			}
+			meta.setAttribute('content', value);
+		}
+
 		function paint() {
 			var dark = current() === 'dark';
 
-			if (meta) {
-				meta.setAttribute('content', dark ? COLORS.dark : COLORS.light);
-			}
+			paintMeta();
 
 			paintButton(button, dark);
 			paintButton(introButton, dark);
+		}
+
+		function currentAccent() {
+			var a = docEl.getAttribute('data-accent');
+			return ACCENTS.indexOf(a) !== -1 ? a : 'blue';
+		}
+
+		function applyAccent(next) {
+			docEl.setAttribute('data-accent', next);
+			try {
+				window.localStorage.setItem(ACCENT_KEY, next);
+			} catch (e) {
+				/* storage blocked — the colour still works for this visit */
+			}
+			paintMeta();
+		}
+
+		function setAccent(next) {
+			if (ACCENTS.indexOf(next) === -1) next = 'blue';
+			if (next === currentAccent()) {
+				paintMeta();
+				return;
+			}
+
+			var run = function () {
+				applyAccent(next);
+			};
+
+			if (!prefersReduced && typeof document.startViewTransition === 'function') {
+				document.startViewTransition(run);
+			} else {
+				run();
+			}
 		}
 
 		function apply(next) {
@@ -157,8 +201,83 @@
 
 		paint();
 
-		return { paint: paint, current: current, set: set };
+		return { paint: paint, current: current, set: set, setAccent: setAccent, currentAccent: currentAccent };
 	})();
+
+	/* =====================================================
+	   Accent colour picker
+	   ===================================================== */
+	var paletteToggles = Array.prototype.slice.call(
+		document.querySelectorAll('.palette-toggle')
+	);
+	var palettePanel = document.getElementById('palette-panel');
+	var paletteSwatches = Array.prototype.slice.call(
+		document.querySelectorAll('#palette-swatches .swatch')
+	);
+
+	var paintSwatches = function () {
+		var current = Theme.currentAccent();
+		paletteSwatches.forEach(function (swatch) {
+			var isActive = swatch.getAttribute('data-accent') === current;
+			swatch.classList.toggle('active', isActive);
+			swatch.setAttribute('aria-checked', String(isActive));
+		});
+	};
+
+	var paintToggles = function (activeToggle) {
+		paletteToggles.forEach(function (toggle) {
+			var isActive = toggle === activeToggle;
+			toggle.classList.toggle('is-active', isActive);
+			toggle.setAttribute('aria-expanded', String(isActive));
+		});
+	};
+
+	var openPalette = function (toggle) {
+		if (!palettePanel) return;
+		palettePanel.classList.add('is-open');
+		palettePanel.classList.toggle('is-intro', !!toggle && toggle.classList.contains('intro-palette-toggle'));
+		paintToggles(toggle);
+	};
+
+	var closePalette = function () {
+		if (!palettePanel) return;
+		palettePanel.classList.remove('is-open');
+		palettePanel.classList.remove('is-intro');
+		paintToggles(null);
+	};
+
+	if (palettePanel) {
+		paletteToggles.forEach(function (toggle) {
+			toggle.addEventListener('click', function () {
+				if (palettePanel.classList.contains('is-open') && toggle.classList.contains('is-active')) {
+					closePalette();
+				} else {
+					openPalette(toggle);
+				}
+			});
+		});
+
+		document.addEventListener('click', function (event) {
+			if (!palettePanel.classList.contains('is-open')) return;
+			var target = event.target;
+			if (target && target.closest &&
+				(target.closest('#palette-panel') || target.closest('.palette-toggle'))) return;
+			closePalette();
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') closePalette();
+		});
+
+		paletteSwatches.forEach(function (swatch) {
+			swatch.addEventListener('click', function () {
+				Theme.setAccent(swatch.getAttribute('data-accent'));
+				paintSwatches();
+			});
+		});
+
+		paintSwatches();
+	}
 
 	/* =====================================================
 	   Sound — generated with the Web Audio API, so there
@@ -278,17 +397,25 @@
 			});
 		};
 
-		var enterSite = function (fromKeyboard) {
+		var enterSite = function (fromKeyboard, originX, originY) {
 			if (entered) return;
 			entered = true;
 
 			Sound.click();
 
+			closePalette();
+
 			behindIntro.forEach(function (el) {
 				el.inert = false;
 			});
 
+			var x = typeof originX === 'number' ? originX : window.innerWidth / 2;
+			var y = typeof originY === 'number' ? originY : window.innerHeight / 2;
+
 			var reveal = function () {
+				/* Zoom the intro open from where the visitor clicked. */
+				introEl.style.transformOrigin = x + 'px ' + y + 'px';
+
 				introEl.classList.add('is-leaving');
 				document.body.classList.remove('is-intro');
 				document.body.classList.add('is-entered');
@@ -302,7 +429,7 @@
 						var firstTab = document.getElementById('nav-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 650);
+				}, 720);
 			};
 
 			/* If a font is still in flight, let it land first (with
@@ -329,14 +456,14 @@
 		};
 
 		introEl.addEventListener('click', function (event) {
-			if (event.target && event.target.closest && event.target.closest('#intro-theme-toggle')) return;
-			enterSite(false);
+			if (event.target && event.target.closest && event.target.closest('.intro-controls')) return;
+			enterSite(false, event.clientX, event.clientY);
 		});
 
 		/* Any key press on the intro page enters, not just a click */
 		document.addEventListener('keydown', function (event) {
 			if (entered) return;
-			if (event.target && event.target.closest && event.target.closest('#intro-theme-toggle')) return;
+			if (event.target && event.target.closest && event.target.closest('.intro-controls')) return;
 			if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') {
 				event.preventDefault();
 				enterSite(true);
@@ -555,11 +682,42 @@
 	}
 
 	/* =====================================================
+	   Placeholder cards — gentle 3D tilt
+	   ===================================================== */
+	if (finePointer && !prefersReduced) {
+		var soonCards = Array.prototype.slice.call(
+			document.querySelectorAll('.coming-soon')
+		);
+
+		soonCards.forEach(function (card) {
+			var rect = null;
+
+			card.addEventListener('pointerenter', function () {
+				rect = card.getBoundingClientRect();
+			});
+
+			card.addEventListener('pointermove', function (event) {
+				if (!rect) rect = card.getBoundingClientRect();
+				var px = (event.clientX - rect.left) / rect.width - 0.5;
+				var py = (event.clientY - rect.top) / rect.height - 0.5;
+				card.style.transform = 'perspective(900px) rotateX(' +
+					(-py * 4).toFixed(2) + 'deg) rotateY(' +
+					(px * 4).toFixed(2) + 'deg)';
+			});
+
+			card.addEventListener('pointerleave', function () {
+				card.style.transform = '';
+				rect = null;
+			});
+		});
+	}
+
+	/* =====================================================
 	   Magnetic buttons — they lean towards the cursor
 	   ===================================================== */
 	if (finePointer && !prefersReduced) {
 		var magnets = Array.prototype.slice.call(
-			document.querySelectorAll('.icon-btn, .nav-btn, .orb-btn')
+			document.querySelectorAll('.icon-btn, .nav-btn, .orb-btn, .swatch')
 		);
 
 		magnets.forEach(function (element) {
@@ -597,7 +755,7 @@
 		var lastGreeting = '';
 
 		function greetingFor(hour) {
-			if (hour < 5) return 'a pleasant night';
+			if (hour < 5) return 'still up?';
 			if (hour < 12) return 'a pleasant morning';
 			if (hour < 18) return 'a pleasant afternoon';
 			return 'a pleasant evening';
