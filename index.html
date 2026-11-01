@@ -9,19 +9,24 @@
 	<meta name="theme-color" content="#2563eb" id="meta-theme">
 	<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
-	<!-- Set the theme before first paint so there is no flash -->
+	<!-- Set the theme + accent colour before first paint so there is no flash -->
 	<script>
 		(function () {
 			var theme;
+			var accent = 'blue';
+			var accents = ['blue', 'violet', 'emerald', 'rose', 'amber', 'teal'];
 			try {
 				var stored = window.localStorage.getItem('jvb-theme');
 				theme = (stored === 'dark' || stored === 'light')
 					? stored
 					: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				var storedAccent = window.localStorage.getItem('jvb-accent');
+				if (storedAccent && accents.indexOf(storedAccent) !== -1) accent = storedAccent;
 			} catch (e) {
 				theme = 'light';
 			}
 			document.documentElement.setAttribute('data-theme', theme);
+			document.documentElement.setAttribute('data-accent', accent);
 		})();
 	</script>
 
@@ -46,9 +51,14 @@
 	<!-- ===== Opening page ===== -->
 	<div class="intro" id="intro" role="button" tabindex="0" aria-label="Enter the portfolio">
 		<div class="intro-orbit" aria-hidden="true"></div>
-		<button class="orb-btn theme-toggle intro-theme-toggle" id="intro-theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
-			<i class="fa-solid fa-moon" aria-hidden="true"></i>
-		</button>
+		<div class="intro-controls">
+			<button class="orb-btn palette-toggle intro-palette-toggle" id="intro-palette-toggle" type="button" data-label="Colour" aria-haspopup="true" aria-expanded="false" aria-label="Choose an accent colour" title="Choose an accent colour">
+				<i class="fa-solid fa-palette" aria-hidden="true"></i>
+			</button>
+			<button class="orb-btn theme-toggle intro-theme-toggle" id="intro-theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+				<i class="fa-solid fa-moon" aria-hidden="true"></i>
+			</button>
+		</div>
 		<div class="intro-content">
 			<p class="intro-kicker">welcome</p>
 			<p class="intro-to">to</p>
@@ -127,7 +137,7 @@
 						</svg>
 					</div>
 					<div class="photo-frame" id="photo-frame">
-						<img src="./images/profile.png" alt="Jade Vernon A. Baronia" class="profile-img">
+						<img src="profile.png" alt="Jade Vernon A. Baronia" class="profile-img">
 					</div>
 				</div>
 
@@ -163,42 +173,82 @@
 			</div>
 		</section>
 
-		<!-- ===== EDUCATIONAL ATTAINMENT (empty - add content here) ===== -->
+		<!-- ===== EDUCATIONAL ATTAINMENT (content coming soon) ===== -->
 		<section id="education" class="section" role="tabpanel" aria-labelledby="nav-education" aria-hidden="true">
 			<div class="coming-soon" data-index="02">
-				<div class="coming-soon-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-				<p class="coming-soon-title">Coming soon</p>
-				<span class="coming-soon-text">Educational attainment will be added here.</span>
+				<div class="coming-soon-icon">
+					<i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
+					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
+				</div>
+				<p class="soon-kicker">coming soon</p>
+				<h2 class="coming-soon-title">Educational attainment</h2>
+				<span class="coming-soon-text">Schools, courses and honours will be collected here.</span>
+				<div class="soon-chips" aria-hidden="true">
+					<span class="soon-chip">Schools</span>
+					<span class="soon-chip">Courses</span>
+					<span class="soon-chip">Honours</span>
+				</div>
 				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
 			</div>
 		</section>
 
-		<!-- ===== ACHIEVEMENTS (empty - add content here) ===== -->
+		<!-- ===== ACHIEVEMENTS (content coming soon) ===== -->
 		<section id="achievements" class="section" role="tabpanel" aria-labelledby="nav-achievements" aria-hidden="true">
 			<div class="coming-soon" data-index="03">
-				<div class="coming-soon-icon"><i class="fa-solid fa-trophy"></i></div>
-				<p class="coming-soon-title">Coming soon</p>
-				<span class="coming-soon-text">Achievements will be added here.</span>
+				<div class="coming-soon-icon">
+					<i class="fa-solid fa-trophy" aria-hidden="true"></i>
+					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
+					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
+				</div>
+				<p class="soon-kicker">coming soon</p>
+				<h2 class="coming-soon-title">Achievements</h2>
+				<span class="coming-soon-text">Awards and certificates will be showcased here.</span>
+				<div class="soon-chips" aria-hidden="true">
+					<span class="soon-chip">Awards</span>
+					<span class="soon-chip">Certificates</span>
+					<span class="soon-chip">Honours</span>
+				</div>
 				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
 			</div>
 		</section>
 
-		<!-- ===== MY FAMILY (empty - add content here) ===== -->
+		<!-- ===== MY FAMILY (content coming soon) ===== -->
 		<section id="family" class="section" role="tabpanel" aria-labelledby="nav-family" aria-hidden="true">
 			<div class="coming-soon" data-index="04">
-				<div class="coming-soon-icon"><i class="fa-solid fa-people-group"></i></div>
-				<p class="coming-soon-title">Coming soon</p>
-				<span class="coming-soon-text">My family will be added here.</span>
+				<div class="coming-soon-icon">
+					<i class="fa-solid fa-people-group" aria-hidden="true"></i>
+					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
+					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
+				</div>
+				<p class="soon-kicker">coming soon</p>
+				<h2 class="coming-soon-title">My family</h2>
+				<span class="coming-soon-text">Portraits and little stories about the people who matter.</span>
+				<div class="soon-chips" aria-hidden="true">
+					<span class="soon-chip">Members</span>
+					<span class="soon-chip">Photos</span>
+					<span class="soon-chip">Stories</span>
+				</div>
 				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
 			</div>
 		</section>
 
-		<!-- ===== MY BATCHMATES (empty - add content here) ===== -->
+		<!-- ===== MY BATCHMATES (content coming soon) ===== -->
 		<section id="batchmates" class="section" role="tabpanel" aria-labelledby="nav-batchmates" aria-hidden="true">
 			<div class="coming-soon" data-index="05">
-				<div class="coming-soon-icon"><i class="fa-solid fa-users"></i></div>
-				<p class="coming-soon-title">Coming soon</p>
-				<span class="coming-soon-text">My batchmates will be added here.</span>
+				<div class="coming-soon-icon">
+					<i class="fa-solid fa-users" aria-hidden="true"></i>
+					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
+					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
+				</div>
+				<p class="soon-kicker">coming soon</p>
+				<h2 class="coming-soon-title">My batchmates</h2>
+				<span class="coming-soon-text">Faces and names from my section will be listed here.</span>
+				<div class="soon-chips" aria-hidden="true">
+					<span class="soon-chip">Classmates</span>
+					<span class="soon-chip">Photos</span>
+					<span class="soon-chip">Reunions</span>
+				</div>
 				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
 			</div>
 		</section>
@@ -226,6 +276,34 @@
 		<button class="orb-btn theme-toggle" id="theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
 			<i class="fa-solid fa-moon" aria-hidden="true"></i>
 		</button>
+		<button class="orb-btn palette-toggle" id="palette-toggle" type="button" data-label="Colour" aria-haspopup="true" aria-expanded="false" aria-label="Choose an accent colour" title="Choose an accent colour">
+			<i class="fa-solid fa-palette" aria-hidden="true"></i>
+		</button>
+	</div>
+
+	<!-- ===== Accent colour picker ===== -->
+	<div class="palette-panel" id="palette-panel" role="dialog" aria-label="Choose an accent colour">
+		<p class="palette-title">Accent colour</p>
+		<div class="palette-swatches" id="palette-swatches" role="radiogroup" aria-label="Accent colour">
+			<button class="swatch" type="button" data-accent="blue" role="radio" aria-checked="true" aria-label="Blue" style="--sw:#2563eb">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+			<button class="swatch" type="button" data-accent="violet" role="radio" aria-checked="false" aria-label="Violet" style="--sw:#7c3aed">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+			<button class="swatch" type="button" data-accent="emerald" role="radio" aria-checked="false" aria-label="Emerald" style="--sw:#059669">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+			<button class="swatch" type="button" data-accent="rose" role="radio" aria-checked="false" aria-label="Rose" style="--sw:#e11d48">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+			<button class="swatch" type="button" data-accent="amber" role="radio" aria-checked="false" aria-label="Amber" style="--sw:#d97706">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+			<button class="swatch" type="button" data-accent="teal" role="radio" aria-checked="false" aria-label="Teal" style="--sw:#0d9488">
+				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
+			</button>
+		</div>
 	</div>
 
 	<script src="script.js"></script>
