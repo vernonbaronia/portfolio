@@ -610,8 +610,7 @@
 			var ease = prefersReduced ? 1 : 0.12;
 			spotX += (spotTargetX - spotX) * ease;
 			spotY += (spotTargetY - spotY) * ease;
-			spotlight.style.setProperty('--mx', spotX.toFixed(1) + 'px');
-			spotlight.style.setProperty('--my', spotY.toFixed(1) + 'px');
+			spotlight.style.transform = 'translate3d(' + spotX.toFixed(1) + 'px,' + spotY.toFixed(1) + 'px,0)';
 			window.requestAnimationFrame(spotLoop);
 		})();
 	}
@@ -1068,6 +1067,19 @@
 				event.preventDefault();
 				updateActiveSection(index);
 			}
+		});
+	});
+
+	/* Home directory cards jump to their section */
+	var dirCards = Array.prototype.slice.call(document.querySelectorAll('.dir-card'));
+	dirCards.forEach(function (card) {
+		card.addEventListener('click', function () {
+			var target = card.getAttribute('data-section');
+			var index = -1;
+			sections.forEach(function (section, i) {
+				if (section.id === target) index = i;
+			});
+			if (index !== -1) updateActiveSection(index);
 		});
 	});
 

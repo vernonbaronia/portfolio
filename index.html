@@ -51,7 +51,6 @@
 	<!-- ===== Opening page ===== -->
 	<div class="intro" id="intro" role="button" tabindex="0" aria-label="Enter the portfolio">
 		<div class="intro-orbit" aria-hidden="true"></div>
-		<div class="intro-ripple" id="intro-ripple" aria-hidden="true"></div>
 		<div class="intro-controls">
 			<button class="orb-btn palette-toggle intro-palette-toggle" id="intro-palette-toggle" type="button" data-label="Colour" aria-haspopup="true" aria-expanded="false" aria-label="Choose an accent colour" title="Choose an accent colour">
 				<i class="fa-solid fa-palette" aria-hidden="true"></i>
@@ -99,7 +98,10 @@
 		</div>
 
 		<ul role="tablist" aria-label="Portfolio sections">
-			<li class="active" id="nav-about" role="tab" tabindex="0" aria-selected="true" aria-controls="about">
+			<li class="active" id="nav-home" role="tab" tabindex="0" aria-selected="true" aria-controls="home">
+				<span class="full">Home</span><span class="short">Home</span>
+			</li>
+			<li id="nav-about" role="tab" tabindex="-1" aria-selected="false" aria-controls="about">
 				<span class="full">About Me</span><span class="short">About</span>
 			</li>
 			<li id="nav-education" role="tab" tabindex="-1" aria-selected="false" aria-controls="education">
@@ -122,8 +124,62 @@
 	</nav>
 
 	<main>
+		<!-- ===== HOME ===== -->
+		<section id="home" class="section active" role="tabpanel" aria-labelledby="nav-home">
+			<div class="home-wrap">
+				<div class="home-hero">
+					<div class="home-avatar">
+						<span class="home-ring" aria-hidden="true"></span>
+						<span class="home-dot" aria-hidden="true"></span>
+						<img src="profile.png" alt="Jade Vernon A. Baronia">
+					</div>
+					<p class="home-kicker">welcome to my corner</p>
+					<h1 class="home-name">Jade Vernon A. Baronia</h1>
+					<p class="home-role">Computer Science — University of the Cordilleras</p>
+				</div>
+
+				<div class="home-directory" role="navigation" aria-label="Portfolio sections">
+					<button class="dir-card" type="button" data-section="about" data-index="01">
+						<span class="dir-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
+						<span class="dir-body">
+							<span class="dir-label">About Me</span>
+							<span class="dir-desc">who i am</span>
+						</span>
+					</button>
+					<button class="dir-card" type="button" data-section="education" data-index="02">
+						<span class="dir-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
+						<span class="dir-body">
+							<span class="dir-label">Education</span>
+							<span class="dir-desc">my schooling</span>
+						</span>
+					</button>
+					<button class="dir-card" type="button" data-section="achievements" data-index="03">
+						<span class="dir-icon"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span>
+						<span class="dir-body">
+							<span class="dir-label">Achievements</span>
+							<span class="dir-desc">awards &amp; honours</span>
+						</span>
+					</button>
+					<button class="dir-card" type="button" data-section="family" data-index="04">
+						<span class="dir-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i></span>
+						<span class="dir-body">
+							<span class="dir-label">Family</span>
+							<span class="dir-desc">my people</span>
+						</span>
+					</button>
+					<button class="dir-card" type="button" data-section="batchmates" data-index="05">
+						<span class="dir-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
+						<span class="dir-body">
+							<span class="dir-label">Batchmates</span>
+							<span class="dir-desc">my classmates</span>
+						</span>
+					</button>
+				</div>
+			</div>
+		</section>
+
 		<!-- ===== ABOUT ME ===== -->
-		<section id="about" class="section active" role="tabpanel" aria-labelledby="nav-about">
+		<section id="about" class="section" role="tabpanel" aria-labelledby="nav-about" aria-hidden="true">
 			<div class="about-container">
 				<div class="about-visual">
 					<div class="orbit-badge" aria-hidden="true">
@@ -262,7 +318,7 @@
 			<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
 		</button>
 		<div class="deck-counter" aria-hidden="true">
-			<span id="current-num">01</span><span class="sep">/</span><span>05</span>
+			<span id="current-num">01</span><span class="sep">/</span><span>06</span>
 		</div>
 		<button class="nav-btn next-btn" id="next-btn" type="button" aria-label="Next section" title="Next (Right arrow)">
 			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
