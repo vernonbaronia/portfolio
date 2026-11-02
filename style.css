@@ -3162,3 +3162,14 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 .dir-card:hover::before {
 	transform: translate(-3px, -3px) scale(1.08);
 }
+
+/* Ensure the ghost number is clearly visible in light mode */
+.dir-card::before {
+	-webkit-text-stroke: 1.5px var(--accent);
+	opacity: 0.45;
+}
+
+.dir-card:hover::before,
+.dir-card:focus-visible::before {
+	opacity: 0.68;
+}
