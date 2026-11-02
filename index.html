@@ -92,15 +92,13 @@
 
 	<nav>
 		<div class="nav-meta nav-meta--time">
+			<button class="nav-logo" id="nav-logo" type="button" aria-label="Go to Home" title="Home">JB</button>
 			<span class="pulse-dot nav-pulse" aria-hidden="true"></span>
 			<time id="live-time" datetime="">--:--</time>
 			<span class="nav-greeting" id="greeting" aria-live="polite"><span id="greeting-text">a pleasant evening</span></span>
 		</div>
 
 		<ul role="tablist" aria-label="Portfolio sections">
-			<li class="active" id="nav-home" role="tab" tabindex="0" aria-selected="true" aria-controls="home">
-				<span class="full">Home</span><span class="short">Home</span>
-			</li>
 			<li id="nav-about" role="tab" tabindex="-1" aria-selected="false" aria-controls="about">
 				<span class="full">About Me</span><span class="short">About</span>
 			</li>
@@ -125,20 +123,32 @@
 
 	<main>
 		<!-- ===== HOME ===== -->
-		<section id="home" class="section active" role="tabpanel" aria-labelledby="nav-home">
+		<section id="home" class="section active" role="tabpanel" aria-label="Home">
 			<div class="home-wrap">
 				<div class="home-hero">
 					<div class="home-avatar">
+						<div class="home-orbit-badge" aria-hidden="true">
+							<svg viewBox="0 0 120 120" focusable="false">
+								<defs>
+									<path id="home-orbit-path" d="M60,60 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"></path>
+								</defs>
+								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="0%">explore</textPath></text>
+								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="33.3%">build</textPath></text>
+								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="66.6%">learn</textPath></text>
+							</svg>
+						</div>
 						<span class="home-ring" aria-hidden="true"></span>
 						<span class="home-dot" aria-hidden="true"></span>
 						<img src="profile.png" alt="Jade Vernon A. Baronia">
 					</div>
 					<p class="home-kicker">welcome to my corner</p>
 					<h1 class="home-name">Jade Vernon A. Baronia</h1>
+					<p class="home-tagline" id="home-tagline">building things for the future</p>
 				</div>
 
 				<div class="home-directory" role="navigation" aria-label="Portfolio sections">
 					<button class="dir-card" type="button" data-section="about" data-index="01">
+						<span class="dir-shine" aria-hidden="true"></span>
 						<span class="dir-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
 						<span class="dir-body">
 							<span class="dir-label">About Me</span>
@@ -146,6 +156,7 @@
 						</span>
 					</button>
 					<button class="dir-card" type="button" data-section="education" data-index="02">
+						<span class="dir-shine" aria-hidden="true"></span>
 						<span class="dir-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
 						<span class="dir-body">
 							<span class="dir-label">Education</span>
@@ -153,6 +164,7 @@
 						</span>
 					</button>
 					<button class="dir-card" type="button" data-section="achievements" data-index="03">
+						<span class="dir-shine" aria-hidden="true"></span>
 						<span class="dir-icon"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span>
 						<span class="dir-body">
 							<span class="dir-label">Achievements</span>
@@ -160,6 +172,7 @@
 						</span>
 					</button>
 					<button class="dir-card" type="button" data-section="family" data-index="04">
+						<span class="dir-shine" aria-hidden="true"></span>
 						<span class="dir-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i></span>
 						<span class="dir-body">
 							<span class="dir-label">Family</span>
@@ -167,6 +180,7 @@
 						</span>
 					</button>
 					<button class="dir-card" type="button" data-section="batchmates" data-index="05">
+						<span class="dir-shine" aria-hidden="true"></span>
 						<span class="dir-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
 						<span class="dir-body">
 							<span class="dir-label">Batchmates</span>

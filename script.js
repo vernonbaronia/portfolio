@@ -992,9 +992,30 @@
 		return number < 10 ? '0' + number : String(number);
 	}
 
+	function sectionIndexForId(id) {
+		for (var i = 0; i < sections.length; i++) {
+			if (sections[i].id === id) return i;
+		}
+		return -1;
+	}
+
+	function navItemForSection(sectionIndex) {
+		var section = sections[sectionIndex];
+		if (!section) return null;
+		for (var i = 0; i < navItems.length; i++) {
+			if (navItems[i].getAttribute('aria-controls') === section.id) return navItems[i];
+		}
+		return null;
+	}
+
 	function paintPill() {
-		var active = navItems[currentIndex];
-		if (!navList || !active) return;
+		if (!navList) return;
+		var active = navItemForSection(currentIndex);
+
+		if (!active) {
+			navList.classList.remove('pill-ready');
+			return;
+		}
 
 		navList.style.setProperty('--pill-x', active.offsetLeft + 'px');
 		navList.style.setProperty('--pill-w', active.offsetWidth + 'px');
@@ -1002,7 +1023,7 @@
 	}
 
 	function revealTab() {
-		var active = navItems[currentIndex];
+		var active = navItemForSection(currentIndex);
 		if (!active) return;
 
 		if (navList && navList.scrollWidth > navList.clientWidth + 1) {
@@ -1019,8 +1040,9 @@
 
 		currentIndex = Math.max(0, Math.min(index, sections.length - 1));
 
-		navItems.forEach(function (item, i) {
-			var isActive = i === currentIndex;
+		var currentId = sections[currentIndex].id;
+		navItems.forEach(function (item) {
+			var isActive = item.getAttribute('aria-controls') === currentId;
 			item.classList.toggle('active', isActive);
 			item.setAttribute('aria-selected', String(isActive));
 			item.setAttribute('tabindex', isActive ? '0' : '-1');
@@ -1057,15 +1079,17 @@
 		revealTab();
 	}
 
-	navItems.forEach(function (item, index) {
+	navItems.forEach(function (item) {
 		item.addEventListener('click', function () {
-			updateActiveSection(index);
+			var idx = sectionIndexForId(item.getAttribute('aria-controls'));
+			if (idx !== -1) updateActiveSection(idx);
 		});
 
 		item.addEventListener('keydown', function (event) {
 			if (event.key === 'Enter' || event.key === ' ') {
 				event.preventDefault();
-				updateActiveSection(index);
+				var idx = sectionIndexForId(item.getAttribute('aria-controls'));
+				if (idx !== -1) updateActiveSection(idx);
 			}
 		});
 	});
@@ -1074,14 +1098,39 @@
 	var dirCards = Array.prototype.slice.call(document.querySelectorAll('.dir-card'));
 	dirCards.forEach(function (card) {
 		card.addEventListener('click', function () {
-			var target = card.getAttribute('data-section');
-			var index = -1;
-			sections.forEach(function (section, i) {
-				if (section.id === target) index = i;
-			});
-			if (index !== -1) updateActiveSection(index);
+			var idx = sectionIndexForId(card.getAttribute('data-section'));
+			if (idx !== -1) updateActiveSection(idx);
 		});
 	});
+
+	/* "JB" logo returns to the Home page */
+	var navLogo = document.getElementById('nav-logo');
+	if (navLogo) {
+		navLogo.addEventListener('click', function () {
+			updateActiveSection(0);
+		});
+	}
+
+	/* Home tagline — cycles through short phrases */
+	var homeTagline = document.getElementById('home-tagline');
+	if (homeTagline && !prefersReduced) {
+		var taglines = [
+			'building things for the future',
+			'exploring low-level systems',
+			'always learning, always curious',
+			'from hardware to the cloud'
+		];
+		var taglineIndex = 0;
+
+		window.setInterval(function () {
+			homeTagline.classList.add('is-swapping');
+			window.setTimeout(function () {
+				taglineIndex = (taglineIndex + 1) % taglines.length;
+				homeTagline.textContent = taglines[taglineIndex];
+				homeTagline.classList.remove('is-swapping');
+			}, 260);
+		}, 3600);
+	}
 
 	if (prevBtn) {
 		prevBtn.addEventListener('click', function () {
@@ -1123,7 +1172,8 @@
 		updateActiveSection(target);
 
 		if (document.activeElement && document.activeElement.closest('nav')) {
-			navItems[currentIndex].focus();
+			var activeItem = navItemForSection(currentIndex);
+			if (activeItem) activeItem.focus();
 		}
 	});
 
