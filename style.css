@@ -3069,8 +3069,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 .nav-logo {
 	display: grid;
 	place-items: center;
-	width: 30px;
-	height: 30px;
+	width: 32px;
+	height: 32px;
 	flex: 0 0 auto;
 	margin-right: 0.1rem;
 	padding: 0;
@@ -3078,10 +3078,10 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	border-radius: 9px;
 	background: var(--accent);
 	color: var(--on-accent);
-	font-family: var(--font-display);
-	font-size: 0.76rem;
-	font-weight: 700;
-	letter-spacing: 0.02em;
+	font-family: 'Sora', var(--font-display), sans-serif;
+	font-size: 0.82rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
 	cursor: pointer;
 	box-shadow: var(--shadow-soft);
 	transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease;
