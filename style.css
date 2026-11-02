@@ -3020,12 +3020,10 @@ body.is-entered .about-info h1 {
 
 .dir-label {
 	font-family: var(--font-display);
-	font-size: 1rem;
+	font-size: 0.92rem;
 	font-weight: 600;
 	color: var(--ink);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	line-height: 1.22;
 }
 
 .dir-desc {
