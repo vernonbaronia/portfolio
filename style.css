@@ -3172,3 +3172,49 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 .dir-card:focus-visible::before {
 	opacity: 0.7;
 }
+
+/* =========================================================
+   INTRO — auto-enter progress + light sweep
+   ========================================================= */
+.intro-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	z-index: 3;
+	overflow: hidden;
+	background: var(--line);
+}
+
+.intro-progress-fill {
+	display: block;
+	height: 100%;
+	width: 0;
+	background: linear-gradient(90deg, var(--accent-soft), var(--accent));
+	animation: intro-progress-fill 3.2s linear forwards;
+}
+
+@keyframes intro-progress-fill {
+	from { width: 0; }
+	to { width: 100%; }
+}
+
+/* Light sweep across the intro type */
+.intro-content::after {
+	content: "";
+	position: absolute;
+	top: -35%;
+	bottom: -35%;
+	width: 42%;
+	left: -55%;
+	background: linear-gradient(105deg, transparent 0%, rgba(var(--accent-soft-rgb), 0.16) 50%, transparent 100%);
+	transform: skewX(-20deg);
+	animation: intro-shimmer 3.6s ease-in-out infinite;
+	pointer-events: none;
+}
+
+@keyframes intro-shimmer {
+	0% { left: -55%; }
+	55%, 100% { left: 135%; }
+}

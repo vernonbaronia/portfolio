@@ -397,9 +397,13 @@
 			});
 		};
 
+		var autoEnterTimer = null;
+
 		var enterSite = function (fromKeyboard, originX, originY) {
 			if (entered) return;
 			entered = true;
+
+			if (autoEnterTimer) window.clearTimeout(autoEnterTimer);
 
 			Sound.click();
 
@@ -478,6 +482,11 @@
 				enterSite(true);
 			}
 		});
+
+		/* Enter automatically after a short delay */
+		autoEnterTimer = window.setTimeout(function () {
+			if (!entered) enterSite(false);
+		}, 3200);
 	}
 
 	/* One delegated listener for every clickable thing */
