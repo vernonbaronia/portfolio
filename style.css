@@ -1642,6 +1642,15 @@ body.is-entered .about-info h1 {
 	width: 100%;
 }
 
+.about-side {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	min-width: 0;
+	width: 100%;
+	translate: 0 -0.6rem;
+}
+
 .about-body .bio {
 	margin-bottom: 0;
 }
@@ -1673,17 +1682,19 @@ body.is-entered .about-info h1 {
 	background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
 }
 
-.about-facts-card .about-links {
-	margin-top: 1.1rem;
-	padding-top: 1rem;
-	border-top: 1px solid var(--line);
+.about-side .about-facts-card {
+	width: 100%;
+}
+
+.about-side .about-links {
+	margin-top: 0.9rem;
 	gap: 0.6rem;
 }
 
-.about-facts-card .icon-btn {
-	width: 40px;
-	height: 40px;
-	font-size: 1.02rem;
+.about-side .icon-btn {
+	width: 44px;
+	height: 44px;
+	font-size: 1.05rem;
 }
 
 .fact {
