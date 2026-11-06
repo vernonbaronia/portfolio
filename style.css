@@ -3243,6 +3243,63 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	display: none;
 }
 
+/* Full-page shutter backdrop: radiating blade lines, lens ring, viewfinder corners */
+.intro-shutter {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px top 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px top 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px top 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px top 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px bottom 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px bottom 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px bottom 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px bottom 26px / 1px 30px no-repeat;
+}
+
+/* six huge blades sweeping across the whole page */
+.intro-shutter::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 150vmax;
+	height: 150vmax;
+	transform: translate(-50%, -50%) rotate(10deg);
+	background: repeating-conic-gradient(
+		from 0deg,
+		rgba(10, 10, 10, 0.16) 0deg 0.35deg,
+		transparent 0.35deg 60deg
+	),
+	repeating-conic-gradient(
+		from 0deg,
+		rgba(10, 10, 10, 0.08) 0deg 30deg,
+		rgba(10, 10, 10, 0.022) 30deg 60deg
+	);
+	-webkit-mask-image: radial-gradient(circle, transparent 0 13%, #000 24%, #000 100%);
+	mask-image: radial-gradient(circle, transparent 0 13%, #000 24%, #000 100%);
+	opacity: 0.9;
+}
+
+/* thin lens ring framing the page */
+.intro-shutter::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: min(178vmin, 1900px);
+	aspect-ratio: 1;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	border: 1px solid rgba(10, 10, 10, 0.14);
+	outline: 1px dashed rgba(10, 10, 10, 0.12);
+	outline-offset: -3.2vmin;
+	box-shadow: inset 0 0 140px rgba(10, 10, 10, 0.04);
+}
+
 .intro-content {
 	width: min(1400px, 100%);
 	flex-direction: row;
