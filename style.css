@@ -3228,6 +3228,17 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	backdrop-filter: none;
 }
 
+/* subtle paper grain over the white opening */
+.intro::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+	opacity: 0.05;
+	pointer-events: none;
+}
+
 .intro-orbit {
 	display: none;
 }
@@ -3238,13 +3249,13 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* small photo, falls in from the top */
 .intro-photo {
-	width: 100px;
-	height: 100px;
-	margin-bottom: 0.7rem;
+	width: 150px;
+	height: 150px;
+	margin-bottom: 0.8rem;
 	border-radius: 50%;
 	overflow: hidden;
 	border: 2px solid #0a0a0a;
-	box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+	box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
 	animation: intro-photo-pop 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
@@ -3303,6 +3314,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	letter-spacing: 0;
 	color: #0a0a0a;
 	opacity: 0.95;
+	-webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 90%);
+	mask-image: linear-gradient(to bottom, #000 30%, transparent 90%);
 	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.54s both;
 }
 
