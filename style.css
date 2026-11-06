@@ -3249,8 +3249,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* small photo, falls in from the top */
 .intro-photo {
-	width: 150px;
-	height: 150px;
+	width: 210px;
+	height: 210px;
 	margin-bottom: 0.8rem;
 	border-radius: 50%;
 	overflow: hidden;
@@ -3286,7 +3286,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* big name */
 .intro-name {
-	font-family: 'Milker', var(--font-display), sans-serif;
+	font-family: 'Transcity', var(--font-display), sans-serif;
 	font-size: clamp(2.1rem, 7vw, 4.7rem);
 	font-weight: 400;
 	line-height: 1.02;
@@ -3307,7 +3307,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 /* "Portfolio" */
 .intro-portfolio {
 	margin: 0.2rem 0 0;
-	font-family: 'Milker', var(--font-display), sans-serif;
+	font-family: 'Transcity', var(--font-display), sans-serif;
 	font-size: clamp(1.4rem, 4.2vw, 2.4rem);
 	font-weight: 400;
 	line-height: 1.05;
