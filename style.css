@@ -1230,7 +1230,7 @@ main {
 	max-width: 1480px;
 	margin: 0 auto;
 	padding: clamp(1.5rem, 3.5vh, 2.5rem) clamp(1.25rem, 3vw, 2.5rem);
-	translate: 0 -0.75rem;
+	translate: 0 -2rem;
 }
 
 /* --- Portrait --- */
@@ -1347,15 +1347,31 @@ main {
 	color: var(--ink-soft);
 }
 
-.about-label {
-	margin: 0 0 0.35rem;
-	font-family: 'Cousine', 'Courier New', monospace;
-	font-style: italic;
-	font-size: clamp(1.15rem, 1.6vw, 1.4rem);
-	font-weight: 400;
+.nav-page-title {
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 0.2rem);
+	transform: translate(-50%, -4px);
+	font-family: 'TRT Otilito', var(--font-display), sans-serif;
+	font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+	font-weight: 500;
 	line-height: 1;
-	letter-spacing: 0.02em;
+	letter-spacing: 0.03em;
 	color: var(--ink-soft);
+	white-space: nowrap;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		visibility 0s linear 0.3s;
+}
+
+body.is-about .nav-page-title {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(-50%, 0);
+	transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		visibility 0s linear 0s;
 }
 
 .about-eyebrow::after {
@@ -4373,6 +4389,18 @@ body.is-section-changing .cursor-ring {
 
 	.nav-meta--date::before {
 		display: none;
+	}
+
+	.about-container {
+		translate: 0 0;
+	}
+}
+
+@media (max-width: 700px) {
+	.nav-meta--date {
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.12rem;
 	}
 }
 

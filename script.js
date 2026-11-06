@@ -992,6 +992,7 @@
 		currentIndex = Math.max(0, Math.min(index, sections.length - 1));
 
 		document.body.classList.toggle('is-home', currentIndex === 0);
+		document.body.classList.toggle('is-about', currentIndex === 1);
 
 		if (navHome) {
 			navHome.hidden = currentIndex === 0;
