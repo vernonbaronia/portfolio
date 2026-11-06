@@ -380,7 +380,15 @@
 			'600 1em Inter',
 			'500 1em "Space Grotesk"',
 			'600 1em "Space Grotesk"',
-			'700 1em "Space Grotesk"'
+			'700 1em "Space Grotesk"',
+			'400 1em Euphoria',
+			'400 1em Francy',
+			'400 1em Gendy',
+			'400 1em "ID Grotesk"',
+			'400 1em Switzer',
+			'500 1em Switzer',
+			'600 1em Switzer',
+			'700 1em Switzer'
 		];
 		if (document.fonts && document.fonts.load) {
 			fontFaces.forEach(function (face) {
@@ -564,7 +572,7 @@
 
 		document.addEventListener('pointerover', function (event) {
 			var interactive = event.target && event.target.closest
-				? event.target.closest('a, button, [role="tab"], [role="button"], .photo-frame, .icon-btn')
+				? event.target.closest('a, button, [role="tab"], [role="button"], .photo-frame, .home-portrait, .icon-btn')
 				: null;
 			dot.classList.toggle('is-hover', !!interactive);
 			ring.classList.toggle('is-hover', !!interactive);
@@ -645,27 +653,7 @@
 		sparkleLayer.appendChild(frag);
 	}
 
-	var scene = document.querySelector('.bg-scene');
-
-	if (scene && finePointer && !prefersReduced) {
-		var targetX = 0;
-		var targetY = 0;
-		var currentX = 0;
-		var currentY = 0;
-
-		window.addEventListener('pointermove', function (event) {
-			targetX = (event.clientX / window.innerWidth - 0.5) * 2;
-			targetY = (event.clientY / window.innerHeight - 0.5) * 2;
-		}, { passive: true });
-
-		(function parallax() {
-			currentX += (targetX - currentX) * 0.05;
-			currentY += (targetY - currentY) * 0.05;
-			scene.style.setProperty('--px', (currentX * 18).toFixed(2) + 'px');
-			scene.style.setProperty('--py', (currentY * 18).toFixed(2) + 'px');
-			window.requestAnimationFrame(parallax);
-		})();
-	}
+	/* The paper/shutter backdrop stays still like the opening page. */
 
 	/* =====================================================
 	   Photo tilt
@@ -691,6 +679,31 @@
 		frame.addEventListener('pointerleave', function () {
 			frame.style.transform = '';
 			frameRect = null;
+		});
+	}
+
+	/* Home portrait: pointer tilt layered on top of its idle float. */
+	var homePortrait = document.querySelector('.home-portrait');
+
+	if (homePortrait && finePointer && !prefersReduced) {
+		var homePortraitRect = null;
+
+		homePortrait.addEventListener('pointerenter', function () {
+			homePortraitRect = homePortrait.getBoundingClientRect();
+		});
+
+		homePortrait.addEventListener('pointermove', function (event) {
+			if (!homePortraitRect) homePortraitRect = homePortrait.getBoundingClientRect();
+			var px = (event.clientX - homePortraitRect.left) / homePortraitRect.width - 0.5;
+			var py = (event.clientY - homePortraitRect.top) / homePortraitRect.height - 0.5;
+			homePortrait.style.transform = 'perspective(1100px) rotateX(' +
+				(-py * 8).toFixed(2) + 'deg) rotateY(' +
+				(px * 8).toFixed(2) + 'deg)';
+		});
+
+		homePortrait.addEventListener('pointerleave', function () {
+			homePortrait.style.transform = '';
+			homePortraitRect = null;
 		});
 	}
 
@@ -1001,7 +1014,10 @@
 	var nextBtn = document.getElementById('next-btn');
 	var counter = document.getElementById('current-num');
 	var main = document.querySelector('main');
+	var navHome = document.getElementById('nav-home');
+	var irisEl = document.getElementById('iris');
 	var currentIndex = 0;
+	var sectionTransitioning = false;
 
 	function pad(number) {
 		return number < 10 ? '0' + number : String(number);
@@ -1018,6 +1034,12 @@
 		if (!sections.length) return;
 
 		currentIndex = Math.max(0, Math.min(index, sections.length - 1));
+
+		document.body.classList.toggle('is-home', currentIndex === 0);
+
+		if (navHome) {
+			navHome.hidden = currentIndex === 0;
+		}
 
 		sections.forEach(function (section, i) {
 			var isActive = i === currentIndex;
@@ -1047,12 +1069,43 @@
 		}
 	}
 
+	/* Section changes use the swirled camera shutter. The section is
+	   swapped while the aperture is fully closed, then it opens again. */
+	function goToSection(index) {
+		if (!sections.length || sectionTransitioning) return;
+
+		var target = Math.max(0, Math.min(index, sections.length - 1));
+		if (target === currentIndex) return;
+
+		if (!irisEl || prefersReduced) {
+			updateActiveSection(target);
+			return;
+		}
+
+		sectionTransitioning = true;
+		document.body.classList.add('is-section-changing');
+
+		irisEl.classList.remove('is-playing', 'is-swirl');
+		void irisEl.offsetWidth;
+		irisEl.classList.add('is-swirl');
+
+		window.setTimeout(function () {
+			updateActiveSection(target);
+		}, 500);
+
+		window.setTimeout(function () {
+			irisEl.classList.remove('is-swirl');
+			document.body.classList.remove('is-section-changing');
+			sectionTransitioning = false;
+		}, 1180);
+	}
+
 	/* Home menu links jump to their section */
 	var homeMenuItems = Array.prototype.slice.call(document.querySelectorAll('.home-menu-item'));
 	homeMenuItems.forEach(function (item) {
 		item.addEventListener('click', function () {
 			var idx = sectionIndexForId(item.getAttribute('data-section'));
-			if (idx !== -1) updateActiveSection(idx);
+			if (idx !== -1) goToSection(idx);
 		});
 	});
 
@@ -1060,19 +1113,26 @@
 	var navLogo = document.getElementById('nav-logo');
 	if (navLogo) {
 		navLogo.addEventListener('click', function () {
-			updateActiveSection(0);
+			goToSection(0);
+		});
+	}
+
+	/* Centre HOME button only shows away from Home */
+	if (navHome) {
+		navHome.addEventListener('click', function () {
+			goToSection(0);
 		});
 	}
 
 	if (prevBtn) {
 		prevBtn.addEventListener('click', function () {
-			if (!prevBtn.disabled) updateActiveSection(currentIndex - 1);
+			if (!prevBtn.disabled) goToSection(currentIndex - 1);
 		});
 	}
 
 	if (nextBtn) {
 		nextBtn.addEventListener('click', function () {
-			if (!nextBtn.disabled) updateActiveSection(currentIndex + 1);
+			if (!nextBtn.disabled) goToSection(currentIndex + 1);
 		});
 	}
 
@@ -1101,7 +1161,7 @@
 		}
 
 		event.preventDefault();
-		updateActiveSection(target);
+		goToSection(target);
 	});
 
 	/* Swipe between sections on touch screens */
@@ -1129,7 +1189,7 @@
 
 			if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
 
-			updateActiveSection(currentIndex + (dx < 0 ? 1 : -1));
+			goToSection(currentIndex + (dx < 0 ? 1 : -1));
 		}, { passive: true });
 	}
 

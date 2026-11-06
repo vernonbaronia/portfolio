@@ -78,9 +78,28 @@
 			<mask id="iris-mask">
 				<rect width="100" height="100" fill="#ffffff"/>
 				<circle class="iris-hole" cx="50" cy="50" r="75" fill="#000000"/>
+				<path class="iris-swirl-hole" fill="#000000" d="M 50.00,37.00 Q 53.69,45.27 61.26,43.50 Q 55.94,50.84 61.26,56.50 Q 52.25,55.56 50.00,63.00 Q 46.31,54.73 38.74,56.50 Q 44.06,49.16 38.74,43.50 Q 47.75,44.44 50.00,37.00 Z"/>
 			</mask>
 		</defs>
 		<rect width="100" height="100" fill="#000000" mask="url(#iris-mask)"/>
+		<g class="iris-blades" mask="url(#iris-mask)" aria-hidden="true">
+			<g stroke="rgba(255, 255, 255, 0.16)" stroke-width="0.16" stroke-linecap="round">
+				<line x1="50" y1="50" x2="115" y2="50"/>
+				<line x1="50" y1="50" x2="106.3" y2="82.5"/>
+				<line x1="50" y1="50" x2="82.5" y2="106.3"/>
+				<line x1="50" y1="50" x2="50" y2="115"/>
+				<line x1="50" y1="50" x2="17.5" y2="106.3"/>
+				<line x1="50" y1="50" x2="-6.3" y2="82.5"/>
+				<line x1="50" y1="50" x2="-15" y2="50"/>
+				<line x1="50" y1="50" x2="-6.3" y2="17.5"/>
+				<line x1="50" y1="50" x2="17.5" y2="-6.3"/>
+				<line x1="50" y1="50" x2="50" y2="-15"/>
+				<line x1="50" y1="50" x2="82.5" y2="-6.3"/>
+				<line x1="50" y1="50" x2="106.3" y2="17.5"/>
+			</g>
+			<circle cx="50" cy="50" r="34" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="0.14" stroke-dasharray="1.2 4"/>
+			<circle cx="50" cy="50" r="52" fill="none" stroke="rgba(255, 255, 255, 0.09)" stroke-width="0.12" stroke-dasharray="2 6"/>
+		</g>
 	</svg>
 
 	<!-- ===== Animated background ===== -->
@@ -90,6 +109,7 @@
 		<div class="orb orb-3"></div>
 		<div class="bg-lines"></div>
 		<div class="sparkles" id="sparkles"></div>
+		<div class="page-shutter" aria-hidden="true"></div>
 		<div class="grain"></div>
 	</div>
 
@@ -110,6 +130,8 @@
 			<span class="nav-greeting" id="greeting" aria-live="polite"><span id="greeting-text">a pleasant evening</span></span>
 		</div>
 
+		<button class="nav-home" id="nav-home" type="button" aria-label="Go to Home" hidden>Home</button>
+
 		<div class="nav-meta nav-meta--date">
 			<span class="nav-weekday" id="live-weekday">Friday</span>
 			<time id="live-date" datetime="">--</time>
@@ -126,19 +148,29 @@
 
 				<div class="home-menu" role="navigation" aria-label="Portfolio sections">
 					<button class="home-menu-item" id="home-menu-about" type="button" data-section="about">
+						<span class="home-menu-num" aria-hidden="true">01</span>
 						<span class="home-menu-label">About Me</span>
+						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="education">
+						<span class="home-menu-num" aria-hidden="true">02</span>
 						<span class="home-menu-label">Educational Attainments</span>
+						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="achievements">
+						<span class="home-menu-num" aria-hidden="true">03</span>
 						<span class="home-menu-label">Achievements</span>
+						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="family">
+						<span class="home-menu-num" aria-hidden="true">04</span>
 						<span class="home-menu-label">Family</span>
+						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="batchmates">
+						<span class="home-menu-num" aria-hidden="true">05</span>
 						<span class="home-menu-label">Batchmates</span>
+						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 				</div>
 			</div>
