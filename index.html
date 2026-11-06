@@ -7,7 +7,7 @@
 	<meta name="description" content="Portfolio of Jade Vernon A. Baronia, a 1st Year Computer Science Student.">
 	<meta name="color-scheme" content="light dark">
 	<meta name="theme-color" content="#111113" id="meta-theme">
-	<link rel="icon" href="./favicon.svg?v=20261107-8" type="image/svg+xml">
+	<link rel="icon" href="./favicon.svg?v=20261107-9" type="image/svg+xml">
 
 	<!-- Set the theme before first paint so there is no flash -->
 	<script>
@@ -25,14 +25,14 @@
 		})();
 	</script>
 
-	<link rel="stylesheet" href="fonts.css?v=20261107-8">
+	<link rel="stylesheet" href="fonts.css?v=20261107-9">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	<link rel="stylesheet" href="style.css?v=20261107-8">
+	<link rel="stylesheet" href="style.css?v=20261107-9">
 </head>
 <body class="is-intro is-home">
 
@@ -241,8 +241,45 @@
 									</ul>
 								</div>
 							</div>
+						</div>
 
-							<div class="about-links">
+						<aside class="about-facts-card">
+							<dl class="about-facts" aria-label="Personal details">
+								<div class="fact">
+									<dt>Birthday</dt>
+									<dd>November 27, 2007</dd>
+								</div>
+								<div class="fact">
+									<dt>Age</dt>
+									<dd>18</dd>
+								</div>
+								<div class="fact">
+									<dt>Year level</dt>
+									<dd>1st Year</dd>
+								</div>
+								<div class="fact">
+									<dt>Program</dt>
+									<dd>Computer Science</dd>
+								</div>
+								<div class="fact fact--wide">
+									<dt>College</dt>
+									<dd>University of the Cordilleras</dd>
+								</div>
+								<div class="fact fact--wide">
+									<dt>Current location</dt>
+									<dd>City Camp Alley, Baguio, Benguet</dd>
+								</div>
+								<div class="fact fact--wide">
+									<dt>Permanent location</dt>
+									<dd>Concordia, Bolinao, Pangasinan</dd>
+								</div>
+								<div class="fact fact--wide">
+									<dt>Phone</dt>
+									<dd><a href="tel:+639283786725">0928 378 6725</a></dd>
+								</div>
+							</dl>
+
+							<div class="about-links about-links--facts">
 								<a href="mailto:baroniajade27@gmail.com" class="icon-btn" data-label="Gmail" title="baroniajade27@gmail.com" aria-label="Email baroniajade27@gmail.com">
 									<i class="fa-solid fa-envelope"></i>
 								</a>
@@ -256,42 +293,7 @@
 									<i class="fa-brands fa-instagram"></i>
 								</a>
 							</div>
-						</div>
-
-						<dl class="about-facts" aria-label="Personal details">
-							<div class="fact">
-								<dt>Birthday</dt>
-								<dd>November 27, 2007</dd>
-							</div>
-							<div class="fact">
-								<dt>Age</dt>
-								<dd>18</dd>
-							</div>
-							<div class="fact">
-								<dt>Year level</dt>
-								<dd>1st Year</dd>
-							</div>
-							<div class="fact">
-								<dt>Program</dt>
-								<dd>Computer Science</dd>
-							</div>
-							<div class="fact fact--wide">
-								<dt>College</dt>
-								<dd>University of the Cordilleras</dd>
-							</div>
-							<div class="fact fact--wide">
-								<dt>Current location</dt>
-								<dd>City Camp Alley, Baguio, Benguet</dd>
-							</div>
-							<div class="fact fact--wide">
-								<dt>Permanent location</dt>
-								<dd>Concordia, Bolinao, Pangasinan</dd>
-							</div>
-							<div class="fact fact--wide">
-								<dt>Phone</dt>
-								<dd><a href="tel:+639283786725">0928 378 6725</a></dd>
-							</div>
-						</dl>
+						</aside>
 					</div>
 				</div>
 			</div>
@@ -378,20 +380,6 @@
 		</section>
 	</main>
 
-	<!-- ===== Deck controls ===== -->
-	<div class="deck-controls" role="group" aria-label="Section navigation">
-		<span class="deck-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> to explore</span>
-		<button class="nav-btn prev-btn disabled" id="prev-btn" type="button" aria-label="Previous section" disabled>
-			<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-		</button>
-		<div class="deck-counter" aria-hidden="true">
-			<span id="current-num">01</span><span class="sep">/</span><span>05</span>
-		</div>
-		<button class="nav-btn next-btn" id="next-btn" type="button" aria-label="Next section">
-			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-		</button>
-	</div>
-
 	<!-- ===== Category dock ===== -->
 	<div class="category-dock" role="group" aria-label="Portfolio categories">
 		<button class="category-dock-btn" type="button" data-section="about" data-label="About Me" aria-label="Go to About Me">
@@ -421,6 +409,6 @@
 		</button>
 	</div>
 
-	<script src="script.js?v=20261107-8"></script>
+	<script src="script.js?v=20261107-9"></script>
 </body>
 </html>

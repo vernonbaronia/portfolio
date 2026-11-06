@@ -1646,12 +1646,8 @@ body.is-entered .about-info h1 {
 	margin-bottom: 0;
 }
 
-.about-facts {
+.about-facts-card {
 	position: relative;
-	display: grid;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-	gap: 1.05rem 1.15rem;
-	margin: 0;
 	padding: 1.35rem 1.5rem;
 	background: var(--surface-strong);
 	border: 1px solid var(--line);
@@ -1659,14 +1655,35 @@ body.is-entered .about-info h1 {
 	box-shadow: var(--shadow-soft);
 }
 
-.about-facts::before {
+.about-facts {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.05rem 1.15rem;
+	margin: 0;
+	padding: 0;
+}
+
+.about-facts-card::before {
 	content: "";
 	position: absolute;
 	top: 0;
-	left: 1.25rem;
-	right: 1.25rem;
+	left: 1.5rem;
+	right: 1.5rem;
 	height: 1px;
 	background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
+}
+
+.about-facts-card .about-links {
+	margin-top: 1.1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--line);
+	gap: 0.6rem;
+}
+
+.about-facts-card .icon-btn {
+	width: 40px;
+	height: 40px;
+	font-size: 1.02rem;
 }
 
 .fact {
@@ -3138,9 +3155,12 @@ body.is-intro .category-dock {
 		gap: 0.95rem;
 	}
 
+	.about-facts-card {
+		padding: 1rem;
+	}
+
 	.about-facts {
 		gap: 0.8rem 0.85rem;
-		padding: 1rem;
 	}
 
 	.about-tag-row {
@@ -3307,9 +3327,12 @@ body.is-intro .category-dock {
 		line-height: 1.62;
 	}
 
+	.about-facts-card {
+		padding: 1rem;
+	}
+
 	.about-facts {
 		gap: 0.8rem 0.9rem;
-		padding: 1rem;
 	}
 
 	.about-tags {
