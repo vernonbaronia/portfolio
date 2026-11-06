@@ -742,12 +742,10 @@ nav {
 	width: 100%;
 	z-index: 20;
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	align-items: center;
-	background: var(--nav-bg);
-	-webkit-backdrop-filter: blur(10px) saturate(1.25);
-	backdrop-filter: blur(10px) saturate(1.25);
-	border-bottom: 1px solid var(--line);
+	background: none;
+	border-bottom: 0;
 }
 
 nav ul {
@@ -2179,7 +2177,7 @@ body.is-entered .about-info h1 {
 /* Tablet portrait and below: stack */
 @media (max-width: 980px) {
 	nav {
-		grid-template-columns: auto minmax(0, 1fr) auto;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	}
 
 	nav ul {
@@ -3598,17 +3596,6 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 nav {
 	min-height: var(--nav-h);
-}
-
-/* The section list moves beside the portrait on the Home page */
-nav ul {
-	transition: opacity 0.3s ease;
-}
-
-body.is-home nav ul {
-	opacity: 0;
-	visibility: hidden;
-	pointer-events: none;
 }
 
 .home-stage {

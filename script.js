@@ -435,8 +435,7 @@
 
 				window.setTimeout(function () {
 					if (fromKeyboard) {
-						var firstTab = document.getElementById('home-menu-about') ||
-							document.getElementById('nav-about');
+						var firstTab = document.getElementById('home-menu-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
 				}, 1050);
@@ -997,8 +996,6 @@
 	/* =====================================================
 	   Section navigation
 	   ===================================================== */
-	var navList = document.querySelector('nav ul');
-	var navItems = Array.prototype.slice.call(document.querySelectorAll('nav ul li'));
 	var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
 	var prevBtn = document.getElementById('prev-btn');
 	var nextBtn = document.getElementById('next-btn');
@@ -1017,55 +1014,10 @@
 		return -1;
 	}
 
-	function navItemForSection(sectionIndex) {
-		var section = sections[sectionIndex];
-		if (!section) return null;
-		for (var i = 0; i < navItems.length; i++) {
-			if (navItems[i].getAttribute('aria-controls') === section.id) return navItems[i];
-		}
-		return null;
-	}
-
-	function paintPill() {
-		if (!navList) return;
-		var active = navItemForSection(currentIndex);
-
-		if (!active) {
-			navList.classList.remove('pill-ready');
-			return;
-		}
-
-		navList.style.setProperty('--pill-x', active.offsetLeft + 'px');
-		navList.style.setProperty('--pill-w', active.offsetWidth + 'px');
-		navList.classList.add('pill-ready');
-	}
-
-	function revealTab() {
-		var active = navItemForSection(currentIndex);
-		if (!active) return;
-
-		if (navList && navList.scrollWidth > navList.clientWidth + 1) {
-			active.scrollIntoView({
-				block: 'nearest',
-				inline: 'center',
-				behavior: prefersReduced ? 'auto' : 'smooth'
-			});
-		}
-	}
-
 	function updateActiveSection(index) {
 		if (!sections.length) return;
 
 		currentIndex = Math.max(0, Math.min(index, sections.length - 1));
-
-		var currentId = sections[currentIndex].id;
-		document.body.classList.toggle('is-home', currentId === 'home');
-		navItems.forEach(function (item) {
-			var isActive = item.getAttribute('aria-controls') === currentId;
-			item.classList.toggle('active', isActive);
-			item.setAttribute('aria-selected', String(isActive));
-			item.setAttribute('tabindex', isActive ? '0' : '-1');
-		});
 
 		sections.forEach(function (section, i) {
 			var isActive = i === currentIndex;
@@ -1093,25 +1045,7 @@
 			nextBtn.classList.toggle('disabled', atEnd);
 			nextBtn.disabled = atEnd;
 		}
-
-		paintPill();
-		revealTab();
 	}
-
-	navItems.forEach(function (item) {
-		item.addEventListener('click', function () {
-			var idx = sectionIndexForId(item.getAttribute('aria-controls'));
-			if (idx !== -1) updateActiveSection(idx);
-		});
-
-		item.addEventListener('keydown', function (event) {
-			if (event.key === 'Enter' || event.key === ' ') {
-				event.preventDefault();
-				var idx = sectionIndexForId(item.getAttribute('aria-controls'));
-				if (idx !== -1) updateActiveSection(idx);
-			}
-		});
-	});
 
 	/* Home menu links jump to their section */
 	var homeMenuItems = Array.prototype.slice.call(document.querySelectorAll('.home-menu-item'));
@@ -1168,11 +1102,6 @@
 
 		event.preventDefault();
 		updateActiveSection(target);
-
-		if (document.activeElement && document.activeElement.closest('nav')) {
-			var activeItem = navItemForSection(currentIndex);
-			if (activeItem) activeItem.focus();
-		}
 	});
 
 	/* Swipe between sections on touch screens */
@@ -1243,12 +1172,4 @@
 
 	/* ---------- Start ---------- */
 	updateActiveSection(0);
-
-	window.addEventListener('resize', paintPill);
-
-	if (document.fonts && document.fonts.ready) {
-		document.fonts.ready.then(paintPill);
-	}
-
-	window.addEventListener('load', paintPill);
 })();
