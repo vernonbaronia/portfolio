@@ -4355,7 +4355,7 @@ nav {
 }
 
 /* Very narrow phones: keep the centred HOME clear of the masthead */
-@media (max-width: 360px) {
+@media (max-width: 380px) {
 	.nav-greeting {
 		font-size: 0.72rem;
 	}
