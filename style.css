@@ -94,7 +94,7 @@
 	--cursor-ring-hover-bg: rgba(var(--accent-rgb), 0.07);
 	--cursor-ring-hover-border: rgba(var(--accent-rgb), 0.28);
 
-	--nav-h: 64px;
+	--nav-h: 72px;
 	--radius: 20px;
 }
 
@@ -860,9 +860,9 @@ nav ul {
 	gap: 0.5rem;
 	min-width: 0;
 	font-family: var(--font-body);
-	font-size: 0.72rem;
+	font-size: 0.86rem;
 	font-weight: 500;
-	letter-spacing: 0.06em;
+	letter-spacing: 0.055em;
 	color: var(--ink-faint);
 	white-space: nowrap;
 	user-select: none;
@@ -881,7 +881,7 @@ nav ul {
 .nav-meta--time time {
 	margin-left: 0.05rem;
 	font-family: var(--font-time);
-	font-size: 0.84rem;
+	font-size: 1.05rem;
 	font-weight: 400;
 	letter-spacing: 0.015em;
 	line-height: 1;
@@ -891,7 +891,7 @@ nav ul {
 	justify-self: end;
 	padding-right: clamp(1rem, 2.5vw, 2rem);
 	font-family: var(--font-time);
-	font-size: 0.76rem;
+	font-size: 0.95rem;
 	font-weight: 400;
 	letter-spacing: 0.012em;
 }
@@ -1065,6 +1065,20 @@ main {
 	padding-bottom: clamp(4rem, 8vh, 6rem);
 }
 
+/* If a very short screen cannot fit the homepage, allow it to
+   scroll instead of clipping the menu behind the bottom controls. */
+#home.section {
+	align-items: safe center;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: rgba(var(--accent-rgb), 0.24) transparent;
+}
+
+#home.section .home-stage {
+	padding-bottom: clamp(5rem, 9vh, 7rem);
+}
+
 @keyframes section-in {
 	from { opacity: 0; transform: translateY(16px) scale(0.99); }
 	to { opacity: 1; transform: none; }
@@ -1221,7 +1235,7 @@ body.is-entered .about-info > *:nth-child(4) { animation-delay: 0.88s; }
 .nav-greeting {
 	display: inline-block;
 	font-family: var(--font-greeting);
-	font-size: clamp(0.86rem, 1.1vw, 1rem);
+	font-size: clamp(0.95rem, 1.2vw, 1.08rem);
 	font-weight: 700;
 	font-stretch: condensed;
 	line-height: 1.05;
@@ -2361,17 +2375,27 @@ body.is-entered .about-info h1 {
 	}
 
 	.nav-meta {
-		font-size: 0.64rem;
-		letter-spacing: 0.03em;
+		font-size: 0.78rem;
+		letter-spacing: 0.035em;
 	}
 
-	.nav-meta--time {
-		padding-left: 1.15rem;
-		gap: 0.35rem;
+	.nav-meta--time time {
+		font-size: 0.95rem;
 	}
 
 	.nav-meta--date {
 		padding-right: 1.15rem;
+		font-size: 0.82rem;
+	}
+
+	.nav-greeting {
+		font-size: 0.86rem;
+	}
+
+	.nav-logo {
+		min-width: 32px;
+		height: 32px;
+		font-size: 1.75rem;
 	}
 
 	#about.section.active {
@@ -2470,7 +2494,7 @@ body.is-entered .about-info h1 {
 /* Phones */
 @media (max-width: 560px) {
 	:root {
-		--nav-h: 58px;
+		--nav-h: 66px;
 	}
 
 	nav ul li {
@@ -2495,8 +2519,12 @@ body.is-entered .about-info h1 {
 	}
 
 	.nav-meta {
-		font-size: 0.6rem;
-		letter-spacing: 0.02em;
+		font-size: 0.74rem;
+		letter-spacing: 0.025em;
+	}
+
+	.nav-meta--time time {
+		font-size: 0.95rem;
 	}
 
 	.nav-meta--time {
@@ -2505,6 +2533,17 @@ body.is-entered .about-info h1 {
 
 	.nav-meta--date {
 		padding-right: 1rem;
+		font-size: 0.84rem;
+	}
+
+	.nav-greeting {
+		font-size: 0.84rem;
+	}
+
+	.nav-logo {
+		min-width: 30px;
+		height: 30px;
+		font-size: 1.65rem;
 	}
 
 	.nav-pulse {
@@ -3234,8 +3273,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	display: inline-grid;
 	place-items: center;
 	width: auto;
-	min-width: 30px;
-	height: 30px;
+	min-width: 34px;
+	height: 34px;
 	flex: 0 0 auto;
 	margin: 0 0.15rem 0 2px;
 	padding: 0 0.12rem;
@@ -3244,7 +3283,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	background: none;
 	color: var(--ink);
 	font-family: var(--font-logo);
-	font-size: 1.55rem;
+	font-size: 1.95rem;
 	font-weight: 400;
 	line-height: 0.8;
 	letter-spacing: 0;
@@ -3361,7 +3400,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	height: 100%;
 	width: 0;
 	background: linear-gradient(90deg, var(--accent-soft), var(--accent));
-	animation: intro-progress-fill 3.2s linear forwards;
+	animation: intro-progress-fill 4s linear forwards;
 }
 
 @keyframes intro-progress-fill {
@@ -3835,6 +3874,44 @@ nav {
 	text-align: left;
 }
 
+.home-right {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	flex: 1 1 auto;
+	width: 100%;
+	max-width: 620px;
+	min-width: 0;
+}
+
+.home-identity {
+	width: 100%;
+	margin-bottom: clamp(1rem, 2.6vh, 1.8rem);
+}
+
+.home-identity h1 {
+	margin: 0 0 0.45rem;
+	font-family: var(--font-big);
+	font-size: clamp(1.9rem, 3.3vw, 3.1rem);
+	font-weight: 700;
+	line-height: 1.02;
+	letter-spacing: -0.035em;
+	background: var(--name-grad);
+	background-size: 220% 100%;
+	background-position: 0% 50%;
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.home-identity .subheader {
+	margin: 0;
+	font-family: var(--font-info);
+	font-size: clamp(0.9rem, 1.05vw, 1.02rem);
+	gap: 0.5rem;
+}
+
 .home-portrait {
 	position: relative;
 	flex: 0 0 auto;
@@ -3920,9 +3997,9 @@ nav {
 .home-menu {
 	display: flex;
 	flex-direction: column;
-	flex: 1 1 auto;
+	flex: 0 0 auto;
 	width: 100%;
-	max-width: 560px;
+	max-width: 100%;
 	min-width: 0;
 }
 
@@ -3933,15 +4010,15 @@ nav {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 0.9rem;
+	gap: 1rem;
 	width: 100%;
-	padding: clamp(0.8rem, 1.9vh, 1.15rem) 0.85rem;
+	padding: clamp(0.9rem, 2.1vh, 1.3rem) 0.9rem;
 	border: 0;
 	border-bottom: 1px solid var(--line);
 	background: none;
 	color: var(--ink);
 	font-family: var(--font-details);
-	font-size: clamp(1.3rem, 2.35vw, 2.05rem);
+	font-size: clamp(1.55rem, 2.8vw, 2.5rem);
 	font-weight: 700;
 	line-height: 1.15;
 	letter-spacing: -0.025em;
@@ -3988,9 +4065,9 @@ nav {
 
 .home-menu-num {
 	flex: 0 0 auto;
-	width: 2.15rem;
+	width: 2.4rem;
 	font-family: var(--font-info);
-	font-size: 0.62rem;
+	font-size: 0.68rem;
 	font-weight: 500;
 	line-height: 1;
 	letter-spacing: 0.12em;
@@ -4010,8 +4087,8 @@ nav {
 .home-menu-arrow {
 	position: relative;
 	flex: 0 0 auto;
-	width: 19px;
-	height: 19px;
+	width: 21px;
+	height: 21px;
 	color: var(--accent);
 	opacity: 0;
 	transform: translateX(-9px) rotate(-16deg);
@@ -4152,6 +4229,18 @@ nav {
 		border-radius: 18px;
 	}
 
+	.home-right {
+		max-width: 400px;
+	}
+
+	.home-identity {
+		margin-bottom: 0.9rem;
+	}
+
+	.home-identity h1 {
+		font-size: clamp(1.7rem, 7vw, 2.2rem);
+	}
+
 	.home-menu {
 		width: min(100%, 400px);
 		max-width: 400px;
@@ -4159,18 +4248,18 @@ nav {
 
 	.home-menu-item {
 		gap: 0.65rem;
-		font-size: clamp(1.1rem, 5vw, 1.45rem);
-		padding: 0.65rem 0.7rem;
+		font-size: clamp(1.25rem, 5.4vw, 1.6rem);
+		padding: 0.6rem 0.7rem;
 	}
 
 	.home-menu-num {
-		width: 1.75rem;
-		font-size: 0.56rem;
+		width: 1.9rem;
+		font-size: 0.6rem;
 	}
 
 	.home-menu-arrow {
-		width: 16px;
-		height: 16px;
+		width: 18px;
+		height: 18px;
 	}
 }
 
@@ -4180,6 +4269,7 @@ nav {
 		flex-direction: row;
 		gap: 1.5rem;
 		padding: 0.75rem 1rem;
+		text-align: left;
 	}
 
 	.home-portrait {
@@ -4188,7 +4278,7 @@ nav {
 	}
 
 	.home-menu {
-		width: auto;
+		width: 100%;
 		max-width: 420px;
 	}
 
@@ -4215,16 +4305,32 @@ nav {
 	}
 }
 
-/* Short phones: shrink the portrait and menu so all five rows fit */
-@media (max-width: 560px) and (max-height: 700px) {
+/* Short phones/tablets: shrink the portrait and menu so all five rows fit */
+@media (max-width: 640px) and (min-height: 521px) and (max-height: 780px) {
 	.home-stage {
-		gap: 0.9rem;
-		padding: 0.4rem 1rem 5.2rem;
+		gap: 0.55rem;
+		padding: 0.2rem 1rem 4.6rem;
 	}
 
 	.home-portrait {
-		width: min(58vw, 220px, 30vh);
+		width: min(56vw, 200px, 28vh);
 		border-radius: 16px;
+	}
+
+	.home-right {
+		max-width: 340px;
+	}
+
+	.home-identity {
+		margin-bottom: 0.45rem;
+	}
+
+	.home-identity h1 {
+		font-size: clamp(1.3rem, 5.4vw, 1.7rem);
+	}
+
+	.home-identity .subheader {
+		font-size: 0.78rem;
 	}
 
 	.home-menu {
@@ -4232,9 +4338,9 @@ nav {
 	}
 
 	.home-menu-item {
-		gap: 0.55rem;
-		padding: 0.4rem 0.6rem;
-		font-size: clamp(0.95rem, 4.4vw, 1.2rem);
+		gap: 0.5rem;
+		padding: 0.35rem 0.55rem;
+		font-size: clamp(1rem, 4.7vw, 1.15rem);
 	}
 
 	.home-menu-num {

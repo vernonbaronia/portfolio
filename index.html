@@ -9,24 +9,19 @@
 	<meta name="theme-color" content="#2563eb" id="meta-theme">
 	<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
-	<!-- Set the theme + accent colour before first paint so there is no flash -->
+	<!-- Set the theme before first paint so there is no flash -->
 	<script>
 		(function () {
 			var theme;
-			var accent = 'blue';
-			var accents = ['blue', 'violet', 'emerald', 'rose', 'amber', 'teal'];
 			try {
 				var stored = window.localStorage.getItem('jvb-theme');
 				theme = (stored === 'dark' || stored === 'light')
 					? stored
 					: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-				var storedAccent = window.localStorage.getItem('jvb-accent');
-				if (storedAccent && accents.indexOf(storedAccent) !== -1) accent = storedAccent;
 			} catch (e) {
 				theme = 'light';
 			}
 			document.documentElement.setAttribute('data-theme', theme);
-			document.documentElement.setAttribute('data-accent', accent);
 		})();
 	</script>
 
@@ -146,7 +141,20 @@
 					<img src="profile.png" alt="Jade Vernon A. Baronia">
 				</figure>
 
-				<div class="home-menu" role="navigation" aria-label="Portfolio sections">
+				<div class="home-right">
+					<div class="home-identity">
+						<h1>Jade Vernon A. Baronia</h1>
+						<p class="subheader">
+							<span class="pulse-dot" aria-hidden="true"></span>
+							<span class="role-line" aria-hidden="true">
+								<span class="role-prefix">Aspiring</span>
+								<span class="role-text"><span class="typed-role">Software Engineer</span><span class="type-caret"></span></span>
+							</span>
+							<span class="sr-only">Aspiring Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect.</span>
+						</p>
+					</div>
+
+					<div class="home-menu" role="navigation" aria-label="Portfolio sections">
 					<button class="home-menu-item" id="home-menu-about" type="button" data-section="about">
 						<span class="home-menu-num" aria-hidden="true">01</span>
 						<span class="home-menu-label">About Me</span>
@@ -172,6 +180,7 @@
 						<span class="home-menu-label">Batchmates</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
+					</div>
 				</div>
 			</div>
 		</section>
@@ -331,34 +340,6 @@
 		<button class="orb-btn theme-toggle" id="theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
 			<i class="fa-solid fa-moon" aria-hidden="true"></i>
 		</button>
-		<button class="orb-btn palette-toggle" id="palette-toggle" type="button" data-label="Colour" aria-haspopup="true" aria-expanded="false" aria-label="Choose an accent colour" title="Choose an accent colour">
-			<i class="fa-solid fa-palette" aria-hidden="true"></i>
-		</button>
-	</div>
-
-	<!-- ===== Accent colour picker ===== -->
-	<div class="palette-panel" id="palette-panel" role="dialog" aria-label="Choose an accent colour">
-		<p class="palette-title">Accent colour</p>
-		<div class="palette-swatches" id="palette-swatches" role="radiogroup" aria-label="Accent colour">
-			<button class="swatch" type="button" data-accent="blue" role="radio" aria-checked="true" aria-label="Blue" style="--sw:#2563eb">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-			<button class="swatch" type="button" data-accent="violet" role="radio" aria-checked="false" aria-label="Violet" style="--sw:#7c3aed">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-			<button class="swatch" type="button" data-accent="emerald" role="radio" aria-checked="false" aria-label="Emerald" style="--sw:#059669">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-			<button class="swatch" type="button" data-accent="rose" role="radio" aria-checked="false" aria-label="Rose" style="--sw:#e11d48">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-			<button class="swatch" type="button" data-accent="amber" role="radio" aria-checked="false" aria-label="Amber" style="--sw:#d97706">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-			<button class="swatch" type="button" data-accent="teal" role="radio" aria-checked="false" aria-label="Teal" style="--sw:#0d9488">
-				<span class="swatch-check"><i class="fa-solid fa-check" aria-hidden="true"></i></span>
-			</button>
-		</div>
 	</div>
 
 	<script src="script.js"></script>

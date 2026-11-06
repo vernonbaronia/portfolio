@@ -18,8 +18,6 @@
 	   ===================================================== */
 	var Theme = (function () {
 		var KEY = 'jvb-theme';
-		var ACCENT_KEY = 'jvb-accent';
-		var ACCENTS = ['blue', 'violet', 'emerald', 'rose', 'amber', 'teal'];
 		var meta = document.getElementById('meta-theme');
 		var button = document.getElementById('theme-toggle');
 		var introButton = document.getElementById('intro-theme-toggle');
@@ -67,39 +65,6 @@
 
 			paintButton(button, dark);
 			paintButton(introButton, dark);
-		}
-
-		function currentAccent() {
-			var a = docEl.getAttribute('data-accent');
-			return ACCENTS.indexOf(a) !== -1 ? a : 'blue';
-		}
-
-		function applyAccent(next) {
-			docEl.setAttribute('data-accent', next);
-			try {
-				window.localStorage.setItem(ACCENT_KEY, next);
-			} catch (e) {
-				/* storage blocked — the colour still works for this visit */
-			}
-			paintMeta();
-		}
-
-		function setAccent(next) {
-			if (ACCENTS.indexOf(next) === -1) next = 'blue';
-			if (next === currentAccent()) {
-				paintMeta();
-				return;
-			}
-
-			var run = function () {
-				applyAccent(next);
-			};
-
-			if (!prefersReduced && typeof document.startViewTransition === 'function') {
-				document.startViewTransition(run);
-			} else {
-				run();
-			}
 		}
 
 		function apply(next) {
@@ -201,83 +166,8 @@
 
 		paint();
 
-		return { paint: paint, current: current, set: set, setAccent: setAccent, currentAccent: currentAccent };
+		return { paint: paint, current: current, set: set };
 	})();
-
-	/* =====================================================
-	   Accent colour picker
-	   ===================================================== */
-	var paletteToggles = Array.prototype.slice.call(
-		document.querySelectorAll('.palette-toggle')
-	);
-	var palettePanel = document.getElementById('palette-panel');
-	var paletteSwatches = Array.prototype.slice.call(
-		document.querySelectorAll('#palette-swatches .swatch')
-	);
-
-	var paintSwatches = function () {
-		var current = Theme.currentAccent();
-		paletteSwatches.forEach(function (swatch) {
-			var isActive = swatch.getAttribute('data-accent') === current;
-			swatch.classList.toggle('active', isActive);
-			swatch.setAttribute('aria-checked', String(isActive));
-		});
-	};
-
-	var paintToggles = function (activeToggle) {
-		paletteToggles.forEach(function (toggle) {
-			var isActive = toggle === activeToggle;
-			toggle.classList.toggle('is-active', isActive);
-			toggle.setAttribute('aria-expanded', String(isActive));
-		});
-	};
-
-	var openPalette = function (toggle) {
-		if (!palettePanel) return;
-		palettePanel.classList.add('is-open');
-		palettePanel.classList.toggle('is-intro', !!toggle && toggle.classList.contains('intro-palette-toggle'));
-		paintToggles(toggle);
-	};
-
-	var closePalette = function () {
-		if (!palettePanel) return;
-		palettePanel.classList.remove('is-open');
-		palettePanel.classList.remove('is-intro');
-		paintToggles(null);
-	};
-
-	if (palettePanel) {
-		paletteToggles.forEach(function (toggle) {
-			toggle.addEventListener('click', function () {
-				if (palettePanel.classList.contains('is-open') && toggle.classList.contains('is-active')) {
-					closePalette();
-				} else {
-					openPalette(toggle);
-				}
-			});
-		});
-
-		document.addEventListener('click', function (event) {
-			if (!palettePanel.classList.contains('is-open')) return;
-			var target = event.target;
-			if (target && target.closest &&
-				(target.closest('#palette-panel') || target.closest('.palette-toggle'))) return;
-			closePalette();
-		});
-
-		document.addEventListener('keydown', function (event) {
-			if (event.key === 'Escape') closePalette();
-		});
-
-		paletteSwatches.forEach(function (swatch) {
-			swatch.addEventListener('click', function () {
-				Theme.setAccent(swatch.getAttribute('data-accent'));
-				paintSwatches();
-			});
-		});
-
-		paintSwatches();
-	}
 
 	/* =====================================================
 	   Sound — generated with the Web Audio API, so there
@@ -415,8 +305,6 @@
 
 			Sound.click();
 
-			closePalette();
-
 			behindIntro.forEach(function (el) {
 				el.inert = false;
 			});
@@ -425,13 +313,16 @@
 			var y = typeof originY === 'number' ? originY : window.innerHeight / 2;
 
 			var reveal = function () {
-				/* Camera-lens (iris) transition: close to black, then open onto the homepage. */
+				/* Swirled shutter: the opening page spirals shut, then
+				   opens onto the homepage. */
 				var iris = document.getElementById('iris');
 				if (iris) {
-					iris.classList.remove('is-playing');
+					iris.classList.remove('is-playing', 'is-swirl');
 					void iris.offsetWidth;
-					iris.classList.add('is-playing');
+					iris.classList.add('is-swirl');
 				}
+				document.body.classList.add('is-section-changing');
+				sectionTransitioning = true;
 
 				/* Swap intro → homepage at the midpoint (screen is fully black). */
 				window.setTimeout(function () {
@@ -442,11 +333,17 @@
 				}, 500);
 
 				window.setTimeout(function () {
+					if (iris) iris.classList.remove('is-swirl');
+					document.body.classList.remove('is-section-changing');
+					sectionTransitioning = false;
+				}, 1180);
+
+				window.setTimeout(function () {
 					if (fromKeyboard) {
 						var firstTab = document.getElementById('home-menu-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 1050);
+				}, 1220);
 			};
 
 			/* If a font is still in flight, let it land first (with
@@ -490,7 +387,7 @@
 		/* Enter automatically after a short delay */
 		autoEnterTimer = window.setTimeout(function () {
 			if (!entered) enterSite(false);
-		}, 3200);
+		}, 4000);
 	}
 
 	/* One delegated listener for every clickable thing */
@@ -934,75 +831,83 @@
 	   Typed role line — "Aspiring [profession]"
 	   Deletes the current role, then types the next one.
 	   ===================================================== */
-	var typedRole = document.getElementById('typed-role');
+	var typedRoles = Array.prototype.slice.call(document.querySelectorAll('.typed-role'));
 
-	if (typedRole) {
+	if (typedRoles.length) {
 		var roles = [
 			'Software Engineer',
 			'Embedded Systems Engineer',
 			'Cloud / Infrastructure Engineer',
 			'Systems Architect'
 		];
-		var roleIndex = 0;
-		var roleTimer = 0;
-		var typingStarted = false;
 
 		var TYPE_MS = 62;
 		var DELETE_MS = 34;
 		var HOLD_MS = 1900;
 		var GAP_MS = 380;
 
-		var eraseRole = function () {
-			var word = roles[roleIndex];
-			var pos = word.length;
+		var makeTyper = function (element) {
+			var roleIndex = 0;
+			var roleTimer = 0;
+			var typingStarted = false;
 
-			var step = function () {
-				pos -= 1;
-				typedRole.textContent = word.slice(0, pos);
+			var eraseRole = function () {
+				var word = roles[roleIndex];
+				var pos = word.length;
 
-				if (pos > 0) {
-					roleTimer = window.setTimeout(step, DELETE_MS);
-				} else {
-					roleIndex = (roleIndex + 1) % roles.length;
-					roleTimer = window.setTimeout(typeRole, GAP_MS);
-				}
+				var step = function () {
+					pos -= 1;
+					element.textContent = word.slice(0, pos);
+
+					if (pos > 0) {
+						roleTimer = window.setTimeout(step, DELETE_MS);
+					} else {
+						roleIndex = (roleIndex + 1) % roles.length;
+						roleTimer = window.setTimeout(typeRole, GAP_MS);
+					}
+				};
+
+				step();
 			};
 
-			step();
-		};
+			var typeRole = function () {
+				var word = roles[roleIndex];
+				var pos = 0;
 
-		var typeRole = function () {
-			var word = roles[roleIndex];
-			var pos = 0;
+				var step = function () {
+					pos += 1;
+					element.textContent = word.slice(0, pos);
 
-			var step = function () {
-				pos += 1;
-				typedRole.textContent = word.slice(0, pos);
+					if (pos < word.length) {
+						roleTimer = window.setTimeout(step, TYPE_MS);
+					} else {
+						roleTimer = window.setTimeout(eraseRole, HOLD_MS);
+					}
+				};
 
-				if (pos < word.length) {
-					roleTimer = window.setTimeout(step, TYPE_MS);
-				} else {
-					roleTimer = window.setTimeout(eraseRole, HOLD_MS);
-				}
+				step();
 			};
 
-			step();
+			return function () {
+				if (typingStarted) return;
+				typingStarted = true;
+
+				element.textContent = roles[0];
+				eraseRole();
+			};
 		};
 
 		var startTyping = function () {
-			if (typingStarted) return;
-			typingStarted = true;
-
-			typedRole.textContent = roles[0];
-			eraseRole();
+			typedRoles.forEach(function (element, index) {
+				var start = makeTyper(element);
+				window.setTimeout(start, 2200 + index * 120);
+			});
 		};
 
 		if (entered) {
-			window.setTimeout(startTyping, 2200);
+			startTyping();
 		} else {
-			document.addEventListener('jvb:entered', function () {
-				window.setTimeout(startTyping, 2200);
-			}, { once: true });
+			document.addEventListener('jvb:entered', startTyping, { once: true });
 		}
 	}
 
@@ -1069,7 +974,7 @@
 		}
 	}
 
-	/* Section changes use the swirled camera shutter. The section is
+	/* Section changes use the circular camera iris. The section is
 	   swapped while the aperture is fully closed, then it opens again. */
 	function goToSection(index) {
 		if (!sections.length || sectionTransitioning) return;
@@ -1087,17 +992,17 @@
 
 		irisEl.classList.remove('is-playing', 'is-swirl');
 		void irisEl.offsetWidth;
-		irisEl.classList.add('is-swirl');
+		irisEl.classList.add('is-playing');
 
 		window.setTimeout(function () {
 			updateActiveSection(target);
 		}, 500);
 
 		window.setTimeout(function () {
-			irisEl.classList.remove('is-swirl');
+			irisEl.classList.remove('is-playing');
 			document.body.classList.remove('is-section-changing');
 			sectionTransitioning = false;
-		}, 1180);
+		}, 1050);
 	}
 
 	/* Home menu links jump to their section */
