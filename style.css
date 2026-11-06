@@ -1356,6 +1356,38 @@ main {
 	opacity: 0.55;
 }
 
+.name-flourish {
+	display: block;
+	width: clamp(120px, 15vw, 200px);
+	height: 6px;
+	margin-top: 0.75rem;
+	background:
+		linear-gradient(90deg, var(--ink) 0%, rgba(var(--accent-rgb), 0) 100%) left center / calc(100% - 7px) 1px no-repeat,
+		radial-gradient(circle, var(--ink) 0 2px, transparent 2.2px) right center / 5px 5px no-repeat;
+	opacity: 0.5;
+}
+
+.about-info .name-flourish {
+	margin-top: 0.2rem;
+	margin-bottom: 0.9rem;
+}
+
+@keyframes flourish-draw {
+	from {
+		opacity: 0;
+		transform: scaleX(0.25);
+	}
+	to {
+		opacity: 0.5;
+		transform: scaleX(1);
+	}
+}
+
+.section.is-revealing .name-flourish {
+	transform-origin: left center;
+	animation: flourish-draw 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+}
+
 /* Everything pops in once the visitor has entered.
    The delays start after the intro has faded away, so the
    pop is actually visible instead of happening behind it. */
@@ -1374,7 +1406,12 @@ body.is-entered .about-info > *:nth-child(5) { animation-delay: 0.98s; }
 body.is-entered .about-info > *:nth-child(6) { animation-delay: 1.08s; }
 
 .nav-greeting {
-	display: inline-block;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-top: 0;
+	padding-left: 1rem;
+	border-left: 1px solid var(--line-strong);
 	font-family: var(--font-greeting);
 	font-size: clamp(1.45rem, 1.8vw, 1.85rem);
 	font-weight: 400;
@@ -1383,9 +1420,15 @@ body.is-entered .about-info > *:nth-child(6) { animation-delay: 1.08s; }
 	letter-spacing: 0;
 	color: var(--ink);
 	white-space: nowrap;
-	margin-top: 0.35rem;
 	transform: none;
 	transform-origin: left center;
+}
+
+.nav-greeting-icon {
+	font-size: 0.72em;
+	line-height: 1;
+	color: var(--ink-faint);
+	opacity: 0.72;
 }
 
 .nav-greeting #greeting-text {
@@ -2804,6 +2847,11 @@ body.is-home .deck-controls {
 
 	.about-tags {
 		text-align: left;
+	}
+
+	.about-info .name-flourish {
+		margin-left: auto;
+		margin-right: auto;
 	}
 
 	.education-cards {
@@ -4278,18 +4326,48 @@ body.is-section-changing .cursor-ring {
    ========================================================= */
 
 /* Two-line corner meta: JB + time / greeting, weekday / date */
-.nav-meta--time,
-.nav-meta--date {
-	flex-direction: column;
-	justify-content: center;
-	align-items: flex-start;
-	gap: 0.75rem;
-	line-height: 1.12;
+.nav-meta--time {
+	flex-direction: row;
+	align-items: center;
+	gap: 1rem;
 }
 
 .nav-meta--date {
+	flex-direction: column;
+	justify-content: center;
 	align-items: flex-end;
+	gap: 0.75rem;
+	line-height: 1.12;
+	position: relative;
 	text-align: right;
+}
+
+.nav-meta--date::before {
+	content: "";
+	position: absolute;
+	right: calc(100% + 0.9rem);
+	top: 50%;
+	width: clamp(34px, 4vw, 64px);
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--line-strong));
+}
+
+@media (max-width: 900px) {
+	.nav-meta--time {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.65rem;
+	}
+
+	.nav-greeting {
+		margin-top: 0.35rem;
+		padding-left: 0;
+		border-left: 0;
+	}
+
+	.nav-meta--date::before {
+		display: none;
+	}
 }
 
 .nav-id {
@@ -4900,6 +4978,11 @@ nav {
 
 	.home-identity {
 		margin-bottom: 0.9rem;
+	}
+
+	.home-identity .name-flourish {
+		margin-left: auto;
+		margin-right: auto;
 	}
 
 	.home-identity h1 {

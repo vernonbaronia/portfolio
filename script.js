@@ -687,6 +687,7 @@
 	   ===================================================== */
 	var greeting = document.getElementById('greeting');
 	var greetingText = document.getElementById('greeting-text');
+	var greetingIcon = document.getElementById('greeting-icon');
 
 	if (greeting && greetingText) {
 		var lastGreeting = '';
@@ -698,8 +699,18 @@
 			return 'a pleasant evening';
 		}
 
+		function greetingIconFor(hour) {
+			return (hour < 5 || hour >= 18) ? 'fa-moon' : 'fa-sun';
+		}
+
 		function paintGreeting(animate) {
-			var next = greetingFor(new Date().getHours());
+			var hour = new Date().getHours();
+			var next = greetingFor(hour);
+
+			if (greetingIcon) {
+				greetingIcon.className = 'fa-solid ' + greetingIconFor(hour) + ' nav-greeting-icon';
+			}
+
 			if (next === lastGreeting) return;
 			lastGreeting = next;
 
