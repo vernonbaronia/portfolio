@@ -3347,3 +3347,25 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	color: #ffffff;
 	border-color: #0a0a0a;
 }
+
+/* =========================================================
+   CAMERA-LENS (IRIS) TRANSITION
+   ========================================================= */
+.iris {
+	position: fixed;
+	inset: 0;
+	z-index: 250;
+	background: #000000;
+	clip-path: circle(0% at 50% 50%);
+	pointer-events: none;
+}
+
+.iris.is-playing {
+	animation: iris-close-open 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes iris-close-open {
+	0% { clip-path: circle(0% at 50% 50%); }
+	50% { clip-path: circle(150% at 50% 50%); }
+	100% { clip-path: circle(0% at 50% 50%); }
+}

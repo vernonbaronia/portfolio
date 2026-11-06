@@ -417,32 +417,28 @@
 			var y = typeof originY === 'number' ? originY : window.innerHeight / 2;
 
 			var reveal = function () {
-				/* Zoom the intro open from where the visitor clicked. */
-				introEl.style.transformOrigin = x + 'px ' + y + 'px';
-
-				var ripple = document.getElementById('intro-ripple');
-				if (ripple) {
-					ripple.style.left = x + 'px';
-					ripple.style.top = y + 'px';
-					ripple.classList.remove('is-burst');
-					void ripple.offsetWidth;
-					ripple.classList.add('is-burst');
+				/* Camera-lens (iris) transition: close to black, then open onto the homepage. */
+				var iris = document.getElementById('iris');
+				if (iris) {
+					iris.classList.remove('is-playing');
+					void iris.offsetWidth;
+					iris.classList.add('is-playing');
 				}
 
-				introEl.classList.add('is-leaving');
-				document.body.classList.remove('is-intro');
-				document.body.classList.add('is-entered');
-
-				document.dispatchEvent(new CustomEvent('jvb:entered'));
-
+				/* Swap intro → homepage at the midpoint (screen is fully black). */
 				window.setTimeout(function () {
 					introEl.hidden = true;
+					document.body.classList.remove('is-intro');
+					document.body.classList.add('is-entered');
+					document.dispatchEvent(new CustomEvent('jvb:entered'));
+				}, 450);
 
+				window.setTimeout(function () {
 					if (fromKeyboard) {
 						var firstTab = document.getElementById('nav-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 760);
+				}, 950);
 			};
 
 			/* If a font is still in flight, let it land first (with
