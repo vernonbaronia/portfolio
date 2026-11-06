@@ -3563,3 +3563,171 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	50% { r: 0px; }
 	100% { r: 75px; }
 }
+
+/* =========================================================
+   HOME — opening-page layout
+   Corner masthead, large portrait left, section menu right.
+   ========================================================= */
+
+/* Two-line corner meta: JB + time / greeting, weekday / date */
+.nav-meta--time,
+.nav-meta--date {
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 0.12rem;
+	line-height: 1.12;
+}
+
+.nav-meta--date {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.nav-id {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.nav-weekday {
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	color: var(--ink);
+}
+
+nav {
+	min-height: var(--nav-h);
+}
+
+/* The section list moves beside the portrait on the Home page */
+nav ul {
+	transition: opacity 0.3s ease;
+}
+
+body.is-home nav ul {
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.home-stage {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(2.5rem, 6vw, 6rem);
+	width: min(1400px, 100%);
+	padding: clamp(1.25rem, 4vh, 2.5rem) clamp(1.25rem, 4vw, 2.5rem);
+	text-align: left;
+}
+
+.home-portrait {
+	flex: 0 0 auto;
+	width: min(clamp(240px, 30vw, 460px), 56vh);
+	aspect-ratio: 1;
+	margin: 0;
+	overflow: hidden;
+	border: 2px solid var(--ink);
+	border-radius: 22px;
+	background: var(--surface);
+	box-shadow: var(--shadow-lift);
+}
+
+.home-portrait img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.home-menu {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	width: 100%;
+	max-width: 560px;
+	min-width: 0;
+}
+
+.home-menu-item {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 1rem;
+	width: 100%;
+	padding: clamp(0.8rem, 1.9vh, 1.15rem) 0;
+	border: 0;
+	border-bottom: 1px solid var(--line);
+	background: none;
+	color: var(--ink);
+	font-family: var(--font-display);
+	font-size: clamp(1.35rem, 2.4vw, 2.1rem);
+	font-weight: 600;
+	line-height: 1.15;
+	letter-spacing: -0.02em;
+	text-align: left;
+	cursor: pointer;
+	transition: color 0.25s ease, padding-left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-menu-item:first-child {
+	border-top: 1px solid var(--line);
+}
+
+.home-menu-item:hover,
+.home-menu-item:focus-visible {
+	color: var(--accent);
+	padding-left: 0.6rem;
+	outline: none;
+}
+
+/* Phones: portrait above the menu */
+@media (max-width: 640px) {
+	.home-stage {
+		flex-direction: column;
+		gap: 1.5rem;
+		width: 100%;
+		padding: 1.25rem 1.25rem 3rem;
+		text-align: center;
+	}
+
+	.home-portrait {
+		width: min(72vw, 300px, 40vh);
+		border-radius: 18px;
+	}
+
+	.home-menu {
+		width: min(100%, 400px);
+		max-width: 400px;
+	}
+
+	.home-menu-item {
+		font-size: clamp(1.1rem, 5vw, 1.45rem);
+		padding: 0.65rem 0;
+	}
+}
+
+/* Short screens: keep the portrait/menu side by side */
+@media (max-height: 520px) {
+	.home-stage {
+		flex-direction: row;
+		gap: 1.5rem;
+		padding: 0.75rem 1rem;
+	}
+
+	.home-portrait {
+		width: min(34vw, 30vh);
+		border-radius: 12px;
+	}
+
+	.home-menu {
+		width: auto;
+		max-width: 420px;
+	}
+
+	.home-menu-item {
+		padding: 0.35rem 0;
+		font-size: clamp(0.85rem, 2.6vh, 1.05rem);
+	}
+}

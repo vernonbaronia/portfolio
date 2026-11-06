@@ -102,9 +102,11 @@
 
 	<nav>
 		<div class="nav-meta nav-meta--time">
-			<button class="nav-logo" id="nav-logo" type="button" aria-label="Go to Home" title="Home">JB</button>
-			<span class="pulse-dot nav-pulse" aria-hidden="true"></span>
-			<time id="live-time" datetime="">--:--</time>
+			<div class="nav-id">
+				<button class="nav-logo" id="nav-logo" type="button" aria-label="Go to Home" title="Home">JB</button>
+				<span class="pulse-dot nav-pulse" aria-hidden="true"></span>
+				<time id="live-time" datetime="">--:--</time>
+			</div>
 			<span class="nav-greeting" id="greeting" aria-live="polite"><span id="greeting-text">a pleasant evening</span></span>
 		</div>
 
@@ -127,6 +129,7 @@
 		</ul>
 
 		<div class="nav-meta nav-meta--date">
+			<span class="nav-weekday" id="live-weekday">Friday</span>
 			<time id="live-date" datetime="">--</time>
 		</div>
 	</nav>
@@ -134,68 +137,26 @@
 	<main>
 		<!-- ===== HOME ===== -->
 		<section id="home" class="section active" role="tabpanel" aria-label="Home">
-			<div class="home-wrap">
-				<div class="home-hero">
-					<div class="home-avatar">
-						<div class="home-orbit-badge" aria-hidden="true">
-							<svg viewBox="0 0 120 120" focusable="false">
-								<defs>
-									<path id="home-orbit-path" d="M60,60 m-56,0 a56,56 0 1,1 112,0 a56,56 0 1,1 -112,0"></path>
-								</defs>
-								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="12%">code</textPath></text>
-								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="45%">build</textPath></text>
-								<text text-anchor="middle"><textPath href="#home-orbit-path" startOffset="78%">learn</textPath></text>
-							</svg>
-						</div>
-						<span class="home-ring" aria-hidden="true"></span>
-						<span class="home-dot" aria-hidden="true"></span>
-						<img src="profile.png" alt="Jade Vernon A. Baronia">
-					</div>
-					<p class="home-kicker">welcome to my corner</p>
-					<h1 class="home-name">Jade Vernon A. Baronia</h1>
-					<p class="home-tagline" id="home-tagline">building things for the future</p>
-				</div>
+			<div class="home-stage">
+				<figure class="home-portrait">
+					<img src="profile.png" alt="Jade Vernon A. Baronia">
+				</figure>
 
-				<div class="home-directory" role="navigation" aria-label="Portfolio sections">
-					<button class="dir-card" type="button" data-section="about" data-index="01">
-						<span class="dir-shine" aria-hidden="true"></span>
-						<span class="dir-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
-						<span class="dir-body">
-							<span class="dir-label">About Me</span>
-							<span class="dir-desc">who i am</span>
-						</span>
+				<div class="home-menu" role="navigation" aria-label="Portfolio sections">
+					<button class="home-menu-item" id="home-menu-about" type="button" data-section="about">
+						<span class="home-menu-label">About Me</span>
 					</button>
-					<button class="dir-card" type="button" data-section="education" data-index="02">
-						<span class="dir-shine" aria-hidden="true"></span>
-						<span class="dir-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></span>
-						<span class="dir-body">
-							<span class="dir-label">Educational Attainment</span>
-							<span class="dir-desc">my schooling</span>
-						</span>
+					<button class="home-menu-item" type="button" data-section="education">
+						<span class="home-menu-label">Educational Attainments</span>
 					</button>
-					<button class="dir-card" type="button" data-section="achievements" data-index="03">
-						<span class="dir-shine" aria-hidden="true"></span>
-						<span class="dir-icon"><i class="fa-solid fa-trophy" aria-hidden="true"></i></span>
-						<span class="dir-body">
-							<span class="dir-label">Achievements</span>
-							<span class="dir-desc">milestones &amp; wins</span>
-						</span>
+					<button class="home-menu-item" type="button" data-section="achievements">
+						<span class="home-menu-label">Achievements</span>
 					</button>
-					<button class="dir-card" type="button" data-section="family" data-index="04">
-						<span class="dir-shine" aria-hidden="true"></span>
-						<span class="dir-icon"><i class="fa-solid fa-people-group" aria-hidden="true"></i></span>
-						<span class="dir-body">
-							<span class="dir-label">Family</span>
-							<span class="dir-desc">my people</span>
-						</span>
+					<button class="home-menu-item" type="button" data-section="family">
+						<span class="home-menu-label">Family</span>
 					</button>
-					<button class="dir-card" type="button" data-section="batchmates" data-index="05">
-						<span class="dir-shine" aria-hidden="true"></span>
-						<span class="dir-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></span>
-						<span class="dir-body">
-							<span class="dir-label">Batchmates</span>
-							<span class="dir-desc">my classmates</span>
-						</span>
+					<button class="home-menu-item" type="button" data-section="batchmates">
+						<span class="home-menu-label">Batchmates</span>
 					</button>
 				</div>
 			</div>

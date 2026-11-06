@@ -435,7 +435,8 @@
 
 				window.setTimeout(function () {
 					if (fromKeyboard) {
-						var firstTab = document.getElementById('nav-about');
+						var firstTab = document.getElementById('home-menu-about') ||
+							document.getElementById('nav-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
 				}, 1050);
@@ -808,15 +809,18 @@
 	   ===================================================== */
 	var liveTime = document.getElementById('live-time');
 	var liveDate = document.getElementById('live-date');
+	var liveWeekday = document.getElementById('live-weekday');
 
-	if (liveTime || liveDate) {
+	if (liveTime || liveDate || liveWeekday) {
 		var timeFormat = new Intl.DateTimeFormat('en-US', {
 			hour: 'numeric',
 			minute: '2-digit'
 		});
+		var weekdayFormat = new Intl.DateTimeFormat('en-US', {
+			weekday: 'long'
+		});
 		var dateFormatFull = new Intl.DateTimeFormat('en-US', {
-			weekday: 'short',
-			month: 'short',
+			month: 'long',
 			day: 'numeric',
 			year: 'numeric'
 		});
@@ -829,6 +833,7 @@
 
 		var lastTimeText = '';
 		var lastTimeAttr = '';
+		var lastWeekdayText = '';
 		var lastDateText = '';
 		var lastDateAttr = '';
 
@@ -861,6 +866,14 @@
 					minute: '2-digit'
 				});
 				if (liveTime.title !== fullTime) liveTime.title = fullTime;
+			}
+
+			if (liveWeekday) {
+				var weekdayText = weekdayFormat.format(now);
+				if (weekdayText !== lastWeekdayText) {
+					lastWeekdayText = weekdayText;
+					liveWeekday.textContent = weekdayText;
+				}
 			}
 
 			if (liveDate) {
@@ -1046,6 +1059,7 @@
 		currentIndex = Math.max(0, Math.min(index, sections.length - 1));
 
 		var currentId = sections[currentIndex].id;
+		document.body.classList.toggle('is-home', currentId === 'home');
 		navItems.forEach(function (item) {
 			var isActive = item.getAttribute('aria-controls') === currentId;
 			item.classList.toggle('active', isActive);
@@ -1099,11 +1113,11 @@
 		});
 	});
 
-	/* Home directory cards jump to their section */
-	var dirCards = Array.prototype.slice.call(document.querySelectorAll('.dir-card'));
-	dirCards.forEach(function (card) {
-		card.addEventListener('click', function () {
-			var idx = sectionIndexForId(card.getAttribute('data-section'));
+	/* Home menu links jump to their section */
+	var homeMenuItems = Array.prototype.slice.call(document.querySelectorAll('.home-menu-item'));
+	homeMenuItems.forEach(function (item) {
+		item.addEventListener('click', function () {
+			var idx = sectionIndexForId(item.getAttribute('data-section'));
 			if (idx !== -1) updateActiveSection(idx);
 		});
 	});
@@ -1114,27 +1128,6 @@
 		navLogo.addEventListener('click', function () {
 			updateActiveSection(0);
 		});
-	}
-
-	/* Home tagline — cycles through short phrases */
-	var homeTagline = document.getElementById('home-tagline');
-	if (homeTagline && !prefersReduced) {
-		var taglines = [
-			'building things for the future',
-			'exploring low-level systems',
-			'always learning, always curious',
-			'from hardware to the cloud'
-		];
-		var taglineIndex = 0;
-
-		window.setInterval(function () {
-			homeTagline.classList.add('is-swapping');
-			window.setTimeout(function () {
-				taglineIndex = (taglineIndex + 1) % taglines.length;
-				homeTagline.textContent = taglines[taglineIndex];
-				homeTagline.classList.remove('is-swapping');
-			}, 260);
-		}, 3600);
 	}
 
 	if (prevBtn) {
