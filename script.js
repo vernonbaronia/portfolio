@@ -946,6 +946,7 @@
 	var main = document.querySelector('main');
 	var navHome = document.getElementById('nav-home');
 	var irisEl = document.getElementById('iris');
+	var categoryButtons = Array.prototype.slice.call(document.querySelectorAll('.category-dock-btn'));
 	var currentIndex = 0;
 	var sectionTransitioning = false;
 	var revealTimer = null;
@@ -1031,6 +1032,16 @@
 			nextBtn.setAttribute('aria-label', nextName ? 'Next: ' + nextName : 'Next section');
 		}
 
+		categoryButtons.forEach(function (button) {
+			var isActive = sectionIndexForId(button.getAttribute('data-section')) === currentIndex;
+			button.classList.toggle('active', isActive);
+			if (isActive) {
+				button.setAttribute('aria-current', 'page');
+			} else {
+				button.removeAttribute('aria-current');
+			}
+		});
+
 		revealSection(sections[currentIndex]);
 	}
 
@@ -1074,6 +1085,14 @@
 	homeMenuItems.forEach(function (item) {
 		item.addEventListener('click', function () {
 			var idx = sectionIndexForId(item.getAttribute('data-section'));
+			if (idx !== -1) goToSection(idx);
+		});
+	});
+
+	/* Category dock icons jump to their section */
+	categoryButtons.forEach(function (button) {
+		button.addEventListener('click', function () {
+			var idx = sectionIndexForId(button.getAttribute('data-section'));
 			if (idx !== -1) goToSection(idx);
 		});
 	});
