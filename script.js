@@ -469,6 +469,105 @@
 			enterSite(false, event.clientX, event.clientY);
 		});
 
+		/* The portrait follows the pointer — a slight tilt, a soft
+		   travelling sheen, and a few pixels of counter-parallax in
+		   the type. Desktop pointers only, and never with reduced motion. */
+		var introPhoto = document.querySelector('.intro-photo');
+		var introCopy = document.querySelector('.intro-copy');
+
+		if (introPhoto && introCopy && finePointer && !prefersReduced) {
+			var glare = introPhoto.querySelector('.intro-photo-glare');
+			var targetX = 0;
+			var targetY = 0;
+			var currentX = 0;
+			var currentY = 0;
+			var tiltFrame = 0;
+			var tiltReady = false;
+
+			var applyTilt = function () {
+				tiltFrame = 0;
+				currentX += (targetX - currentX) * 0.14;
+				currentY += (targetY - currentY) * 0.14;
+
+				var unsettled = Math.abs(targetX - currentX) > 0.0004 ||
+					Math.abs(targetY - currentY) > 0.0004;
+				if (!unsettled) {
+					currentX = targetX;
+					currentY = targetY;
+					introPhoto.style.willChange = '';
+					introCopy.style.willChange = '';
+					introPhoto.style.boxShadow = '';
+				}
+
+				introPhoto.style.transform = 'perspective(1000px) rotateX(' +
+					(-currentY * 3.2).toFixed(2) + 'deg) rotateY(' +
+					(currentX * 4).toFixed(2) + 'deg)';
+				if (unsettled) {
+					introPhoto.style.boxShadow =
+						(-currentX * 14).toFixed(1) + 'px ' +
+						(22 - currentY * 12).toFixed(1) + 'px 60px rgba(0, 0, 0, 0.26)';
+				}
+				introCopy.style.transform = 'translate3d(' +
+					(-currentX * 6).toFixed(2) + 'px,' +
+					(-currentY * 4).toFixed(2) + 'px,0)';
+
+				if (unsettled) tiltFrame = window.requestAnimationFrame(applyTilt);
+			};
+
+			var requestTilt = function () {
+				if (!tiltFrame) tiltFrame = window.requestAnimationFrame(applyTilt);
+			};
+
+			introEl.addEventListener('pointermove', function (event) {
+				if (!tiltReady || entered) return;
+
+				var nx = event.clientX / window.innerWidth - 0.5;
+				var ny = event.clientY / window.innerHeight - 0.5;
+				targetX = Math.max(-1, Math.min(1, nx * 2));
+				targetY = Math.max(-1, Math.min(1, ny * 2));
+
+				/* Light direction, kept inside the portrait so the
+				   sheen always reads no matter where the pointer is. */
+				glare.style.setProperty('--gx', (50 + targetX * 42).toFixed(1) + '%');
+				glare.style.setProperty('--gy', (50 + targetY * 42).toFixed(1) + '%');
+
+				if (!introPhoto.classList.contains('is-live')) {
+					introPhoto.classList.add('is-live');
+					introPhoto.style.willChange = 'transform';
+					introCopy.style.willChange = 'transform';
+				}
+				requestTilt();
+			});
+
+			introEl.addEventListener('pointerleave', function () {
+				if (entered) return;
+				targetX = 0;
+				targetY = 0;
+				introPhoto.classList.remove('is-live');
+				requestTilt();
+			});
+
+			var enableTilt = function () {
+				tiltReady = true;
+			};
+			introPhoto.addEventListener('animationend', function (event) {
+				if (event.animationName === 'intro-photo-left') enableTilt();
+			});
+			window.setTimeout(enableTilt, 1150);
+
+			document.addEventListener('jvb:entered', function () {
+				if (tiltFrame) {
+					window.cancelAnimationFrame(tiltFrame);
+					tiltFrame = 0;
+				}
+				introPhoto.style.transform = '';
+				introCopy.style.transform = '';
+				introPhoto.style.boxShadow = '';
+				introPhoto.style.willChange = '';
+				introCopy.style.willChange = '';
+			}, { once: true });
+		}
+
 		/* Any key press on the intro page enters, not just a click */
 		document.addEventListener('keydown', function (event) {
 			if (entered) return;

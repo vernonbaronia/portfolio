@@ -3311,6 +3311,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* large square photo, slides in from the left */
 .intro-photo {
+	position: relative;
 	width: min(clamp(210px, 29vw, 440px), 52vh);
 	height: min(clamp(210px, 29vw, 440px), 52vh);
 	flex: 0 0 auto;
@@ -3318,7 +3319,38 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	overflow: hidden;
 	border: 2px solid #0a0a0a;
 	box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
-	animation: intro-photo-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+	animation: intro-photo-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+/* a soft light that follows the pointer across the portrait */
+.intro-photo-glare {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	border-radius: inherit;
+	background: radial-gradient(
+		circle at var(--gx, 50%) var(--gy, 45%),
+		rgba(255, 255, 255, 0.55) 0%,
+		rgba(255, 255, 255, 0.16) 28%,
+		rgba(255, 255, 255, 0) 58%
+	);
+	mix-blend-mode: soft-light;
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+.intro-photo.is-live .intro-photo-glare {
+	opacity: 1;
+}
+
+/* faint inner rim keeps the tilted edge feeling printed, not digital */
+.intro-photo::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	border-radius: inherit;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .intro-photo img {
