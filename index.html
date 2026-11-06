@@ -6,7 +6,7 @@
 	<title>Jade Vernon A. Baronia | Portfolio</title>
 	<meta name="description" content="Portfolio of Jade Vernon A. Baronia, a 1st Year Computer Science Student.">
 	<meta name="color-scheme" content="light dark">
-	<meta name="theme-color" content="#2563eb" id="meta-theme">
+	<meta name="theme-color" content="#111113" id="meta-theme">
 	<link rel="icon" href="./favicon.svg" type="image/svg+xml">
 
 	<!-- Set the theme before first paint so there is no flash -->
@@ -34,7 +34,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<link rel="stylesheet" href="style.css">
 </head>
-<body class="is-intro">
+<body class="is-intro is-home">
 
 	<noscript>
 		<style>
@@ -63,6 +63,11 @@
 				</h2>
 				<p class="intro-portfolio">Portfolio</p>
 			</div>
+		</div>
+		<div class="intro-controls" role="group" aria-label="Appearance">
+			<button class="orb-btn theme-toggle" id="intro-theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
+				<i class="fa-solid fa-moon" aria-hidden="true"></i>
+			</button>
 		</div>
 		<div class="intro-progress" aria-hidden="true"><span class="intro-progress-fill"></span></div>
 	</div>
@@ -108,8 +113,6 @@
 		<div class="grain"></div>
 	</div>
 
-	<!-- ===== Cursor spotlight ===== -->
-	<div class="spotlight" id="spotlight" aria-hidden="true"></div>
 
 	<!-- ===== Custom cursor ===== -->
 	<div class="cursor-ring is-hidden" id="cursor-ring" aria-hidden="true"></div>
@@ -135,11 +138,14 @@
 
 	<main>
 		<!-- ===== HOME ===== -->
-		<section id="home" class="section active" role="region" aria-label="Home">
+		<section id="home" class="section active" role="region" aria-label="Home" data-title="Home">
+			<div class="home-watermark" aria-hidden="true"><span>JVB</span></div>
 			<div class="home-stage">
-				<figure class="home-portrait">
-					<img src="profile.png" alt="Jade Vernon A. Baronia">
-				</figure>
+				<div class="home-portrait-wrap">
+					<figure class="home-portrait">
+						<img src="profile.png" alt="Jade Vernon A. Baronia">
+					</figure>
+				</div>
 
 				<div class="home-right">
 					<div class="home-identity">
@@ -186,7 +192,7 @@
 		</section>
 
 		<!-- ===== ABOUT ME ===== -->
-		<section id="about" class="section" role="region" aria-label="About Me" aria-hidden="true">
+		<section id="about" class="section" role="region" aria-label="About Me" aria-hidden="true" data-title="About Me">
 			<div class="about-container">
 				<div class="about-visual">
 					<div class="orbit-badge" aria-hidden="true">
@@ -206,39 +212,90 @@
 				</div>
 
 				<div class="about-info">
+					<p class="about-eyebrow">Hi, I am</p>
 					<h1>Jade Vernon A. Baronia</h1>
-					<p class="subheader">
-						<span class="pulse-dot" aria-hidden="true"></span>
-						<span class="role-line" aria-hidden="true">
-							<span class="role-prefix">Aspiring</span>
-							<span class="role-text"><span class="typed-role" id="typed-role">Software Engineer</span><span class="type-caret"></span></span>
-						</span>
-						<span class="sr-only">Aspiring Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect.</span>
-					</p>
-					<div class="bio">
-						<p>Computer Science - University of the Cordilleras<br>Currently exploring career pathways such as Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect. Endlessly amazed by how rapidly technology evolves and continues to transform our world.</p>
-						<p>I am driven by a deep curiosity for low-level systems and understanding how hardware and software work together under the hood. Inspired by this continuous evolution, I am dedicated to working hard and growing into a computer scientist who actively builds high-impact technology for the future.</p>
-					</div>
-					<div class="about-links">
-						<a href="#" class="icon-btn" data-label="Mail" title="Mail" aria-label="Mail">
-							<i class="fa-solid fa-envelope"></i>
-						</a>
-						<a href="#" class="icon-btn" data-label="GitHub" title="GitHub" aria-label="GitHub">
-							<i class="fa-brands fa-github"></i>
-						</a>
-						<a href="#" class="icon-btn" data-label="Facebook" title="Facebook" aria-label="Facebook">
-							<i class="fa-brands fa-facebook"></i>
-						</a>
-						<a href="#" class="icon-btn" data-label="Instagram" title="Instagram" aria-label="Instagram">
-							<i class="fa-brands fa-instagram"></i>
-						</a>
+					<div class="about-body">
+						<div class="about-main">
+							<div class="bio">
+								<p>Driven by a deep curiosity for low-level systems and hardware-software integration, I am actively exploring pathways across software engineering, embedded systems, cloud infrastructure, and systems architecture. Inspired by technology’s rapid evolution, I am dedicated to growing into a computer scientist who builds high-impact solutions for the future.</p>
+							</div>
+
+							<div class="about-tags">
+								<div class="about-tag-row">
+									<span class="about-tag-label">Hobbies</span>
+									<ul class="about-chips">
+										<li class="about-chip">Exercising</li>
+										<li class="about-chip">Learning</li>
+										<li class="about-chip">Reading</li>
+									</ul>
+								</div>
+								<div class="about-tag-row">
+									<span class="about-tag-label">Skills</span>
+									<ul class="about-chips">
+										<li class="about-chip">Coding</li>
+										<li class="about-chip">Solving</li>
+										<li class="about-chip">Managing</li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="about-links">
+								<a href="mailto:baroniajade27@gmail.com" class="icon-btn" data-label="Gmail" title="baroniajade27@gmail.com" aria-label="Email baroniajade27@gmail.com">
+									<i class="fa-solid fa-envelope"></i>
+								</a>
+								<a href="https://github.com/vernonbaronia" class="icon-btn" data-label="GitHub" title="GitHub" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+									<i class="fa-brands fa-github"></i>
+								</a>
+								<a href="https://www.facebook.com/vernon.baronia" class="icon-btn" data-label="Facebook" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+									<i class="fa-brands fa-facebook"></i>
+								</a>
+								<a href="https://www.instagram.com/vrnon27/" class="icon-btn" data-label="Instagram" title="Instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+									<i class="fa-brands fa-instagram"></i>
+								</a>
+							</div>
+						</div>
+
+						<dl class="about-facts" aria-label="Personal details">
+							<div class="fact">
+								<dt>Birthday</dt>
+								<dd>November 27, 2007</dd>
+							</div>
+							<div class="fact">
+								<dt>Age</dt>
+								<dd>18</dd>
+							</div>
+							<div class="fact">
+								<dt>Year level</dt>
+								<dd>1st Year</dd>
+							</div>
+							<div class="fact">
+								<dt>Program</dt>
+								<dd>Computer Science</dd>
+							</div>
+							<div class="fact fact--wide">
+								<dt>College</dt>
+								<dd>University of the Cordilleras</dd>
+							</div>
+							<div class="fact fact--wide">
+								<dt>Current location</dt>
+								<dd>City Camp Alley, Baguio, Benguet</dd>
+							</div>
+							<div class="fact fact--wide">
+								<dt>Permanent location</dt>
+								<dd>Concordia, Bolinao, Pangasinan</dd>
+							</div>
+							<div class="fact fact--wide">
+								<dt>Phone</dt>
+								<dd><a href="tel:+639283786725">0928 378 6725</a></dd>
+							</div>
+						</dl>
 					</div>
 				</div>
 			</div>
 		</section>
 
 		<!-- ===== EDUCATIONAL ATTAINMENT (content coming soon) ===== -->
-		<section id="education" class="section" role="region" aria-label="Educational Attainments" aria-hidden="true">
+		<section id="education" class="section" role="region" aria-label="Educational Attainments" aria-hidden="true" data-title="Educational Attainments">
 			<div class="coming-soon" data-index="02">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
@@ -258,7 +315,7 @@
 		</section>
 
 		<!-- ===== ACHIEVEMENTS (content coming soon) ===== -->
-		<section id="achievements" class="section" role="region" aria-label="Achievements" aria-hidden="true">
+		<section id="achievements" class="section" role="region" aria-label="Achievements" aria-hidden="true" data-title="Achievements">
 			<div class="coming-soon" data-index="03">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-trophy" aria-hidden="true"></i>
@@ -278,7 +335,7 @@
 		</section>
 
 		<!-- ===== MY FAMILY (content coming soon) ===== -->
-		<section id="family" class="section" role="region" aria-label="Family" aria-hidden="true">
+		<section id="family" class="section" role="region" aria-label="Family" aria-hidden="true" data-title="Family">
 			<div class="coming-soon" data-index="04">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-people-group" aria-hidden="true"></i>
@@ -298,7 +355,7 @@
 		</section>
 
 		<!-- ===== MY BATCHMATES (content coming soon) ===== -->
-		<section id="batchmates" class="section" role="region" aria-label="Batchmates" aria-hidden="true">
+		<section id="batchmates" class="section" role="region" aria-label="Batchmates" aria-hidden="true" data-title="Batchmates">
 			<div class="coming-soon" data-index="05">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-users" aria-hidden="true"></i>
@@ -321,13 +378,13 @@
 	<!-- ===== Deck controls ===== -->
 	<div class="deck-controls" role="group" aria-label="Section navigation">
 		<span class="deck-hint" aria-hidden="true"><kbd>←</kbd><kbd>→</kbd> to explore</span>
-		<button class="nav-btn prev-btn disabled" id="prev-btn" type="button" aria-label="Previous section" title="Previous (Left arrow)" disabled>
+		<button class="nav-btn prev-btn disabled" id="prev-btn" type="button" aria-label="Previous section" disabled>
 			<i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
 		</button>
 		<div class="deck-counter" aria-hidden="true">
-			<span id="current-num">01</span><span class="sep">/</span><span>06</span>
+			<span id="current-num">01</span><span class="sep">/</span><span>05</span>
 		</div>
-		<button class="nav-btn next-btn" id="next-btn" type="button" aria-label="Next section" title="Next (Right arrow)">
+		<button class="nav-btn next-btn" id="next-btn" type="button" aria-label="Next section">
 			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 		</button>
 	</div>

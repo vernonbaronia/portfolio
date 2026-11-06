@@ -51,9 +51,9 @@
 			var dark = current() === 'dark';
 			var value;
 			if (dark) {
-				value = getComputedStyle(docEl).getPropertyValue('--body-bg').trim() || '#0a1424';
+				value = getComputedStyle(docEl).getPropertyValue('--body-bg').trim() || '#08080a';
 			} else {
-				value = getComputedStyle(docEl).getPropertyValue('--accent').trim() || '#2563eb';
+				value = getComputedStyle(docEl).getPropertyValue('--accent').trim() || '#1a1a1c';
 			}
 			meta.setAttribute('content', value);
 		}
@@ -295,13 +295,45 @@
 			});
 		};
 
+		var AUTO_ENTER_MS = 3000;
 		var autoEnterTimer = null;
+		var autoEnterRemaining = AUTO_ENTER_MS;
+		var autoEnterStarted = 0;
+
+		var stopAutoEnter = function () {
+			if (!autoEnterTimer) return;
+			window.clearTimeout(autoEnterTimer);
+			autoEnterTimer = null;
+			autoEnterRemaining = Math.max(0, autoEnterRemaining - (Date.now() - autoEnterStarted));
+		};
+
+		var startAutoEnter = function () {
+			if (entered || autoEnterTimer || autoEnterRemaining <= 0) return;
+			autoEnterStarted = Date.now();
+			autoEnterTimer = window.setTimeout(function () {
+				autoEnterTimer = null;
+				if (!entered) enterSite(false);
+			}, autoEnterRemaining);
+		};
+
+		var pauseAutoEnter = function () {
+			if (entered || !autoEnterTimer) return;
+			stopAutoEnter();
+			introEl.classList.add('is-timer-paused');
+		};
+
+		var resumeAutoEnter = function () {
+			if (entered) return;
+			introEl.classList.remove('is-timer-paused');
+			startAutoEnter();
+		};
 
 		var enterSite = function (fromKeyboard, originX, originY) {
 			if (entered) return;
 			entered = true;
 
-			if (autoEnterTimer) window.clearTimeout(autoEnterTimer);
+			stopAutoEnter();
+			introEl.classList.remove('is-timer-paused');
 
 			Sound.click();
 
@@ -384,10 +416,17 @@
 			}
 		});
 
+		/* Pause the countdown while the visitor is using the intro controls */
+		var introControls = introEl.querySelector('.intro-controls');
+		if (introControls) {
+			introControls.addEventListener('pointerenter', pauseAutoEnter);
+			introControls.addEventListener('pointerleave', resumeAutoEnter);
+			introControls.addEventListener('focusin', pauseAutoEnter);
+			introControls.addEventListener('focusout', resumeAutoEnter);
+		}
+
 		/* Enter automatically after a short delay */
-		autoEnterTimer = window.setTimeout(function () {
-			if (!entered) enterSite(false);
-		}, 4000);
+		startAutoEnter();
 	}
 
 	/* One delegated listener for every clickable thing */
@@ -495,33 +534,6 @@
 			ringY += (mouseY - ringY) * ease;
 			ring.style.transform = 'translate3d(' + ringX.toFixed(2) + 'px,' + ringY.toFixed(2) + 'px,0)';
 			window.requestAnimationFrame(trail);
-		})();
-	}
-
-	/* =====================================================
-	   Cursor spotlight — a soft light that follows the pointer
-	   ===================================================== */
-	var spotlight = document.getElementById('spotlight');
-
-	if (spotlight && finePointer) {
-		docEl.classList.add('has-spotlight');
-
-		var spotTargetX = window.innerWidth / 2;
-		var spotTargetY = window.innerHeight / 2;
-		var spotX = spotTargetX;
-		var spotY = spotTargetY;
-
-		window.addEventListener('pointermove', function (event) {
-			spotTargetX = event.clientX;
-			spotTargetY = event.clientY;
-		}, { passive: true });
-
-		(function spotLoop() {
-			var ease = prefersReduced ? 1 : 0.12;
-			spotX += (spotTargetX - spotX) * ease;
-			spotY += (spotTargetY - spotY) * ease;
-			spotlight.style.transform = 'translate3d(' + spotX.toFixed(1) + 'px,' + spotY.toFixed(1) + 'px,0)';
-			window.requestAnimationFrame(spotLoop);
 		})();
 	}
 
@@ -640,11 +652,13 @@
 	   ===================================================== */
 	if (finePointer && !prefersReduced) {
 		var magnets = Array.prototype.slice.call(
-			document.querySelectorAll('.icon-btn, .nav-btn, .orb-btn, .swatch')
+			document.querySelectorAll('.nav-home, .icon-btn, .nav-btn, .orb-btn, .swatch')
 		);
 
 		magnets.forEach(function (element) {
-			var strength = element.classList.contains('icon-btn') ? 7 : 4;
+			var strength = element.classList.contains('icon-btn')
+				? 7
+				: (element.classList.contains('nav-home') ? 6 : 4);
 			var rect = null;
 
 			element.addEventListener('pointerenter', function () {
@@ -923,6 +937,7 @@
 	var irisEl = document.getElementById('iris');
 	var currentIndex = 0;
 	var sectionTransitioning = false;
+	var revealTimer = null;
 
 	function pad(number) {
 		return number < 10 ? '0' + number : String(number);
@@ -933,6 +948,31 @@
 			if (sections[i].id === id) return i;
 		}
 		return -1;
+	}
+
+	function sectionTitle(index) {
+		var section = sections[index];
+		if (!section) return '';
+		return section.getAttribute('data-title') || section.getAttribute('aria-label') || '';
+	}
+
+	/* Replay the entrance choreography for the section coming into view. */
+	function revealSection(section) {
+		if (!section) return;
+
+		sections.forEach(function (item) {
+			item.classList.remove('is-revealing');
+		});
+
+		if (revealTimer) window.clearTimeout(revealTimer);
+
+		void section.offsetWidth;
+		section.classList.add('is-revealing');
+
+		revealTimer = window.setTimeout(function () {
+			section.classList.remove('is-revealing');
+			revealTimer = null;
+		}, 2200);
 	}
 
 	function updateActiveSection(index) {
@@ -954,24 +994,32 @@
 		});
 
 		if (counter) {
-			counter.textContent = pad(currentIndex + 1);
+			counter.textContent = pad(currentIndex);
 			counter.classList.remove('pop');
 			void counter.offsetWidth;
 			counter.classList.add('pop');
 		}
 
-		var atStart = currentIndex === 0;
-		var atEnd = currentIndex === sections.length - 1;
+		var atStart = currentIndex <= 1;
+		var prevName = atStart ? '' : sectionTitle(currentIndex - 1);
+		var nextIndex = currentIndex >= sections.length - 1 ? 1 : currentIndex + 1;
+		var nextName = sectionTitle(nextIndex);
 
 		if (prevBtn) {
 			prevBtn.classList.toggle('disabled', atStart);
 			prevBtn.disabled = atStart;
+			prevBtn.setAttribute('data-label', prevName ? 'Previous — ' + prevName : '');
+			prevBtn.setAttribute('aria-label', prevName ? 'Previous: ' + prevName : 'Previous section');
 		}
 
 		if (nextBtn) {
-			nextBtn.classList.toggle('disabled', atEnd);
-			nextBtn.disabled = atEnd;
+			nextBtn.classList.remove('disabled');
+			nextBtn.disabled = false;
+			nextBtn.setAttribute('data-label', nextName ? 'Next — ' + nextName : '');
+			nextBtn.setAttribute('aria-label', nextName ? 'Next: ' + nextName : 'Next section');
 		}
+
+		revealSection(sections[currentIndex]);
 	}
 
 	/* Section changes use the circular camera iris. The section is
@@ -990,6 +1038,9 @@
 		sectionTransitioning = true;
 		document.body.classList.add('is-section-changing');
 
+		var leavingSection = sections[currentIndex];
+		if (leavingSection) leavingSection.classList.add('is-leaving');
+
 		irisEl.classList.remove('is-playing', 'is-swirl');
 		void irisEl.offsetWidth;
 		irisEl.classList.add('is-playing');
@@ -999,6 +1050,7 @@
 		}, 500);
 
 		window.setTimeout(function () {
+			if (leavingSection) leavingSection.classList.remove('is-leaving');
 			irisEl.classList.remove('is-playing');
 			document.body.classList.remove('is-section-changing');
 			sectionTransitioning = false;
@@ -1027,6 +1079,38 @@
 		navHome.addEventListener('click', function () {
 			goToSection(0);
 		});
+
+		/* Chrome ripple on press */
+		navHome.addEventListener('pointerdown', function (event) {
+			if (prefersReduced) return;
+
+			var rect = navHome.getBoundingClientRect();
+			var size = Math.max(rect.width, rect.height) * 1.35;
+			var ripple = document.createElement('span');
+
+			ripple.className = 'nav-home-ripple';
+			ripple.style.width = size + 'px';
+			ripple.style.height = size + 'px';
+			ripple.style.left = (event.clientX - rect.left - size / 2) + 'px';
+			ripple.style.top = (event.clientY - rect.top - size / 2) + 'px';
+
+			navHome.appendChild(ripple);
+			ripple.addEventListener('animationend', function () {
+				ripple.remove();
+			});
+		});
+	}
+
+	/* First visit: play the home entrance once the intro clears. */
+	var homeSection = document.getElementById('home');
+	if (homeSection) {
+		if (entered) {
+			revealSection(homeSection);
+		} else {
+			document.addEventListener('jvb:entered', function () {
+				revealSection(homeSection);
+			}, { once: true });
+		}
 	}
 
 	if (prevBtn) {
@@ -1037,7 +1121,10 @@
 
 	if (nextBtn) {
 		nextBtn.addEventListener('click', function () {
-			if (!nextBtn.disabled) goToSection(currentIndex + 1);
+			if (!nextBtn.disabled) {
+				var nextIndex = currentIndex >= sections.length - 1 ? 1 : currentIndex + 1;
+				goToSection(nextIndex);
+			}
 		});
 	}
 
@@ -1061,8 +1148,13 @@
 		}
 
 		if (direction !== 0) {
-			target = currentIndex + direction;
-			if (target < 0 || target > sections.length - 1) return;
+			if (direction === 1 && currentIndex >= sections.length - 1) {
+				target = 1;
+			} else {
+				target = currentIndex + direction;
+				if (currentIndex > 0) target = Math.max(1, target);
+				if (target < 0 || target > sections.length - 1) return;
+			}
 		}
 
 		event.preventDefault();
@@ -1094,7 +1186,11 @@
 
 			if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.6) return;
 
-			goToSection(currentIndex + (dx < 0 ? 1 : -1));
+			var target = currentIndex + (dx < 0 ? 1 : -1);
+			if (dx < 0 && currentIndex >= sections.length - 1) target = 1;
+			if (currentIndex > 0) target = Math.max(1, target);
+			if (target < 0 || target > sections.length - 1 || target === currentIndex) return;
+			goToSection(target);
 		}, { passive: true });
 	}
 
