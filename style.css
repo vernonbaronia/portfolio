@@ -3243,22 +3243,76 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	display: none;
 }
 
+/* Full-page camera-shutter backdrop: giant aperture blades + lens ring + viewfinder corners */
+.intro-shutter {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px top 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px top 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px top 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px top 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px bottom 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) left 26px bottom 26px / 1px 30px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px bottom 26px / 30px 1px no-repeat,
+		linear-gradient(rgba(10, 10, 10, 0.28), rgba(10, 10, 10, 0.28)) right 26px bottom 26px / 1px 30px no-repeat;
+}
+
+/* six huge blades sweeping across the whole page */
+.intro-shutter::before {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 190vmax;
+	height: 190vmax;
+	transform: translate(-50%, -50%) rotate(10deg);
+	background: repeating-conic-gradient(
+		from 0deg,
+		rgba(10, 10, 10, 0.055) 0deg 30deg,
+		rgba(10, 10, 10, 0.012) 30deg 60deg
+	);
+	-webkit-mask-image: radial-gradient(circle, transparent 0 15%, #000 28%, #000 62%, transparent 88%);
+	mask-image: radial-gradient(circle, transparent 0 15%, #000 28%, #000 62%, transparent 88%);
+	opacity: 0.85;
+}
+
+/* thin lens ring framing the page */
+.intro-shutter::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: min(178vmin, 1900px);
+	aspect-ratio: 1;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	border: 1px solid rgba(10, 10, 10, 0.14);
+	outline: 1px dashed rgba(10, 10, 10, 0.12);
+	outline-offset: -3.2vmin;
+	box-shadow: inset 0 0 140px rgba(10, 10, 10, 0.04);
+}
+
 .intro-content {
+	width: min(1400px, 100%);
 	flex-direction: row;
 	align-items: center;
-	gap: clamp(2rem, 5vw, 4.5rem);
+	justify-content: center;
+	gap: clamp(2.5rem, 6vw, 6rem);
 	text-align: left;
 }
 
-/* square photo, slides in from the left */
+/* large square photo, slides in from the left */
 .intro-photo {
-	width: clamp(170px, 24vw, 250px);
-	height: clamp(170px, 24vw, 250px);
+	width: min(clamp(240px, 30vw, 440px), 52vh);
+	height: min(clamp(240px, 30vw, 440px), 52vh);
 	flex: 0 0 auto;
-	border-radius: 18px;
+	border-radius: 22px;
 	overflow: hidden;
 	border: 2px solid #0a0a0a;
-	box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
+	box-shadow: 0 22px 60px rgba(0, 0, 0, 0.26);
 	animation: intro-photo-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
@@ -3280,6 +3334,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	align-items: flex-start;
 	justify-content: center;
 	min-width: 0;
+	max-width: 760px;
 }
 
 /* "welcome to" — fun handwriting */
@@ -3297,10 +3352,10 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 /* big name */
 .intro-name {
 	font-family: var(--font-body);
-	font-size: clamp(2rem, 5vw, 3.8rem);
+	font-size: clamp(2.3rem, 5.2vw, 5.2rem);
 	font-weight: 600;
-	line-height: 1.08;
-	letter-spacing: -0.02em;
+	line-height: 1.04;
+	letter-spacing: -0.03em;
 	color: #0a0a0a;
 }
 
@@ -3316,11 +3371,11 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* "Portfolio" */
 .intro-portfolio {
-	margin: 0.5rem 0 0;
+	margin: 0.4rem 0 0;
 	font-family: 'Tempting', var(--font-hand), cursive;
-	font-size: clamp(1.7rem, 4.2vw, 2.8rem);
+	font-size: clamp(2.2rem, 5vw, 4.4rem);
 	font-weight: 400;
-	line-height: 1.2;
+	line-height: 1.15;
 	letter-spacing: 0.01em;
 	color: #0a0a0a;
 	opacity: 0.95;
@@ -3358,6 +3413,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 /* Narrow screens: stack photo above the type */
 @media (max-width: 640px) {
 	.intro-content {
+		width: 100%;
 		flex-direction: column;
 		gap: 1.4rem;
 		text-align: center;
@@ -3365,10 +3421,21 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 	.intro-copy {
 		align-items: center;
+		max-width: 100%;
+	}
+
+	.intro-photo {
+		width: min(60vw, 260px, 40vh);
+		height: min(60vw, 260px, 40vh);
+		border-radius: 18px;
 	}
 
 	.intro-name {
-		font-size: clamp(1.55rem, 7vw, 2.4rem);
+		font-size: clamp(1.7rem, 8.4vw, 2.5rem);
+	}
+
+	.intro-portfolio {
+		font-size: clamp(1.6rem, 7vw, 2.2rem);
 	}
 }
 
@@ -3388,20 +3455,21 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	animation: shutter 1s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
-/* rotating aperture blades inside the shutter */
+/* rotating aperture blades spanning the whole page */
 .iris::before {
 	content: "";
 	position: absolute;
-	inset: -45%;
-	background: repeating-conic-gradient(
-		from 0deg,
-		rgba(255, 255, 255, 0.16) 0deg 5deg,
-		transparent 5deg 12deg
-	);
-	-webkit-mask-image: radial-gradient(circle, transparent 26%, #000 38%, #000 62%, transparent 78%);
-	mask-image: radial-gradient(circle, transparent 26%, #000 38%, #000 62%, transparent 78%);
+	inset: -30%;
+	background:
+		repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.5) 0deg 0.4deg, transparent 0.4deg 60deg),
+		repeating-conic-gradient(
+			from 0deg,
+			rgba(255, 255, 255, 0.12) 0deg 30deg,
+			rgba(255, 255, 255, 0.025) 30deg 60deg
+		);
 	opacity: 0;
-	transform: rotate(0deg) scale(0.7);
+	transform: rotate(0deg) scale(0.75);
+	transform-origin: 50% 50%;
 }
 
 .iris.is-playing::before {
@@ -3409,10 +3477,10 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 }
 
 @keyframes aperture-blades {
-	0% { opacity: 0; transform: rotate(0deg) scale(0.7); }
-	35% { opacity: 0.9; }
-	55% { opacity: 0.9; transform: rotate(42deg) scale(1.15); }
-	100% { opacity: 0; transform: rotate(80deg) scale(1.5); }
+	0% { opacity: 0; transform: rotate(0deg) scale(0.75); }
+	24% { opacity: 0.95; }
+	52% { opacity: 0.95; transform: rotate(36deg) scale(1.25); }
+	100% { opacity: 0; transform: rotate(70deg) scale(1.65); }
 }
 
 .iris::after {
