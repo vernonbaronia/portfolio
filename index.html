@@ -55,7 +55,6 @@
 	<!-- ===== Opening page ===== -->
 	<div class="intro" id="intro" role="button" tabindex="0" aria-label="Enter the portfolio">
 		<div class="intro-orbit" aria-hidden="true"></div>
-		<div class="intro-shutter" aria-hidden="true"></div>
 		<div class="intro-ripple" id="intro-ripple" aria-hidden="true"></div>
 		<div class="intro-controls">
 			<button class="orb-btn palette-toggle intro-palette-toggle" id="intro-palette-toggle" type="button" data-label="Colour" aria-haspopup="true" aria-expanded="false" aria-label="Choose an accent colour" title="Choose an accent colour">
@@ -80,11 +79,16 @@
 		<div class="intro-progress" aria-hidden="true"><span class="intro-progress-fill"></span></div>
 	</div>
 
-	<!-- ===== Camera-lens (iris) transition ===== -->
-	<div class="iris" id="iris" aria-hidden="true">
-		<span class="iris-blades"></span>
-		<span class="iris-aperture"></span>
-	</div>
+	<!-- ===== Camera-iris transition ===== -->
+	<svg class="iris" id="iris" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+		<defs>
+			<mask id="iris-mask">
+				<rect width="100" height="100" fill="#ffffff"/>
+				<circle class="iris-hole" cx="50" cy="50" r="75" fill="#000000"/>
+			</mask>
+		</defs>
+		<rect width="100" height="100" fill="#000000" mask="url(#iris-mask)"/>
+	</svg>
 
 	<!-- ===== Animated background ===== -->
 	<div class="bg-scene" aria-hidden="true">
