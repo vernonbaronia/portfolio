@@ -3361,7 +3361,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	font-family: var(--font-body);
 	font-size: clamp(2.6rem, 7.8vw, 8rem);
 	font-weight: 700;
-	line-height: 0.98;
+	line-height: 1.02;
 	letter-spacing: -0.04em;
 	color: #0a0a0a;
 }
@@ -3383,8 +3383,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* "Portfolio" */
 .intro-portfolio {
-	align-self: flex-end;
-	margin: 0.5rem 0 0;
+	align-self: flex-start;
+	margin: clamp(1rem, 2.4vh, 1.8rem) 0 0;
 	padding-bottom: 0.08em;
 	padding-right: 0.04em;
 	font-family: 'Tempting', var(--font-hand), cursive;
@@ -3451,7 +3451,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	}
 
 	.intro-portfolio {
-		align-self: center;
+		align-self: flex-start;
 		font-size: clamp(2.2rem, 10.5vw, 3.8rem);
 	}
 }
@@ -3477,7 +3477,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	}
 
 	.intro-portfolio {
-		margin-top: 0.2rem;
+		margin-top: 0.6rem;
 		font-size: clamp(1.3rem, 5.5vh, 2rem);
 	}
 }
