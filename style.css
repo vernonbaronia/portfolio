@@ -3266,17 +3266,22 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	width: 190vmax;
-	height: 190vmax;
+	width: 150vmax;
+	height: 150vmax;
 	transform: translate(-50%, -50%) rotate(10deg);
 	background: repeating-conic-gradient(
 		from 0deg,
-		rgba(10, 10, 10, 0.055) 0deg 30deg,
-		rgba(10, 10, 10, 0.012) 30deg 60deg
+		rgba(10, 10, 10, 0.16) 0deg 0.35deg,
+		transparent 0.35deg 60deg
+	),
+	repeating-conic-gradient(
+		from 0deg,
+		rgba(10, 10, 10, 0.08) 0deg 30deg,
+		rgba(10, 10, 10, 0.022) 30deg 60deg
 	);
-	-webkit-mask-image: radial-gradient(circle, transparent 0 15%, #000 28%, #000 62%, transparent 88%);
-	mask-image: radial-gradient(circle, transparent 0 15%, #000 28%, #000 62%, transparent 88%);
-	opacity: 0.85;
+	-webkit-mask-image: radial-gradient(circle, transparent 0 13%, #000 24%, #000 100%);
+	mask-image: radial-gradient(circle, transparent 0 13%, #000 24%, #000 100%);
+	opacity: 0.9;
 }
 
 /* thin lens ring framing the page */
@@ -3306,8 +3311,8 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* large square photo, slides in from the left */
 .intro-photo {
-	width: min(clamp(240px, 30vw, 440px), 52vh);
-	height: min(clamp(240px, 30vw, 440px), 52vh);
+	width: min(clamp(210px, 29vw, 440px), 52vh);
+	height: min(clamp(210px, 29vw, 440px), 52vh);
 	flex: 0 0 auto;
 	border-radius: 22px;
 	overflow: hidden;
@@ -3334,7 +3339,7 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	align-items: flex-start;
 	justify-content: center;
 	min-width: 0;
-	max-width: 760px;
+	max-width: 800px;
 }
 
 /* "welcome to" — fun handwriting */
@@ -3349,18 +3354,21 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	animation: intro-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
-/* big name */
+/* big name — two deliberate, oversized lines */
 .intro-name {
+	display: flex;
+	flex-direction: column;
 	font-family: var(--font-body);
-	font-size: clamp(2.3rem, 5.2vw, 5.2rem);
-	font-weight: 600;
-	line-height: 1.04;
-	letter-spacing: -0.03em;
+	font-size: clamp(2.6rem, 7.8vw, 8rem);
+	font-weight: 700;
+	line-height: 0.98;
+	letter-spacing: -0.04em;
 	color: #0a0a0a;
 }
 
 .intro-title {
 	display: block;
+	white-space: nowrap;
 	background: none;
 	background-clip: border-box;
 	-webkit-background-clip: border-box;
@@ -3369,17 +3377,25 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both;
 }
 
+.intro-title + .intro-title {
+	animation-delay: 0.52s;
+}
+
 /* "Portfolio" */
 .intro-portfolio {
-	margin: 0.4rem 0 0;
+	align-self: flex-end;
+	margin: 0.5rem 0 0;
+	padding-bottom: 0.08em;
+	padding-right: 0.04em;
 	font-family: 'Tempting', var(--font-hand), cursive;
-	font-size: clamp(2.2rem, 5vw, 4.4rem);
+	font-size: clamp(2.4rem, 6.6vw, 6.4rem);
 	font-weight: 400;
-	line-height: 1.15;
-	letter-spacing: 0.01em;
+	line-height: 1.02;
+	letter-spacing: 0.005em;
+	white-space: nowrap;
 	color: #0a0a0a;
 	opacity: 0.95;
-	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.54s both;
+	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
 }
 
 /* progress bar → black */
@@ -3425,17 +3441,44 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	}
 
 	.intro-photo {
-		width: min(60vw, 260px, 40vh);
-		height: min(60vw, 260px, 40vh);
+		width: min(78vw, 320px, 46vh);
+		height: min(78vw, 320px, 46vh);
 		border-radius: 18px;
 	}
 
 	.intro-name {
-		font-size: clamp(1.7rem, 8.4vw, 2.5rem);
+		font-size: clamp(2.3rem, 11vw, 3.4rem);
 	}
 
 	.intro-portfolio {
-		font-size: clamp(1.6rem, 7vw, 2.2rem);
+		align-self: center;
+		font-size: clamp(2.2rem, 10.5vw, 3.8rem);
+	}
+}
+
+/* Short screens (landscape phones): keep everything on one page */
+@media (max-height: 520px) {
+	.intro {
+		padding: 1rem;
+	}
+
+	.intro-content {
+		gap: 1rem;
+	}
+
+	.intro-photo {
+		width: min(34vw, 30vh);
+		height: min(34vw, 30vh);
+		border-radius: 12px;
+	}
+
+	.intro-name {
+		font-size: clamp(1.4rem, 6vh, 2.2rem);
+	}
+
+	.intro-portfolio {
+		margin-top: 0.2rem;
+		font-size: clamp(1.3rem, 5.5vh, 2rem);
 	}
 }
 
@@ -3446,41 +3489,49 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	position: fixed;
 	inset: 0;
 	z-index: 250;
+	pointer-events: none;
+}
+
+/* black aperture that closes over the page */
+.iris-aperture {
+	position: absolute;
+	inset: 0;
 	background: #000000;
 	clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
 	pointer-events: none;
 }
 
-.iris.is-playing {
+.iris.is-playing .iris-aperture {
 	animation: shutter 1s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
-/* rotating aperture blades spanning the whole page */
-.iris::before {
-	content: "";
+/* full-screen rotating aperture blades */
+.iris-blades {
 	position: absolute;
-	inset: -30%;
+	inset: -25%;
 	background:
-		repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.5) 0deg 0.4deg, transparent 0.4deg 60deg),
+		repeating-conic-gradient(from 0deg, rgba(10, 10, 10, 0.34) 0deg 0.5deg, transparent 0.5deg 60deg),
 		repeating-conic-gradient(
 			from 0deg,
-			rgba(255, 255, 255, 0.12) 0deg 30deg,
-			rgba(255, 255, 255, 0.025) 30deg 60deg
+			rgba(10, 10, 10, 0.16) 0deg 30deg,
+			rgba(10, 10, 10, 0.03) 30deg 60deg
 		);
 	opacity: 0;
-	transform: rotate(0deg) scale(0.75);
+	transform: rotate(0deg) scale(0.85);
 	transform-origin: 50% 50%;
+	pointer-events: none;
 }
 
-.iris.is-playing::before {
+.iris.is-playing .iris-blades {
 	animation: aperture-blades 1s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
 @keyframes aperture-blades {
-	0% { opacity: 0; transform: rotate(0deg) scale(0.75); }
-	24% { opacity: 0.95; }
-	52% { opacity: 0.95; transform: rotate(36deg) scale(1.25); }
-	100% { opacity: 0; transform: rotate(70deg) scale(1.65); }
+	0% { opacity: 0; transform: rotate(0deg) scale(0.85); }
+	18% { opacity: 0.9; }
+	44% { opacity: 0.9; transform: rotate(30deg) scale(1.05); }
+	52% { opacity: 0; transform: rotate(36deg) scale(1.1); }
+	100% { opacity: 0; transform: rotate(36deg) scale(1.1); }
 }
 
 .iris::after {
