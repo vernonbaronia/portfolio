@@ -3286,11 +3286,12 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* big name */
 .intro-name {
-	font-family: 'Transcity', var(--font-display), sans-serif;
+	font-family: 'Uni Sans', var(--font-display), sans-serif;
 	font-size: clamp(2.6rem, 9vw, 6.2rem);
 	font-weight: 400;
 	line-height: 1.02;
-	letter-spacing: 0;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
 	color: #0a0a0a;
 }
 
