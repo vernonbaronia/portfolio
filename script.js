@@ -431,14 +431,14 @@
 					document.body.classList.remove('is-intro');
 					document.body.classList.add('is-entered');
 					document.dispatchEvent(new CustomEvent('jvb:entered'));
-				}, 450);
+				}, 500);
 
 				window.setTimeout(function () {
 					if (fromKeyboard) {
 						var firstTab = document.getElementById('nav-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 950);
+				}, 1050);
 			};
 
 			/* If a font is still in flight, let it land first (with

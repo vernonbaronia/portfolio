@@ -3244,19 +3244,22 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 }
 
 .intro-content {
-	gap: 0.5rem;
+	flex-direction: row;
+	align-items: center;
+	gap: clamp(2rem, 5vw, 4.5rem);
+	text-align: left;
 }
 
-/* small photo, falls in from the top */
+/* square photo, slides in from the left */
 .intro-photo {
-	width: 210px;
-	height: 210px;
-	margin-bottom: 0.8rem;
-	border-radius: 50%;
+	width: clamp(170px, 24vw, 250px);
+	height: clamp(170px, 24vw, 250px);
+	flex: 0 0 auto;
+	border-radius: 18px;
 	overflow: hidden;
 	border: 2px solid #0a0a0a;
 	box-shadow: 0 16px 44px rgba(0, 0, 0, 0.24);
-	animation: intro-photo-pop 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+	animation: intro-photo-left 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
 }
 
 .intro-photo img {
@@ -3266,10 +3269,17 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	object-fit: cover;
 }
 
-@keyframes intro-photo-pop {
-	0% { opacity: 0; transform: translateY(-140px) scale(0.6) rotate(-6deg); }
-	55% { opacity: 1; transform: translateY(10px) scale(1.04) rotate(1deg); }
-	100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+@keyframes intro-photo-left {
+	0% { opacity: 0; transform: translateX(-100px) scale(0.92); }
+	100% { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.intro-copy {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	min-width: 0;
 }
 
 /* "welcome to" — fun handwriting */
@@ -3286,12 +3296,11 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* big name */
 .intro-name {
-	font-family: 'Uni Sans', var(--font-display), sans-serif;
-	font-size: clamp(2.6rem, 9vw, 6.2rem);
-	font-weight: 400;
-	line-height: 1.02;
-	letter-spacing: 0.02em;
-	text-transform: uppercase;
+	font-family: var(--font-body);
+	font-size: clamp(2rem, 5vw, 3.8rem);
+	font-weight: 600;
+	line-height: 1.08;
+	letter-spacing: -0.02em;
 	color: #0a0a0a;
 }
 
@@ -3307,16 +3316,14 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* "Portfolio" */
 .intro-portfolio {
-	margin: 0.2rem 0 0;
-	font-family: 'Milker', var(--font-display), sans-serif;
-	font-size: clamp(1.8rem, 5.5vw, 3.2rem);
+	margin: 0.5rem 0 0;
+	font-family: 'Tempting', var(--font-hand), cursive;
+	font-size: clamp(1.7rem, 4.2vw, 2.8rem);
 	font-weight: 400;
-	line-height: 1.05;
-	letter-spacing: 0;
+	line-height: 1.2;
+	letter-spacing: 0.01em;
 	color: #0a0a0a;
 	opacity: 0.95;
-	-webkit-mask-image: linear-gradient(to bottom, #000 30%, transparent 90%);
-	mask-image: linear-gradient(to bottom, #000 30%, transparent 90%);
 	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.54s both;
 }
 
@@ -3348,24 +3355,86 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	border-color: #0a0a0a;
 }
 
+/* Narrow screens: stack photo above the type */
+@media (max-width: 640px) {
+	.intro-content {
+		flex-direction: column;
+		gap: 1.4rem;
+		text-align: center;
+	}
+
+	.intro-copy {
+		align-items: center;
+	}
+
+	.intro-name {
+		font-size: clamp(1.55rem, 7vw, 2.4rem);
+	}
+}
+
 /* =========================================================
-   CAMERA-LENS (IRIS) TRANSITION
+   CAMERA-LENS (SHUTTER) TRANSITION
    ========================================================= */
 .iris {
 	position: fixed;
 	inset: 0;
 	z-index: 250;
 	background: #000000;
-	clip-path: circle(0% at 50% 50%);
+	clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%);
 	pointer-events: none;
 }
 
 .iris.is-playing {
-	animation: iris-close-open 0.9s cubic-bezier(0.65, 0, 0.35, 1) both;
+	animation: shutter 1s cubic-bezier(0.65, 0, 0.35, 1) both;
 }
 
-@keyframes iris-close-open {
-	0% { clip-path: circle(0% at 50% 50%); }
-	50% { clip-path: circle(150% at 50% 50%); }
-	100% { clip-path: circle(0% at 50% 50%); }
+/* rotating aperture blades inside the shutter */
+.iris::before {
+	content: "";
+	position: absolute;
+	inset: -45%;
+	background: repeating-conic-gradient(
+		from 0deg,
+		rgba(255, 255, 255, 0.16) 0deg 5deg,
+		transparent 5deg 12deg
+	);
+	-webkit-mask-image: radial-gradient(circle, transparent 26%, #000 38%, #000 62%, transparent 78%);
+	mask-image: radial-gradient(circle, transparent 26%, #000 38%, #000 62%, transparent 78%);
+	opacity: 0;
+	transform: rotate(0deg) scale(0.7);
+}
+
+.iris.is-playing::before {
+	animation: aperture-blades 1s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+
+@keyframes aperture-blades {
+	0% { opacity: 0; transform: rotate(0deg) scale(0.7); }
+	35% { opacity: 0.9; }
+	55% { opacity: 0.9; transform: rotate(42deg) scale(1.15); }
+	100% { opacity: 0; transform: rotate(80deg) scale(1.5); }
+}
+
+.iris::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: radial-gradient(circle, #ffffff 0%, transparent 55%);
+	opacity: 0;
+}
+
+.iris.is-playing::after {
+	animation: shutter-flash 1s ease-out both;
+}
+
+@keyframes shutter {
+	0% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); }
+	50% { clip-path: polygon(50% -22%, 115% 15%, 115% 85%, 50% 122%, -15% 85%, -15% 15%); }
+	100% { clip-path: polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%); }
+}
+
+@keyframes shutter-flash {
+	0%, 42% { opacity: 0; }
+	50% { opacity: 1; }
+	58%, 100% { opacity: 0; }
 }
