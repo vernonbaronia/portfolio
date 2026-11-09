@@ -190,7 +190,8 @@
 				ctx = new AudioCtor();
 			}
 			if (ctx.state === 'suspended') {
-				ctx.resume();
+				var resumed = ctx.resume();
+				if (resumed && resumed.catch) resumed.catch(function () {});
 			}
 			return ctx;
 		}
@@ -220,6 +221,14 @@
 		return {
 			isEnabled: function () {
 				return enabled;
+			},
+			prepare: function () {
+				if (!enabled) return;
+				try {
+					context();
+				} catch (e) {
+					/* audio unavailable — stay silent */
+				}
 			},
 			setEnabled: function (value) {
 				enabled = value;
@@ -260,6 +269,13 @@
 		behindIntro.forEach(function (el) {
 			el.inert = true;
 		});
+
+		/* Decode the portrait before the homepage reveal so the first
+		   frame of the transition isn't waiting on a large image. */
+		var homePortrait = document.querySelector('.home-portrait img');
+		if (homePortrait && homePortrait.decode) {
+			homePortrait.decode().catch(function () {});
+		}
 
 		/* Warm every face the homepage uses straight away, so a
 		   cold cache can never swap fonts while the intro fades. */
@@ -379,10 +395,6 @@
 
 			Sound.click();
 
-			behindIntro.forEach(function (el) {
-				el.inert = false;
-			});
-
 			var x = typeof originX === 'number' ? originX : window.innerWidth / 2;
 			var y = typeof originY === 'number' ? originY : window.innerHeight / 2;
 
@@ -403,6 +415,9 @@
 					introEl.hidden = true;
 					document.body.classList.remove('is-intro');
 					document.body.classList.add('is-entered');
+					behindIntro.forEach(function (el) {
+						el.inert = false;
+					});
 					document.dispatchEvent(new CustomEvent('jvb:entered'));
 				}, 500);
 
@@ -468,6 +483,7 @@
 		}
 
 		/* Enter automatically after a short delay */
+		Sound.prepare();
 		startAutoEnter();
 	}
 
