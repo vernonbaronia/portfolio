@@ -1263,10 +1263,13 @@ main {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 2.2rem;
+	gap: 2.4rem;
+	margin-left: 16px;
 }
 
 .about-portrait {
+	--portrait-w: clamp(210px, 20vw, 280px);
+	--orbit-r: calc(var(--portrait-w) / 2 + 26px);
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -1276,59 +1279,76 @@ main {
 .about-portrait::before {
 	content: "";
 	position: absolute;
-	inset: -18px;
-	border-radius: 50%;
+	inset: -10px;
+	border-radius: 36px;
 	background: var(--halo);
-	filter: blur(12px);
+	filter: blur(10px);
+	opacity: 0.5;
 	z-index: 0;
 }
 
 .about-portrait::after {
-	content: "";
-	position: absolute;
-	inset: -16px;
-	border-radius: 40px;
-	background: var(--conic);
-	filter: blur(12px);
-	opacity: 0.6;
-	z-index: 0;
-	animation: spin 22s linear infinite;
+	display: none;
 }
 
 @keyframes spin {
 	to { transform: rotate(360deg); }
 }
 
-/* Rotating type ring around the portrait */
+/* Words that travel around the portrait, always upright */
 .orbit-badge {
 	position: absolute;
-	inset: -30px;
-	z-index: 0;
+	inset: 0;
+	z-index: 2;
 	pointer-events: none;
-	opacity: 0.62;
-	animation: spin 52s linear infinite;
 }
 
-.orbit-badge svg {
-	display: block;
-	width: 100%;
-	height: 100%;
-	overflow: visible;
-}
-
-.orbit-badge text {
-	fill: var(--accent-deep);
+.orbit-word {
+	position: absolute;
+	top: 50%;
+	left: 50%;
 	font-family: var(--font-body);
-	font-size: 3.2px;
+	font-size: 0.55rem;
 	font-weight: 600;
-	letter-spacing: 0.12em;
+	line-height: 1;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
+	color: var(--accent-deep);
+	white-space: nowrap;
+	text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+	will-change: transform;
+	animation: orbit-word 26s linear infinite;
+}
+
+[data-theme="dark"] .orbit-word {
+	text-shadow: 0 0 4px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+.orbit-word:nth-child(2) {
+	animation-delay: -6.5s;
+}
+
+.orbit-word:nth-child(3) {
+	animation-delay: -13s;
+}
+
+.orbit-word:nth-child(4) {
+	animation-delay: -19.5s;
+}
+
+@keyframes orbit-word {
+	from {
+		transform: translate(-50%, -50%) rotate(0turn) translateX(var(--orbit-r)) rotate(0turn);
+	}
+	to {
+		transform: translate(-50%, -50%) rotate(1turn) translateX(var(--orbit-r)) rotate(-1turn);
+	}
 }
 
 .photo-frame {
 	position: relative;
 	z-index: 1;
-	width: clamp(210px, 20vw, 280px);
+	width: var(--portrait-w);
 	padding: 7px;
 	border-radius: 32px;
 	background: var(--frame-grad);
@@ -3284,6 +3304,10 @@ body.is-intro .category-dock {
 		gap: 2rem;
 	}
 
+	.about-visual {
+		margin-left: 0;
+	}
+
 	.about-portrait::before {
 		inset: -30px;
 	}
@@ -3293,7 +3317,7 @@ body.is-intro .category-dock {
 	}
 
 	.orbit-badge {
-		inset: -26px;
+		inset: 0;
 	}
 
 	.about-info {
@@ -3466,8 +3490,11 @@ body.is-intro .category-dock {
 		padding: 2rem 1.1rem 4.75rem;
 	}
 
+	.about-portrait {
+		--portrait-w: 210px;
+	}
+
 	.photo-frame {
-		width: 210px;
 		padding: 5px;
 		border-radius: 26px;
 	}
@@ -3615,8 +3642,8 @@ body.is-intro .category-dock {
 		padding-bottom: 4rem;
 	}
 
-	.photo-frame {
-		width: 240px;
+	.about-portrait {
+		--portrait-w: 240px;
 	}
 
 	.about-visual {
@@ -3695,8 +3722,8 @@ body.is-intro .category-dock {
 }
 
 @media (min-width: 981px) and (max-height: 660px) {
-	.photo-frame {
-		width: 240px;
+	.about-portrait {
+		--portrait-w: 230px;
 	}
 
 	.about-info h1 {
@@ -3738,6 +3765,27 @@ body.is-intro .category-dock {
 
 	.sparkles {
 		display: none;
+	}
+
+	/* Park the orbit words in four readable spots instead of stacking them */
+	.orbit-word {
+		animation: none !important;
+	}
+
+	.orbit-word:nth-child(1) {
+		transform: translate(-50%, -50%) translateX(var(--orbit-r));
+	}
+
+	.orbit-word:nth-child(2) {
+		transform: translate(-50%, -50%) rotate(90deg) translateX(var(--orbit-r)) rotate(-90deg);
+	}
+
+	.orbit-word:nth-child(3) {
+		transform: translate(-50%, -50%) rotate(180deg) translateX(var(--orbit-r)) rotate(-180deg);
+	}
+
+	.orbit-word:nth-child(4) {
+		transform: translate(-50%, -50%) rotate(270deg) translateX(var(--orbit-r)) rotate(-270deg);
 	}
 
 	.about-info h1 {
