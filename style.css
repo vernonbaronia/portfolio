@@ -2665,13 +2665,15 @@ body.is-intro .category-dock {
 .achievement-category {
 	position: relative;
 	display: flex;
-	flex: 1 1 380px;
+	flex: 0 1 340px;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.55rem;
-	max-width: 440px;
+	justify-content: center;
+	gap: 0.7rem;
+	max-width: 340px;
+	min-height: 280px;
 	margin: 0;
-	padding: 2.2rem 1.8rem;
+	padding: 2.4rem 1.5rem;
 	font: inherit;
 	color: inherit;
 	text-align: center;
@@ -2731,11 +2733,11 @@ body.is-intro .category-dock {
 .achievement-category-icon {
 	display: grid;
 	place-items: center;
-	width: 54px;
-	height: 54px;
-	margin-bottom: 0.35rem;
+	width: 64px;
+	height: 64px;
+	margin-bottom: 0.5rem;
 	border-radius: 50%;
-	font-size: 1.25rem;
+	font-size: 1.5rem;
 	color: var(--accent-deep);
 	background: rgba(255, 255, 255, 0.55);
 	-webkit-backdrop-filter: blur(8px);
@@ -2750,10 +2752,11 @@ body.is-intro .category-dock {
 }
 
 .achievement-category-title {
-	font-family: var(--font-display);
-	font-size: 1.3rem;
-	font-weight: 600;
-	line-height: 1.25;
+	font-family: 'Derian Demo', var(--font-display), sans-serif;
+	font-size: clamp(1.6rem, 2vw, 2rem);
+	font-weight: 400;
+	line-height: 1.1;
+	letter-spacing: 0.02em;
 	color: var(--accent-deep);
 }
 
@@ -3203,7 +3206,8 @@ body.is-intro .category-dock {
 	.achievement-category {
 		flex: 0 0 auto;
 		width: 100%;
-		max-width: 440px;
+		max-width: 400px;
+		min-height: 240px;
 		margin: 0 auto;
 	}
 
