@@ -1368,13 +1368,19 @@ main {
 	line-height: 1;
 	letter-spacing: 0.1em;
 	text-transform: uppercase;
-	color: #ffffff;
+	color: #0b0b0c;
 	white-space: nowrap;
-	mix-blend-mode: difference;
+	text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
 	offset-path: var(--snake-path);
 	offset-rotate: auto;
 	offset-distance: 0%;
 	animation: orbit-word 28s linear infinite;
+}
+
+[data-theme="dark"] .orbit-word {
+	color: #ffffff;
+	mix-blend-mode: difference;
+	text-shadow: none;
 }
 
 .orbit-word:nth-child(2) {
