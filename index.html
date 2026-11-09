@@ -303,42 +303,26 @@
 		<!-- ===== ACHIEVEMENTS ===== -->
 		<section id="achievements" class="section" role="region" aria-label="Achievements" aria-hidden="true" data-title="Achievements">
 			<div class="achievements-layout">
-				<div class="achievement-column">
-					<h2 class="category-title">Curricular</h2>
-					<div class="achievement-cards-vertical">
-						<article class="achievement-card achievement-card--empty">
-							<span class="achievement-empty-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
-							<h3>Academic awards</h3>
-							<p>Honours, dean’s list recognitions and academic distinctions earned through coursework will be listed here.</p>
-							<span class="achievement-empty-tag">coming soon</span>
-						</article>
-					</div>
-				</div>
+				<button class="achievement-category" type="button" data-category="Curricular" aria-label="Curricular achievements — coming soon">
+					<span class="achievement-category-icon" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
+					<span class="achievement-category-title">Curricular</span>
+					<span class="achievement-category-tag">coming soon</span>
+				</button>
 
-				<div class="achievement-column">
-					<h2 class="category-title">Extra Curricular</h2>
-					<div class="achievement-cards-vertical">
-						<article class="achievement-card achievement-card--empty">
-							<span class="achievement-empty-icon" aria-hidden="true"><i class="fa-solid fa-people-group"></i></span>
-							<h3>School activities</h3>
-							<p>Recognitions from clubs, organisations, sports and campus events will be listed here.</p>
-							<span class="achievement-empty-tag">coming soon</span>
-						</article>
-					</div>
-				</div>
+				<button class="achievement-category" type="button" data-category="Extra Curricular" aria-label="Extra Curricular achievements — coming soon">
+					<span class="achievement-category-icon" aria-hidden="true"><i class="fa-solid fa-people-group"></i></span>
+					<span class="achievement-category-title">Extra Curricular</span>
+					<span class="achievement-category-tag">coming soon</span>
+				</button>
 
-				<div class="achievement-column">
-					<h2 class="category-title">Extramural</h2>
-					<div class="achievement-cards-vertical">
-						<article class="achievement-card achievement-card--empty">
-							<span class="achievement-empty-icon" aria-hidden="true"><i class="fa-solid fa-earth-asia"></i></span>
-							<h3>Outside school</h3>
-							<p>Awards from community programmes and activities beyond the campus will be listed here.</p>
-							<span class="achievement-empty-tag">coming soon</span>
-						</article>
-					</div>
-				</div>
+				<button class="achievement-category" type="button" data-category="Extramural" aria-label="Extramural achievements — coming soon">
+					<span class="achievement-category-icon" aria-hidden="true"><i class="fa-solid fa-earth-asia"></i></span>
+					<span class="achievement-category-title">Extramural</span>
+					<span class="achievement-category-tag">coming soon</span>
+				</button>
 			</div>
+
+			<div class="achievement-toast" id="achievement-toast" role="status" aria-live="polite"></div>
 		</section>
 
 		<!-- ===== MY FAMILY (content coming soon) ===== -->

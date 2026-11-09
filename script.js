@@ -1290,6 +1290,30 @@
 	}
 
 	/* =====================================================
+	   Achievements: show a coming soon notice for categories
+	   whose entries have not been published yet.
+	   ===================================================== */
+	var achievementCategories = Array.prototype.slice.call(
+		document.querySelectorAll('.achievement-category')
+	);
+	var achievementToast = document.getElementById('achievement-toast');
+	var achievementToastTimer = null;
+
+	if (achievementToast) {
+		achievementCategories.forEach(function (button) {
+			button.addEventListener('click', function () {
+				var label = button.getAttribute('data-category') || 'These achievements';
+				achievementToast.textContent = label + ' achievements are coming soon.';
+				achievementToast.classList.add('is-visible');
+				window.clearTimeout(achievementToastTimer);
+				achievementToastTimer = window.setTimeout(function () {
+					achievementToast.classList.remove('is-visible');
+				}, 2600);
+			});
+		});
+	}
+
+	/* =====================================================
 	   Achievements: show the matching photo on hover/click.
 	   Cards are added later via [data-image] attributes.
 	   ===================================================== */

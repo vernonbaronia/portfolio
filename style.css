@@ -2519,7 +2519,7 @@ body.is-intro .category-dock {
 .achievements-layout {
 	display: flex;
 	gap: 1rem;
-	justify-content: space-between;
+	justify-content: center;
 	align-items: flex-start;
 	width: 100%;
 	max-width: 1560px;
@@ -2661,40 +2661,113 @@ body.is-intro .category-dock {
 	transform: scale(1.02);
 }
 
-/* Empty state cards for categories without entries yet */
-.achievement-card--empty {
-	gap: 0.4rem;
-	background: transparent;
-	border-style: dashed;
-	box-shadow: none;
+/* Clickable category cards (entries coming later) */
+.achievement-category {
+	display: flex;
+	flex: 1 1 380px;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.55rem;
+	max-width: 440px;
+	margin: 0;
+	padding: 2.2rem 1.8rem;
+	font: inherit;
+	color: inherit;
+	text-align: center;
+	background: var(--surface-strong);
+	-webkit-backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
+	border: 1px dashed var(--line-strong);
+	border-radius: var(--radius);
+	box-shadow: var(--shadow-soft);
+	cursor: pointer;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease,
+		background 0.25s ease;
 }
 
-.achievement-card--empty:hover {
-	transform: none;
-	border-color: var(--line);
-	box-shadow: none;
+.achievement-category:hover,
+.achievement-category:focus-visible {
+	transform: translateY(-4px);
+	border-color: var(--accent);
+	background: var(--accent-wash);
+	box-shadow: var(--shadow-lift);
+	outline: none;
 }
 
-.achievement-empty-icon {
+.achievement-category:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 3px;
+}
+
+.achievement-category:active {
+	transform: translateY(-1px);
+}
+
+.achievement-category-icon {
 	display: grid;
 	place-items: center;
-	width: 48px;
-	height: 48px;
+	width: 54px;
+	height: 54px;
 	margin-bottom: 0.35rem;
 	border-radius: 50%;
-	font-size: 1.15rem;
+	font-size: 1.25rem;
 	color: var(--accent-deep);
 	background: var(--accent-wash);
 	border: 1px solid var(--line);
+	transition: transform 0.25s ease;
 }
 
-.achievement-empty-tag {
-	margin-top: 0.5rem;
+.achievement-category:hover .achievement-category-icon {
+	transform: scale(1.08);
+}
+
+.achievement-category-title {
+	font-family: var(--font-display);
+	font-size: 1.3rem;
+	font-weight: 600;
+	line-height: 1.25;
+	color: var(--accent-deep);
+}
+
+.achievement-category-tag {
 	font-size: 0.72rem;
 	font-weight: 600;
 	letter-spacing: 0.16em;
 	text-transform: uppercase;
 	color: var(--ink-faint);
+}
+
+.achievement-toast {
+	position: fixed;
+	left: 50%;
+	bottom: calc(clamp(1rem, 2.5vw, 1.8rem) + 4.75rem);
+	z-index: 35;
+	max-width: min(88vw, 440px);
+	padding: 0.7rem 1.25rem;
+	font-size: 0.92rem;
+	line-height: 1.4;
+	color: var(--ink);
+	text-align: center;
+	background: var(--surface);
+	-webkit-backdrop-filter: blur(14px) saturate(1.2);
+	backdrop-filter: blur(14px) saturate(1.2);
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	box-shadow: var(--shadow-soft);
+	opacity: 0;
+	visibility: hidden;
+	transform: translate(-50%, 8px);
+	transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		visibility 0s linear 0.3s;
+	pointer-events: none;
+}
+
+.achievement-toast.is-visible {
+	opacity: 1;
+	visibility: visible;
+	transform: translate(-50%, 0);
+	transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+		visibility 0s linear 0s;
 }
 
 /* =========================================================
@@ -3065,6 +3138,13 @@ body.is-intro .category-dock {
 		flex-direction: column;
 		gap: 1.4rem;
 		padding: 1rem 1rem 6rem;
+	}
+
+	.achievement-category {
+		flex: 0 0 auto;
+		width: 100%;
+		max-width: 440px;
+		margin: 0 auto;
 	}
 
 	.achievement-column {
