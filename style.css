@@ -4331,23 +4331,38 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	box-shadow:
 		0 0 0 3px color-mix(in srgb, var(--intro-ink) 8%, transparent),
 		0 0 16px color-mix(in srgb, var(--intro-ink) 40%, transparent);
-	animation: intro-rail-bead 1.3s ease-in-out infinite;
 }
 
-/* tiny twinkle riding above the leading bead */
+/* small orbit line circling the leading bead */
 .intro-rail-fill::before {
 	content: "";
 	position: absolute;
-	right: -3.5px;
-	top: -10px;
-	width: 7px;
-	height: 7px;
-	background:
-		radial-gradient(circle, var(--intro-ink) 0 0.8px, transparent 1.2px) center / 100% 100% no-repeat,
-		linear-gradient(var(--intro-ink), var(--intro-ink)) center / 1px 100% no-repeat,
-		linear-gradient(var(--intro-ink), var(--intro-ink)) center / 100% 1px no-repeat;
-	opacity: 0;
-	animation: intro-rail-twinkle 1.6s ease-in-out 0.9s infinite;
+	right: -9px;
+	top: 50%;
+	width: 18px;
+	height: 18px;
+	margin-top: -9px;
+	border-radius: 50%;
+	background: conic-gradient(from 0deg, var(--intro-ink) 0deg 100deg, transparent 100deg 360deg);
+	-webkit-mask: radial-gradient(circle, transparent 0 7px, #000 7.4px 8.6px, transparent 9px);
+	mask: radial-gradient(circle, transparent 0 7px, #000 7.4px 8.6px, transparent 9px);
+}
+
+.intro.is-timing .intro-rail-fill::after {
+	animation:
+		intro-rail-bead 1.3s ease-in-out infinite,
+		intro-rail-bead-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1) 2.68s forwards;
+}
+
+.intro.is-timing .intro-rail-fill::before {
+	animation:
+		intro-rail-orbit 0.7s linear infinite,
+		intro-rail-ring-pop 0.32s cubic-bezier(0.22, 1, 0.36, 1) 2.68s forwards;
+}
+
+.intro.is-timer-paused .intro-rail-fill::before,
+.intro.is-timer-paused .intro-rail-fill::after {
+	animation-play-state: paused;
 }
 
 @keyframes intro-rail-in {
@@ -4367,9 +4382,19 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	50% { transform: scale(1.28); }
 }
 
-@keyframes intro-rail-twinkle {
-	0%, 100% { opacity: 0; transform: translateY(1px) scale(0.35) rotate(0deg); }
-	50% { opacity: 1; transform: translateY(-1px) scale(1.05) rotate(45deg); }
+@keyframes intro-rail-orbit {
+	to { rotate: 360deg; }
+}
+
+@keyframes intro-rail-bead-pop {
+	0% { scale: 1; opacity: 1; }
+	35% { scale: 2.4; opacity: 1; }
+	100% { scale: 3.8; opacity: 0; }
+}
+
+@keyframes intro-rail-ring-pop {
+	0% { scale: 1; opacity: 1; }
+	100% { scale: 3.4; opacity: 0; }
 }
 
 /* progress bar → ink */
