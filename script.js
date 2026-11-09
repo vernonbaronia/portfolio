@@ -1003,6 +1003,7 @@
 	var counter = document.getElementById('current-num');
 	var main = document.querySelector('main');
 	var navHome = document.getElementById('nav-home');
+	var navPageTitle = document.getElementById('nav-page-title');
 	var irisEl = document.getElementById('iris');
 	var categoryButtons = Array.prototype.slice.call(document.querySelectorAll('.category-dock-btn'));
 	var currentIndex = 0;
@@ -1052,6 +1053,11 @@
 
 		document.body.classList.toggle('is-home', currentIndex === 0);
 		document.body.classList.toggle('is-about', currentIndex === 1);
+		document.body.classList.toggle('is-achievements', currentIndex === 2);
+
+		if (navPageTitle) {
+			navPageTitle.textContent = sections[currentIndex].getAttribute('data-title') || '';
+		}
 
 		if (navHome) {
 			navHome.hidden = currentIndex === 0;
