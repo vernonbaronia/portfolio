@@ -299,6 +299,37 @@
 		var autoEnterTimer = null;
 		var autoEnterRemaining = AUTO_ENTER_MS;
 		var autoEnterStarted = 0;
+		var autoEnterQueued = false;
+
+		var railFill = introEl.querySelector('.intro-rail-fill');
+		var progressFill = introEl.querySelector('.intro-progress-fill');
+		var barAnimations = [];
+
+		var startBarAnimations = function (anchorTime) {
+			if (!railFill || !progressFill || !railFill.animate) return;
+			if (barAnimations.length) {
+				barAnimations.forEach(function (anim) { anim.play(); });
+				return;
+			}
+			barAnimations = [
+				{ el: railFill, id: 'intro-rail-fill' },
+				{ el: progressFill, id: 'intro-progress-fill' }
+			].map(function (item) {
+				var anim = item.el.animate(
+					[{ width: '0%' }, { width: '100%' }],
+					{ duration: AUTO_ENTER_MS, easing: 'linear', fill: 'forwards' }
+				);
+				anim.id = item.id;
+				return anim;
+			});
+			if (typeof anchorTime === 'number') {
+				barAnimations.forEach(function (anim) { anim.startTime = anchorTime; });
+			}
+		};
+
+		var pauseBarAnimations = function () {
+			barAnimations.forEach(function (anim) { anim.pause(); });
+		};
 
 		var stopAutoEnter = function () {
 			if (!autoEnterTimer) return;
@@ -308,18 +339,29 @@
 		};
 
 		var startAutoEnter = function () {
-			if (entered || autoEnterTimer || autoEnterRemaining <= 0) return;
-			autoEnterStarted = Date.now();
-			autoEnterTimer = window.setTimeout(function () {
-				autoEnterTimer = null;
-				if (!entered) enterSite(false);
-			}, autoEnterRemaining);
+			if (entered || autoEnterTimer || autoEnterQueued || autoEnterRemaining <= 0) return;
+			autoEnterQueued = true;
+			window.requestAnimationFrame(function () {
+				if (!autoEnterQueued) return;
+				autoEnterQueued = false;
+				if (entered || autoEnterTimer || autoEnterRemaining <= 0) return;
+				introEl.classList.add('is-timing');
+				startBarAnimations(document.timeline ? document.timeline.currentTime : null);
+				autoEnterStarted = Date.now();
+				autoEnterTimer = window.setTimeout(function () {
+					autoEnterTimer = null;
+					if (!entered) enterSite(false);
+				}, autoEnterRemaining);
+			});
 		};
 
 		var pauseAutoEnter = function () {
-			if (entered || !autoEnterTimer) return;
+			if (entered) return;
+			autoEnterQueued = false;
+			if (!autoEnterTimer) return;
 			stopAutoEnter();
 			introEl.classList.add('is-timer-paused');
+			pauseBarAnimations();
 		};
 
 		var resumeAutoEnter = function () {
