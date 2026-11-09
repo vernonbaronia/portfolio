@@ -4245,7 +4245,6 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 /* "Portfolio" */
 .intro-portfolio {
-	--rule-w: clamp(50px, 14vw, 240px);
 	position: relative;
 	align-self: center;
 	margin: clamp(1rem, 2.4vh, 1.8rem) 0 0;
@@ -4262,46 +4261,96 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	animation: intro-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.62s both;
 }
 
-/* hairline flourish + pulsing full stop */
-.intro-portfolio::after {
-	content: "";
-	position: absolute;
-	left: calc(100% + 1.3rem);
-	top: 55%;
-	width: var(--rule-w);
+/* Focus rail below "Portfolio": draws from the centre, then a gleam glides along it */
+.intro-rail {
+	--rail-half: clamp(75px, 12vw, 160px);
+	--rail-w: calc(var(--rail-half) + var(--rail-half));
+	position: relative;
+	width: var(--rail-w);
 	height: 1px;
-	background: var(--intro-line-strong);
-	transform: scaleX(0);
-	transform-origin: left center;
-	animation: portfolio-rule 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.25s forwards;
+	margin-top: clamp(1.1rem, 2.6vh, 1.8rem);
+	opacity: 0;
+	animation: intro-rail-in 0.3s ease 0.95s forwards;
 }
 
-.intro-portfolio::before {
+.intro-rail::before {
 	content: "";
 	position: absolute;
-	left: calc(100% + 1.3rem + var(--rule-w));
-	top: 55%;
-	width: 7px;
+	inset: 0;
+	background: linear-gradient(90deg, transparent, var(--intro-line-strong) 16%, var(--intro-line-strong) 84%, transparent);
+	transform: scaleX(0);
+	transform-origin: center;
+	animation: intro-rail-draw 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
+}
+
+.intro-rail::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
 	height: 7px;
+	transform: translateY(-50%);
+	background:
+		radial-gradient(circle at 50% 50%, transparent 0 1.6px, var(--intro-line-strong) 2px 2.7px, transparent 3.4px),
+		linear-gradient(var(--intro-line-strong), var(--intro-line-strong)) left center / 1px 5px no-repeat,
+		linear-gradient(var(--intro-line-strong), var(--intro-line-strong)) right center / 1px 5px no-repeat;
+	opacity: 0;
+	animation: intro-rail-ticks 0.45s ease 1.7s forwards;
+}
+
+.intro-rail-gleam {
+	--gleam-w: clamp(48px, 8vw, 88px);
+	--gleam-half: clamp(24px, 4vw, 44px);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: var(--gleam-w);
+	height: 1px;
+	background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--intro-ink) 72%, transparent), transparent);
+	transform: translate(-50%, -50%);
+	translate: calc(0px - var(--rail-half) + var(--gleam-half)) 0;
+	opacity: 0;
+	animation:
+		intro-gleam-in 0.4s ease 1.55s forwards,
+		intro-gleam-run 2.6s cubic-bezier(0.45, 0, 0.55, 1) 1.6s infinite alternate;
+	will-change: translate;
+}
+
+.intro-rail-gleam::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 5px;
+	height: 5px;
+	margin: -2.5px 0 0 -2.5px;
 	border-radius: 50%;
 	background: var(--intro-ink);
-	transform: translate(-50%, -50%) scale(0);
-	animation:
-		portfolio-dot 0.4s cubic-bezier(0.22, 1, 0.36, 1) 1.85s forwards,
-		portfolio-pulse 3.2s ease-in-out 2.5s infinite;
+	box-shadow:
+		0 0 0 3px color-mix(in srgb, var(--intro-ink) 8%, transparent),
+		0 0 16px color-mix(in srgb, var(--intro-ink) 40%, transparent);
 }
 
-@keyframes portfolio-rule {
+@keyframes intro-rail-in {
+	to { opacity: 1; }
+}
+
+@keyframes intro-rail-draw {
 	to { transform: scaleX(1); }
 }
 
-@keyframes portfolio-dot {
-	to { transform: translate(-50%, -50%) scale(1); }
+@keyframes intro-rail-ticks {
+	to { opacity: 1; }
 }
 
-@keyframes portfolio-pulse {
-	0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--intro-ink) 16%, transparent); }
-	50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--intro-ink) 0%, transparent); }
+@keyframes intro-gleam-in {
+	to { opacity: 1; }
+}
+
+@keyframes intro-gleam-run {
+	from { translate: calc(0px - var(--rail-half) + var(--gleam-half)) 0; }
+	to { translate: calc(var(--rail-half) - var(--gleam-half)) 0; }
 }
 
 /* progress bar → ink */
@@ -4365,9 +4414,9 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 		font-size: clamp(2.2rem, 10.5vw, 3.8rem);
 	}
 
-	.intro-portfolio::before,
-	.intro-portfolio::after {
-		display: none;
+	.intro-rail {
+		--rail-half: clamp(60px, 26vw, 110px);
+		margin-top: 0.95rem;
 	}
 }
 
@@ -4396,9 +4445,9 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 		font-size: clamp(1.3rem, 5.5vh, 2rem);
 	}
 
-	.intro-portfolio::before,
-	.intro-portfolio::after {
-		display: none;
+	.intro-rail {
+		--rail-half: clamp(55px, 16vw, 95px);
+		margin-top: 0.7rem;
 	}
 }
 
