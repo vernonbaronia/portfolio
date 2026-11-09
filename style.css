@@ -4331,6 +4331,23 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 	box-shadow:
 		0 0 0 3px color-mix(in srgb, var(--intro-ink) 8%, transparent),
 		0 0 16px color-mix(in srgb, var(--intro-ink) 40%, transparent);
+	animation: intro-rail-bead 1.3s ease-in-out infinite;
+}
+
+/* tiny twinkle riding above the leading bead */
+.intro-rail-fill::before {
+	content: "";
+	position: absolute;
+	right: -3.5px;
+	top: -10px;
+	width: 7px;
+	height: 7px;
+	background:
+		radial-gradient(circle, var(--intro-ink) 0 0.8px, transparent 1.2px) center / 100% 100% no-repeat,
+		linear-gradient(var(--intro-ink), var(--intro-ink)) center / 1px 100% no-repeat,
+		linear-gradient(var(--intro-ink), var(--intro-ink)) center / 100% 1px no-repeat;
+	opacity: 0;
+	animation: intro-rail-twinkle 1.6s ease-in-out 0.9s infinite;
 }
 
 @keyframes intro-rail-in {
@@ -4343,6 +4360,16 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 
 @keyframes intro-rail-ticks {
 	to { opacity: 1; }
+}
+
+@keyframes intro-rail-bead {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.28); }
+}
+
+@keyframes intro-rail-twinkle {
+	0%, 100% { opacity: 0; transform: translateY(1px) scale(0.35) rotate(0deg); }
+	50% { opacity: 1; transform: translateY(-1px) scale(1.05) rotate(45deg); }
 }
 
 /* progress bar → ink */
