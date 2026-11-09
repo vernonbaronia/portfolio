@@ -1233,10 +1233,9 @@ main {
    ABOUT ME
    ========================================================= */
 .about-container {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr);
-	align-items: center;
-	gap: clamp(2.25rem, 4vw, 4.5rem);
+	display: flex;
+	flex-direction: column;
+	gap: clamp(1.35rem, 2.4vh, 1.9rem);
 	width: 100%;
 	max-width: 1480px;
 	margin: 0 auto;
@@ -1244,15 +1243,31 @@ main {
 	translate: 0 -2rem;
 }
 
+/* Intro row: portrait + social links beside the name, bio and tags */
+.about-hero {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: center;
+	gap: clamp(2rem, 4vw, 4rem);
+	width: 100%;
+}
+
 /* --- Portrait --- */
 .about-visual {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 2rem;
+}
+
+.about-portrait {
 	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
-.about-visual::before {
+.about-portrait::before {
 	content: "";
 	position: absolute;
 	inset: -44px;
@@ -1262,7 +1277,7 @@ main {
 	z-index: 0;
 }
 
-.about-visual::after {
+.about-portrait::after {
 	content: "";
 	position: absolute;
 	inset: -24px;
@@ -1307,7 +1322,7 @@ main {
 .photo-frame {
 	position: relative;
 	z-index: 1;
-	width: clamp(260px, 30vw, 430px);
+	width: clamp(240px, 26vw, 340px);
 	padding: 7px;
 	border-radius: 32px;
 	background: var(--frame-grad);
@@ -1342,8 +1357,16 @@ main {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
+	gap: 0.95rem;
 	min-width: 0;
-	max-width: 900px;
+	width: 100%;
+}
+
+.about-info .about-eyebrow,
+.about-info h1,
+.about-info .name-flourish {
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 .about-eyebrow {
@@ -1406,8 +1429,8 @@ body.is-achievements .nav-page-title {
 }
 
 .about-info .name-flourish {
-	margin-top: 0.2rem;
-	margin-bottom: 0.9rem;
+	margin-top: 0;
+	margin-bottom: 0;
 }
 
 @keyframes flourish-draw {
@@ -1480,7 +1503,7 @@ body.is-entered .about-info > *:nth-child(6) { animation-delay: 1.08s; }
 }
 
 .about-info h1 {
-	margin: 0 0 0.6rem;
+	margin: 0;
 	font-family: var(--font-display);
 	font-size: clamp(2.5rem, 4.6vw, 4.7rem);
 	font-weight: 700;
@@ -1602,8 +1625,8 @@ body.is-entered .about-info h1 {
 
 .bio {
 	position: relative;
-	margin: 0 0 1.5rem;
-	padding: clamp(1.4rem, 2vw, 1.8rem) clamp(1.5rem, 2.2vw, 2rem) clamp(1.4rem, 2vw, 1.8rem) clamp(1.7rem, 2.4vw, 2.2rem);
+	margin: 0;
+	padding: clamp(1.2rem, 1.7vw, 1.5rem) clamp(1.4rem, 2vw, 1.8rem) clamp(1.2rem, 1.7vw, 1.5rem) clamp(1.6rem, 2.2vw, 2rem);
 	font-size: clamp(1rem, 1.2vw, 1.15rem);
 	line-height: 1.78;
 	color: var(--ink);
@@ -1756,7 +1779,7 @@ body.is-entered .about-info h1 {
 	flex-direction: column;
 	gap: 0.85rem;
 	width: 100%;
-	margin-top: clamp(1rem, 1.8vh, 1.3rem);
+	margin-top: 0;
 }
 
 .about-tag-row {
@@ -1811,11 +1834,112 @@ body.is-entered .about-info h1 {
 	box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.45);
 }
 
+/* --- Grouped personal details --- */
+.about-facts-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: clamp(0.85rem, 1.2vw, 1.25rem);
+	width: 100%;
+}
+
+.facts-group {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	padding: 1.05rem 1.2rem 1.15rem;
+	background: var(--surface-strong);
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	box-shadow: var(--shadow-soft);
+}
+
+.facts-group-head {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-bottom: 0.8rem;
+	padding-bottom: 0.7rem;
+	border-bottom: 1px solid var(--line);
+}
+
+.facts-group-icon {
+	display: grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 26px;
+	height: 26px;
+	border-radius: 8px;
+	font-size: 0.72rem;
+	color: var(--accent-deep);
+	background: var(--accent-wash);
+	border: 1px solid var(--line);
+}
+
+.facts-group-title {
+	margin: 0;
+	font-family: var(--font-navi);
+	font-size: 0.68rem;
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--ink-faint);
+}
+
+.facts-list {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+}
+
+.facts-list .fact {
+	display: flex;
+	flex-direction: row;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.9rem;
+	padding: 0.5rem 0;
+}
+
+.facts-list .fact:first-child {
+	padding-top: 0;
+}
+
+.facts-list .fact:last-child {
+	padding-bottom: 0;
+}
+
+.facts-list .fact + .fact {
+	border-top: 1px dashed var(--line);
+}
+
+.facts-list .fact dt {
+	margin-bottom: 0;
+	flex: 0 0 auto;
+}
+
+.facts-list .fact dd {
+	font-size: 0.95rem;
+	text-align: right;
+}
+
 /* --- Links --- */
 .about-links {
 	display: flex;
 	gap: 0.85rem;
 	margin-top: clamp(1.1rem, 2vh, 1.5rem);
+}
+
+.about-visual .about-links {
+	margin-top: 0;
+	gap: 0.6rem;
+}
+
+.about-links--social .icon-btn {
+	width: 46px;
+	height: 46px;
+	font-size: 1.02rem;
 }
 
 .icon-btn {
@@ -3144,17 +3268,21 @@ body.is-intro .category-dock {
 	}
 
 	.about-container {
-		grid-template-columns: minmax(0, 1fr);
-		justify-items: center;
-		gap: 2.2rem;
+		gap: 1.6rem;
 		padding: 2.2rem 1.4rem 2.5rem;
 	}
 
-	.about-visual::before {
+	.about-hero {
+		grid-template-columns: minmax(0, 1fr);
+		justify-items: center;
+		gap: 2rem;
+	}
+
+	.about-portrait::before {
 		inset: -30px;
 	}
 
-	.about-visual::after {
+	.about-portrait::after {
 		inset: -16px;
 	}
 
@@ -3184,6 +3312,12 @@ body.is-intro .category-dock {
 
 	.about-tags {
 		text-align: left;
+	}
+
+	.about-facts-grid {
+		grid-template-columns: minmax(0, 1fr);
+		max-width: 720px;
+		margin: 0 auto;
 	}
 
 	.about-info .name-flourish {
@@ -3503,7 +3637,7 @@ body.is-intro .category-dock {
 
 @media (min-width: 981px) {
 	#about.section .about-container {
-		padding-bottom: clamp(0.75rem, 1.5vh, 1.25rem);
+		padding-bottom: clamp(4.5rem, 7vh, 5.5rem);
 	}
 }
 
@@ -4903,7 +5037,7 @@ nav {
 	.page-shutter::before,
 	.intro-shutter::before,
 	.home-stage::before,
-	.about-visual::after {
+	.about-portrait::after {
 		animation: none;
 	}
 }
