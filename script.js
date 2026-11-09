@@ -1350,6 +1350,49 @@
 		});
 	}
 
+	/* =====================================================
+	   Personal info: build a rounded-rectangle path so the
+	   orbit words slither around the portrait's border.
+	   ===================================================== */
+	var orbitPortrait = document.querySelector('.about-portrait');
+	var orbitBadge = document.querySelector('.orbit-badge');
+
+	function updateOrbitPath() {
+		if (!orbitPortrait || !orbitBadge) return;
+		var w = orbitPortrait.clientWidth;
+		var h = orbitPortrait.clientHeight;
+		if (!w || !h) return;
+
+		var d = 19; /* distance outside the frame */
+		var r = 18; /* rounded corner radius */
+		var x0 = -d;
+		var y0 = -d;
+		var x1 = w + d;
+		var y1 = h + d;
+
+		var path = 'path("M ' + r + ' ' + y0 +
+			' H ' + (x1 - r) +
+			' A ' + r + ' ' + r + ' 0 0 1 ' + x1 + ' ' + (y0 + r) +
+			' V ' + (y1 - r) +
+			' A ' + r + ' ' + r + ' 0 0 1 ' + (x1 - r) + ' ' + y1 +
+			' H ' + (x0 + r) +
+			' A ' + r + ' ' + r + ' 0 0 1 ' + x0 + ' ' + (y1 - r) +
+			' V ' + (y0 + r) +
+			' A ' + r + ' ' + r + ' 0 0 1 ' + (x0 + r) + ' ' + y0 +
+			' Z")';
+
+		orbitBadge.style.setProperty('--snake-path', path);
+	}
+
+	if (orbitPortrait && orbitBadge) {
+		if (window.ResizeObserver) {
+			new ResizeObserver(updateOrbitPath).observe(orbitPortrait);
+		} else {
+			window.addEventListener('resize', updateOrbitPath);
+		}
+		updateOrbitPath();
+	}
+
 	/* ---------- Start ---------- */
 	updateActiveSection(0);
 })();
