@@ -1218,6 +1218,21 @@ main {
 	to { opacity: 1; transform: none; }
 }
 
+/* Panels pop up from their own centre when they open */
+.section.active .home-stage,
+.section.active .about-container,
+.section.active .achievements-layout {
+	transform-origin: 50% 50%;
+	animation: content-pop 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes content-pop {
+	0% { opacity: 0; transform: scale(0.82); }
+	55% { opacity: 1; transform: scale(1.035); }
+	75% { transform: scale(0.99); }
+	100% { opacity: 1; transform: scale(1); }
+}
+
 @keyframes rise-in {
 	from { opacity: 0; transform: translateY(18px); }
 	to { opacity: 1; transform: none; }
