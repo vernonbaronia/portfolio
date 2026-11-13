@@ -178,3 +178,12 @@
 	font-display: swap;
 	src: url('fonts/olivera.woff') format('woff');
 }
+
+/* Vielotta - achievement award lists */
+@font-face {
+	font-family: 'Vielotta';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('fonts/vielotta.woff') format('woff');
+}

@@ -3078,12 +3078,12 @@ body.is-achievements .nav-journey {
 
 .ach-runner-arm-back,
 .ach-runner-leg-front {
-	animation: ach-run 0.54s ease-in-out infinite alternate;
+	animation: ach-run 0.78s ease-in-out infinite alternate;
 }
 
 .ach-runner-arm-front,
 .ach-runner-leg-back {
-	animation: ach-run 0.54s ease-in-out infinite alternate-reverse;
+	animation: ach-run 0.78s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes ach-run {
@@ -3276,10 +3276,10 @@ body.is-achievements .nav-journey {
 .ach-awards li {
 	position: relative;
 	padding-left: 0.82rem;
-	font-family: var(--font-time);
-	font-size: clamp(0.8rem, 0.88vw, 1rem);
-	font-weight: 500;
-	line-height: 1.32;
+	font-family: 'Vielotta', var(--font-time);
+	font-size: clamp(0.82rem, 0.9vw, 1.02rem);
+	font-weight: 400;
+	line-height: 1.35;
 	color: var(--ink);
 }
 

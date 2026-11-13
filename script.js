@@ -1913,7 +1913,7 @@
 
 			if (distance > 4) {
 				/* Constant-ish running speed, in px per millisecond. */
-				var runTime = Math.max(340, Math.min(1100, distance / 0.46));
+				var runTime = Math.max(560, Math.min(1700, distance / 0.3));
 				push(runTime, runTo, step.y, 0, 1);
 			}
 
@@ -1930,7 +1930,7 @@
 			/* Never let the leap carry the climber's head into the title. */
 			var arcRoom = (achievBoard.offsetHeight + jumpToY) - figureH - headLimit;
 			arc = Math.max(0, Math.min(arc, arcRoom));
-			var flight = 540;
+			var flight = 780;
 			var slices = 8;
 
 			for (var k = 1; k <= slices; k++) {
