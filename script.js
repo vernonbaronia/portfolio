@@ -1731,10 +1731,10 @@
 			if (isSummit && achievSummitCard) {
 				achievSummitCard.appendChild(card);
 			} else if (index === 0 && achievBase) {
-				/* The first step is stacked on top of the day care block. */
-				achievBase.appendChild(card);
+				/* The day care block sits on top of the first step. */
 				var startCard = buildAchievementStart(achievContent.start);
 				if (startCard) achievBase.appendChild(startCard);
+				achievBase.appendChild(card);
 			} else {
 				card.style.setProperty('--ach-col', String(index + 1));
 				achievBoard.appendChild(card);

@@ -2824,7 +2824,7 @@ body.is-achievements::before {
 .nav-journey {
 	display: none;
 	position: absolute;
-	top: calc(50% + 0.95rem);
+	top: calc(50% + 2.05rem);
 	left: clamp(1rem, 2.5vw, 2rem);
 	z-index: 1;
 	max-width: 15ch;
@@ -3122,24 +3122,24 @@ body.is-achievements .nav-journey {
 }
 
 .ach-reel-slide {
-	display: grid;
-	place-items: center;
+	position: relative;
+	display: block;
 	flex: 0 0 100%;
 	width: 100%;
 	height: 100%;
 	margin: 0;
-	padding: 0.35rem;
+	padding: 0;
 	background: none;
 	border: 0;
 	cursor: zoom-in;
 }
 
 .ach-reel-slide img {
-	display: block;
-	max-width: 100%;
-	max-height: 100%;
-	width: auto;
-	height: auto;
+	position: absolute;
+	top: 0.4rem;
+	left: 0.4rem;
+	width: calc(100% - 0.8rem);
+	height: calc(100% - 0.8rem);
 	object-fit: contain;
 	border-radius: 3px;
 }
@@ -3184,9 +3184,10 @@ body.is-achievements .nav-journey {
 
 .ach-still img {
 	display: block;
-	max-width: 100%;
-	height: clamp(120px, 20vh, 210px);
 	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: clamp(120px, 20vh, 210px);
 	object-fit: contain;
 	border-radius: 4px;
 }
