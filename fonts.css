@@ -187,3 +187,12 @@
 	font-display: swap;
 	src: url('fonts/vielotta.woff') format('woff');
 }
+
+/* Willow Starlion DEMO - achievement award lists */
+@font-face {
+	font-family: 'Willow Starlion';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('fonts/willow-starlion.ttf') format('truetype');
+}
