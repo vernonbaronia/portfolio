@@ -3050,6 +3050,27 @@ body.is-achievements .nav-journey {
 	width: 100%;
 	height: 100%;
 	overflow: visible;
+	/* A soft starlight halo around the little climber. */
+	filter:
+		drop-shadow(0 0 3px rgba(255, 246, 220, 0.85))
+		drop-shadow(0 0 10px rgba(255, 226, 160, 0.45))
+		drop-shadow(0 0 22px rgba(255, 214, 140, 0.22));
+	animation: ach-runner-glow 3.8s ease-in-out infinite;
+}
+
+@keyframes ach-runner-glow {
+	0%, 100% {
+		filter:
+			drop-shadow(0 0 3px rgba(255, 246, 220, 0.75))
+			drop-shadow(0 0 9px rgba(255, 226, 160, 0.38))
+			drop-shadow(0 0 20px rgba(255, 214, 140, 0.18));
+	}
+	50% {
+		filter:
+			drop-shadow(0 0 4px rgba(255, 248, 226, 1))
+			drop-shadow(0 0 15px rgba(255, 230, 170, 0.62))
+			drop-shadow(0 0 30px rgba(255, 216, 140, 0.32));
+	}
 }
 
 .ach-runner-head {
