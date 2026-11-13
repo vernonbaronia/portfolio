@@ -531,60 +531,6 @@
 	if (dot) dot.remove();
 	if (ring) ring.remove();
 
-	if (false && finePointer && dot && ring) {
-		docEl.classList.add('has-custom-cursor');
-
-		var mouseX = window.innerWidth / 2;
-		var mouseY = window.innerHeight / 2;
-		var ringX = mouseX;
-		var ringY = mouseY;
-		var visible = false;
-
-		window.addEventListener('pointermove', function (event) {
-			mouseX = event.clientX;
-			mouseY = event.clientY;
-
-			if (!visible) {
-				visible = true;
-				ringX = mouseX;
-				ringY = mouseY;
-				dot.classList.remove('is-hidden');
-				ring.classList.remove('is-hidden');
-			}
-
-			dot.style.transform = 'translate3d(' + mouseX + 'px,' + mouseY + 'px,0)';
-		}, { passive: true });
-
-		document.addEventListener('pointerover', function (event) {
-			var interactive = event.target && event.target.closest
-				? event.target.closest('a, button, [role="tab"], [role="button"], .photo-frame, .home-portrait, .icon-btn')
-				: null;
-			dot.classList.toggle('is-hover', !!interactive);
-			ring.classList.toggle('is-hover', !!interactive);
-		});
-
-		window.addEventListener('pointerdown', function () {
-			ring.classList.add('is-down');
-		});
-
-		window.addEventListener('pointerup', function () {
-			ring.classList.remove('is-down');
-		});
-
-		document.addEventListener('mouseleave', function () {
-			visible = false;
-			dot.classList.add('is-hidden');
-			ring.classList.add('is-hidden');
-		});
-
-		(function trail() {
-			var ease = prefersReduced ? 1 : 0.45;
-			ringX += (mouseX - ringX) * ease;
-			ringY += (mouseY - ringY) * ease;
-			ring.style.transform = 'translate3d(' + ringX.toFixed(2) + 'px,' + ringY.toFixed(2) + 'px,0)';
-			window.requestAnimationFrame(trail);
-		})();
-	}
 
 	/* =====================================================
 	   Background — sparkles + gentle parallax
