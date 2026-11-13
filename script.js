@@ -523,12 +523,15 @@
 	}
 
 	/* =====================================================
-	   Custom cursor
+	   Custom cursor — parked. The site uses the normal pointer.
 	   ===================================================== */
 	var dot = document.getElementById('cursor-dot');
 	var ring = document.getElementById('cursor-ring');
 
-	if (finePointer && dot && ring) {
+	if (dot) dot.remove();
+	if (ring) ring.remove();
+
+	if (false && finePointer && dot && ring) {
 		docEl.classList.add('has-custom-cursor');
 
 		var mouseX = window.innerWidth / 2;
@@ -1407,6 +1410,11 @@
 		photos.forEach(function (item) {
 			indexBySrc[item.src] = items.length;
 			items.push({ src: item.src, title: item.title, school: school.school });
+
+			/* Warm the cache so a swipe never waits on the network. */
+			var preload = new Image();
+			preload.decoding = 'async';
+			preload.src = item.thumb || item.src;
 		});
 
 		/* The graduation shot leads and comes back every ninth slide; the
@@ -2215,22 +2223,20 @@
 		var shots = [];
 		var width = 0;
 		var height = 0;
-		var pointerX = 0;
-		var pointerY = 0;
 		var nextShot = 6 + Math.random() * 8;
 		var last = 0;
 		var running = false;
 
 		function build() {
-			var count = Math.round(Math.min(170, Math.max(70, (width * height) / 11000)));
+			var count = Math.round(Math.min(120, Math.max(50, (width * height) / 17000)));
 			stars = [];
 			for (var i = 0; i < count; i++) {
 				stars.push({
 					x: Math.random() * width,
 					y: Math.random() * height,
-					r: 0.4 + Math.random() * 1.5,
+					r: 0.35 + Math.random() * 1.1,
 					phase: Math.random() * Math.PI * 2,
-					speed: 0.35 + Math.random() * 1.3,
+					speed: 0.3 + Math.random() * 1.1,
 					depth: 0.25 + Math.random() * 0.75
 				});
 			}
@@ -2268,11 +2274,11 @@
 				var s = stars[i];
 				var twinkle = 0.5 + 0.5 * Math.sin(time * s.speed + s.phase);
 				var alpha = dark
-					? 0.14 + twinkle * 0.72
-					: 0.05 + twinkle * 0.24;
-				var x = s.x + pointerX * 22 * s.depth;
-				var y = s.y + pointerY * 16 * s.depth + Math.sin(time * 0.18 + s.phase) * 2.5;
-				var radius = s.r * (0.75 + twinkle * 0.6);
+					? 0.05 + twinkle * 0.4
+					: 0.02 + twinkle * 0.12;
+				var x = s.x;
+				var y = s.y + Math.sin(time * 0.18 + s.phase) * 2;
+				var radius = s.r * (0.75 + twinkle * 0.5);
 
 				ctx.beginPath();
 				ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -2280,16 +2286,6 @@
 					? 'rgba(255, 247, 226,' + alpha.toFixed(3) + ')'
 					: 'rgba(38, 32, 24,' + alpha.toFixed(3) + ')';
 				ctx.fill();
-
-				/* A soft halo on the brightest few. */
-				if (s.r > 1.25 && twinkle > 0.55) {
-					ctx.beginPath();
-					ctx.arc(x, y, radius * 3.4, 0, Math.PI * 2);
-					ctx.fillStyle = dark
-						? 'rgba(255, 236, 190,' + (alpha * 0.12).toFixed(3) + ')'
-						: 'rgba(38, 32, 24,' + (alpha * 0.08).toFixed(3) + ')';
-					ctx.fill();
-				}
 			}
 
 			nextShot -= dt;
@@ -2330,11 +2326,16 @@
 
 		function loop(now) {
 			if (!running) return;
+			window.requestAnimationFrame(loop);
+
+			/* 30fps is plenty for a slow twinkle and leaves the main thread
+			   free for the card transitions. */
+			if (now - last < 30) return;
+
 			var time = now / 1000;
-			var dt = last ? Math.min(0.05, (now - last) / 1000) : 0.016;
+			var dt = last ? Math.min(0.06, (now - last) / 1000) : 0.016;
 			last = now;
 			draw(time, dt);
-			window.requestAnimationFrame(loop);
 		}
 
 		function start() {
@@ -2350,11 +2351,6 @@
 
 		resize();
 		window.addEventListener('resize', resize);
-
-		window.addEventListener('pointermove', function (event) {
-			pointerX = (event.clientX / window.innerWidth) * 2 - 1;
-			pointerY = (event.clientY / window.innerHeight) * 2 - 1;
-		}, { passive: true });
 
 		document.addEventListener('visibilitychange', function () {
 			if (document.hidden) {
