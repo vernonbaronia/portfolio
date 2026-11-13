@@ -169,3 +169,12 @@
 	font-display: swap;
 	src: url('fonts/shooting-star.woff') format('woff');
 }
+
+/* Olivera - achievements top-left line */
+@font-face {
+	font-family: 'Olivera';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('fonts/olivera.woff') format('woff');
+}
