@@ -40,7 +40,7 @@ window.ACHIEVEMENT_CONTENT = {
 			logo: 'bis',
 			folder: 'JHS',
 			bg: 'achievements-images/bg/bis-bg.jpg',
-			photo: 'profiles/thumbs/jhs-vernon.jpg',
+			photo: 'profiles/thumbs/jhs-vernon-2.jpg',
 			awards: [
 				'With Honors — Grade 9',
 				'With High Honors — Grade 10',

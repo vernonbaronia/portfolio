@@ -3128,7 +3128,7 @@ body.is-achievements .nav-journey {
 		clamp(0.65rem, 0.85vw, 0.8rem);
 	background-color: var(--surface);
 	background-image:
-		linear-gradient(rgba(255, 252, 247, 0.9), rgba(255, 252, 247, 0.9)),
+		linear-gradient(rgba(255, 252, 247, 0.93), rgba(255, 252, 247, 0.93)),
 		var(--ach-card-bg, none);
 	background-size: cover, cover;
 	background-position: center, center;
@@ -3183,9 +3183,9 @@ body.is-achievements .nav-journey {
 [data-theme="dark"] .ach-card {
 	background-image:
 		linear-gradient(180deg,
-			rgba(9, 9, 11, 0.94) 0%,
-			rgba(9, 9, 11, 0.82) 45%,
-			rgba(9, 9, 11, 0.72) 100%),
+			rgba(9, 9, 11, 0.96) 0%,
+			rgba(9, 9, 11, 0.88) 45%,
+			rgba(9, 9, 11, 0.8) 100%),
 		var(--ach-card-bg, none);
 	border-color: rgba(235, 235, 242, 0.18);
 	box-shadow:
@@ -3277,10 +3277,12 @@ body.is-achievements .nav-journey {
 	position: relative;
 	padding-left: 0.82rem;
 	font-family: 'Willow Starlion', 'Vielotta', var(--font-time);
-	font-size: clamp(0.86rem, 0.96vw, 1.08rem);
+	font-size: clamp(0.88rem, 0.98vw, 1.1rem);
 	font-weight: 400;
-	line-height: 1.42;
+	line-height: 1.38;
+	letter-spacing: 0.005em;
 	color: var(--ink);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
 }
 
 .ach-awards li::before {
