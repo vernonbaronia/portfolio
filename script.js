@@ -315,14 +315,17 @@
 				barAnimations.forEach(function (anim) { anim.play(); });
 				return;
 			}
+			/* The rail carries a glowing head, so it animates its width; the
+			   bottom bar is a plain fill, so it can scale on the compositor. */
 			barAnimations = [
-				{ el: railFill, id: 'intro-rail-fill' },
-				{ el: progressFill, id: 'intro-progress-fill' }
+				{ el: railFill, id: 'intro-rail-fill', frames: [{ width: '0%' }, { width: '100%' }] },
+				{ el: progressFill, id: 'intro-progress-fill', frames: [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }] }
 			].map(function (item) {
-				var anim = item.el.animate(
-					[{ width: '0%' }, { width: '100%' }],
-					{ duration: AUTO_ENTER_MS, easing: 'linear', fill: 'forwards' }
-				);
+				var anim = item.el.animate(item.frames, {
+					duration: AUTO_ENTER_MS,
+					easing: 'linear',
+					fill: 'forwards'
+				});
 				anim.id = item.id;
 				return anim;
 			});
@@ -2184,7 +2187,7 @@
 		var running = false;
 
 		function build() {
-			var count = Math.round(Math.min(120, Math.max(50, (width * height) / 17000)));
+			var count = Math.round(Math.min(100, Math.max(45, (width * height) / 20000)));
 			stars = [];
 			for (var i = 0; i < count; i++) {
 				stars.push({
@@ -2199,7 +2202,9 @@
 		}
 
 		function resize() {
-			var dpr = Math.min(2, window.devicePixelRatio || 1);
+			/* One canvas pixel per CSS pixel is plenty for these tiny dots and
+			   keeps the per-frame cost down. */
+			var dpr = 1;
 			width = window.innerWidth;
 			height = window.innerHeight;
 			canvas.width = Math.floor(width * dpr);
@@ -2284,9 +2289,9 @@
 			if (!running) return;
 			window.requestAnimationFrame(loop);
 
-			/* 30fps is plenty for a slow twinkle and leaves the main thread
+			/* 25fps is plenty for a slow twinkle and leaves the main thread
 			   free for the card transitions. */
-			if (now - last < 30) return;
+			if (now - last < 40) return;
 
 			var time = now / 1000;
 			var dt = last ? Math.min(0.06, (now - last) / 1000) : 0.016;
@@ -2322,7 +2327,13 @@
 			return;
 		}
 
-		start();
+		/* While the intro is up its full-screen blur would be re-rendered
+		   every frame, so the sky waits until the site is entered. */
+		if (document.body.classList.contains('is-intro')) {
+			document.addEventListener('jvb:entered', start, { once: true });
+		} else {
+			start();
+		}
 	})();
 
 	/* ---------- Start ---------- */

@@ -1158,6 +1158,7 @@ main {
 .section.active {
 	display: flex;
 	animation: section-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+	will-change: transform, opacity;
 }
 
 .section.is-leaving {
@@ -3302,6 +3303,7 @@ body.is-achievements .nav-journey {
 .ach-reel {
 	position: relative;
 	overflow: hidden;
+	contain: paint;
 	width: 100%;
 	height: clamp(150px, 18.5vh, 240px);
 	margin-top: 0.15rem;
@@ -5202,7 +5204,9 @@ body.is-entered .dir-card:nth-child(5) { animation-delay: 0.82s; }
 .intro-progress-fill {
 	display: block;
 	height: 100%;
-	width: 0;
+	width: 100%;
+	transform: scaleX(0);
+	transform-origin: left center;
 	background: linear-gradient(90deg, var(--accent-soft), var(--accent));
 }
 
