@@ -1882,28 +1882,36 @@
 		var safeHead = navH + 34;
 		var headLimit = (safeHead - boardRect.top) / (zoom || 1);
 
-		function style(x, y, rot, opacity) {
+		function style(x, y, rot, opacity, scale) {
 			return {
-				transform: 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg)',
+				transform: 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')',
 				opacity: opacity
 			};
 		}
 
-		function push(delay, x, y, rot, opacity) {
+		function push(delay, x, y, rot, opacity, scale) {
 			time += delay;
-			frames.push({ time: time, style: style(x, y, rot, opacity) });
+			frames.push({ time: time, style: style(x, y, rot, opacity, scale) });
+		}
+
+		/* He starts tiny at the day-care step and grows as he climbs. */
+		function scaleAt(index) {
+			if (steps.length < 2) return 0.9;
+			return 0.7 + (index / (steps.length - 1)) * 0.55;
 		}
 
 		var x = steps[0].left + inset;
 		var y = steps[0].y;
 
 		/* A quiet beat before the climb starts. */
-		push(0, x, y, 0, 0);
-		push(300, x, y, 0, 0);
-		push(240, x, y, 0, 1);
+		push(0, x, y, 0, 0, scaleAt(0));
+		push(300, x, y, 0, 0, scaleAt(0));
+		push(240, x, y, 0, 1, scaleAt(0));
 
 		steps.forEach(function (step, i) {
 			var lastStep = i === steps.length - 1;
+			var here = scaleAt(i);
+			var there = scaleAt(Math.min(i + 1, steps.length - 1));
 			/* On the final step the climber pulls up near the middle of the
 			   card instead of running all the way to the edge. */
 			var runTo = lastStep
@@ -1914,7 +1922,7 @@
 			if (distance > 4) {
 				/* Constant-ish running speed, in px per millisecond. */
 				var runTime = Math.max(560, Math.min(1700, distance / 0.3));
-				push(runTime, runTo, step.y, 0, 1);
+				push(runTime, runTo, step.y, 0, 1, here);
 			}
 
 			x = runTo;
@@ -1928,7 +1936,7 @@
 			var rise = Math.abs(jumpToY - step.y);
 			var arc = Math.max(30, Math.min(84, rise * 0.45 + 28));
 			/* Never let the leap carry the climber's head into the title. */
-			var arcRoom = (achievBoard.offsetHeight + jumpToY) - figureH - headLimit;
+			var arcRoom = (achievBoard.offsetHeight + jumpToY) - figureH * there - headLimit;
 			arc = Math.max(0, Math.min(arc, arcRoom));
 			var flight = 780;
 			var slices = 8;
@@ -1945,7 +1953,8 @@
 					x + (jumpToX - x) * p,
 					step.y + (jumpToY - step.y) * p - arcOffset * arc,
 					arcOffset * 14,
-					1
+					1,
+					here + (there - here) * p
 				);
 			}
 
@@ -1955,8 +1964,9 @@
 
 		/* At the top: stop, wave, then fade away and walk again. */
 		var holdAt = time;
-		push(1750, x, y, 0, 1);
-		push(320, x, y, 0, 0);
+		var top = scaleAt(steps.length - 1);
+		push(1750, x, y, 0, 1, top);
+		push(320, x, y, 0, 0, top);
 
 		var total = time;
 		return {

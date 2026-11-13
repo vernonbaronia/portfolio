@@ -11,28 +11,20 @@
 
 	<!-- Set the theme before first paint so there is no flash -->
 	<script>
+		/* Light mode is parked for now — the site always opens in dark. */
 		(function () {
-			var theme;
-			try {
-				var stored = window.localStorage.getItem('jvb-theme');
-				theme = (stored === 'dark' || stored === 'light')
-					? stored
-					: 'dark';
-			} catch (e) {
-				theme = 'light';
-			}
-			document.documentElement.setAttribute('data-theme', theme);
+			document.documentElement.setAttribute('data-theme', 'dark');
 		})();
 	</script>
 
-	<link rel="stylesheet" href="fonts.css?v=20261115-12">
+	<link rel="stylesheet" href="fonts.css?v=20261115-13">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	<link rel="stylesheet" href="style.css?v=20261115-12">
+	<link rel="stylesheet" href="style.css?v=20261115-13">
 </head>
 <body class="is-intro is-home">
 
@@ -64,11 +56,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="intro-controls" role="group" aria-label="Appearance">
-			<button class="orb-btn theme-toggle" id="intro-theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
-				<i class="fa-solid fa-moon" aria-hidden="true"></i>
-			</button>
-		</div>
+		<div class="intro-controls" role="group" aria-label="Appearance"></div>
 		<div class="intro-progress" aria-hidden="true"><span class="intro-progress-fill"></span></div>
 	</div>
 
@@ -425,9 +413,6 @@
 		<button class="orb-btn sound-toggle" id="sound-toggle" type="button" data-label="Sound on" aria-pressed="true" aria-label="Mute interface sounds" title="Sound on — click to mute">
 			<i class="fa-solid fa-volume-high" aria-hidden="true"></i>
 		</button>
-		<button class="orb-btn theme-toggle" id="theme-toggle" type="button" data-label="Dark mode" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
-			<i class="fa-solid fa-moon" aria-hidden="true"></i>
-		</button>
 	</div>
 
 	<!-- ===== Achievement image viewer ===== -->
@@ -459,8 +444,8 @@
 		</figure>
 	</div>
 
-	<script src="achievements-data.js?v=20261115-12"></script>
+	<script src="achievements-data.js?v=20261115-13"></script>
 	<script src="achievements-images.js?v=20261114-2"></script>
-	<script src="script.js?v=20261115-12"></script>
+	<script src="script.js?v=20261115-13"></script>
 </body>
 </html>
