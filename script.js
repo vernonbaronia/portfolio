@@ -150,20 +150,8 @@
 			});
 		}
 
-		/* Follow the OS while the visitor has not chosen a side */
-		var system = window.matchMedia('(prefers-color-scheme: dark)');
-
-		function followSystem(event) {
-			if (stored()) return;
-			set(event.matches ? 'dark' : 'light', null);
-		}
-
-		if (typeof system.addEventListener === 'function') {
-			system.addEventListener('change', followSystem);
-		} else if (typeof system.addListener === 'function') {
-			system.addListener(followSystem);
-		}
-
+		/* Dark is the house default; only a saved choice changes it, so the
+		   operating system preference is not followed. */
 		paint();
 
 		return { paint: paint, current: current, set: set };
@@ -1362,72 +1350,94 @@
 		return img;
 	}
 
-	/* An auto-rolling, one-at-a-time photo presentation. */
+	/* An auto-rolling photo presentation. Every card steps in lockstep so
+	   the graduation shots always arrive together. */
 	var achReels = [];
+	var achReelSlots = 1;
+	var achReelTimer = 0;
+	var achReelStep = 0;
+
+	function achReelSlide(item, index, eager) {
+		var slide = achEl('button', 'ach-reel-slide');
+		slide.type = 'button';
+		slide.setAttribute('data-ach-index', String(index));
+		slide.setAttribute('aria-label', 'Open ' + item.title);
+
+		var img = document.createElement('img');
+		img.src = item.thumb || item.src;
+		img.alt = '';
+		img.loading = eager ? 'eager' : 'lazy';
+		img.decoding = 'async';
+		if (item.width && item.height) {
+			img.width = item.width;
+			img.height = item.height;
+			img.style.aspectRatio = item.width + ' / ' + item.height;
+		}
+
+		slide.appendChild(img);
+		return slide;
+	}
 
 	function buildAchReel(data, school, items) {
 		var photos = data.certs.concat(data.featured);
+		var total = photos.length;
 		var reel = achEl('div', 'ach-reel');
 		reel.setAttribute('role', 'group');
 		reel.setAttribute('aria-label', school.school + ' photos');
 
 		var track = achEl('div', 'ach-reel-track');
 
+		/* Register every photo once; repeated slides point at the same
+		   lightbox entry. */
+		var indexBySrc = {};
 		photos.forEach(function (item, i) {
-			var slide = achEl('button', 'ach-reel-slide');
-			slide.type = 'button';
-			slide.setAttribute('data-ach-index', String(items.length));
-			slide.setAttribute(
-				'aria-label',
-				'Open photo ' + (i + 1) + ' of ' + photos.length + ': ' + item.title
-			);
-
-			var img = document.createElement('img');
-			img.src = item.thumb || item.src;
-			img.alt = '';
-			img.loading = i < 2 ? 'eager' : 'lazy';
-			img.decoding = 'async';
-			if (item.width && item.height) {
-				img.width = item.width;
-				img.height = item.height;
-				img.style.aspectRatio = item.width + ' / ' + item.height;
-			}
-
-			slide.appendChild(img);
-			track.appendChild(slide);
-
-			items.push({
-				src: item.src,
-				title: item.title,
-				school: school.school
-			});
+			indexBySrc[item.src] = items.length;
+			items.push({ src: item.src, title: item.title, school: school.school });
 		});
 
-		/* A copy of the first slide makes the loop swipe onward instead of
-		   rolling all the way back. */
-		if (photos.length > 1 && track.firstChild) {
-			var clone = track.firstChild.cloneNode(true);
-			clone.setAttribute('aria-hidden', 'true');
-			clone.setAttribute('tabindex', '-1');
-			track.appendChild(clone);
+		/* The graduation shot can be pinned to a specific photo so all the
+		   cards finish on a certificate. */
+		var finaleAt = total - 1;
+		if (school.grad) {
+			for (var g = 0; g < total; g++) {
+				if (photos[g].src.indexOf(school.grad) !== -1) {
+					finaleAt = g;
+					break;
+				}
+			}
 		}
+
+		var finale = photos[finaleAt];
+		var rest = photos.filter(function (item, i) { return i !== finaleAt; });
+		var normal = Math.max(1, rest.length);
+
+		for (var i = 0; i < achReelSlots; i++) {
+			var pick = rest.length ? rest[i % normal] : finale;
+			track.appendChild(achReelSlide(pick, indexBySrc[pick.src], i < 2));
+		}
+		track.appendChild(achReelSlide(finale, indexBySrc[finale.src], false));
+
+		/* A copy of the first slide so the loop keeps swiping onward. */
+		var first = rest.length ? rest[0] : finale;
+		var clone = achReelSlide(first, indexBySrc[first.src], false);
+		clone.setAttribute('aria-hidden', 'true');
+		clone.setAttribute('tabindex', '-1');
+		track.appendChild(clone);
 
 		reel.appendChild(track);
 
 		var counter = null;
-		if (photos.length > 1) {
-			counter = achEl('span', 'ach-reel-count', reelCountText(0, photos.length));
+		if (total > 1) {
+			counter = achEl('span', 'ach-reel-count', reelCountText(0, total));
 			counter.setAttribute('aria-hidden', 'true');
 			reel.appendChild(counter);
 		}
 
 		achReels.push({
 			track: track,
-			count: photos.length,
-			index: 0,
-			counter: counter,
-			looping: false,
-			timer: 0
+			normal: normal,
+			total: total,
+			counter: counter
 		});
 
 		return reel;
@@ -1438,54 +1448,68 @@
 		return pad(index + 1) + ' / ' + pad(total);
 	}
 
-	var achReelTimer = 0;
-
-	function advanceAchReels() {
+	function achReelsShow(step) {
 		achReels.forEach(function (reel) {
-			if (reel.count < 2 || reel.looping) return;
+			reel.track.style.transform = 'translate3d(0,' + (-100 * step) + '%,0)';
+			if (!reel.counter) return;
 
-			reel.index += 1;
-			reel.track.style.transform = 'translate3d(0,' + (-100 * reel.index) + '%,0)';
-			if (reel.counter) {
-				reel.counter.textContent = reelCountText(reel.index % reel.count, reel.count);
-			}
+			var at;
+			if (step === achReelSlots) at = reel.total - 1;
+			else if (step > achReelSlots) at = 0;
+			else at = step % reel.normal;
 
-			/* We are on the clone now: snap back to the real first slide
-			   while it looks exactly the same, so the loop never rewinds. */
-			if (reel.index >= reel.count) {
-				reel.looping = true;
-				reel.timer = window.setTimeout(function () {
-					reel.track.style.transition = 'none';
-					reel.track.style.transform = 'translate3d(0,0,0)';
-					void reel.track.offsetHeight;
-					reel.track.style.transition = '';
-					reel.index = 0;
-					reel.looping = false;
-				}, 820);
-			}
+			reel.counter.textContent = reelCountText(at, reel.total);
 		});
 	}
 
+	function achReelTick() {
+		achReelStep += 1;
+
+		if (achReelStep < achReelSlots) {
+			achReelsShow(achReelStep);
+			achReelTimer = window.setTimeout(achReelTick, 2000);
+			return;
+		}
+
+		if (achReelStep === achReelSlots) {
+			/* The graduation shot: shown on every card, and for longer. */
+			achReelsShow(achReelStep);
+			achReelTimer = window.setTimeout(achReelTick, 3000);
+			return;
+		}
+
+		/* Slide onto the copy, then snap back unseen and start over. */
+		achReelsShow(achReelStep);
+		achReelTimer = window.setTimeout(function () {
+			achReels.forEach(function (reel) {
+				reel.track.style.transition = 'none';
+				reel.track.style.transform = 'translate3d(0,0,0)';
+				void reel.track.offsetHeight;
+				reel.track.style.transition = '';
+			});
+			achReelStep = 0;
+			achReelsShow(0);
+			achReelTimer = window.setTimeout(achReelTick, 2000);
+		}, 820);
+	}
+
 	function resetAchReels() {
-		window.clearInterval(achReelTimer);
+		window.clearTimeout(achReelTimer);
 		achReelTimer = 0;
+		achReelStep = 0;
 
 		achReels.forEach(function (reel) {
-			window.clearTimeout(reel.timer);
-			reel.timer = 0;
-			reel.looping = false;
-			reel.index = 0;
 			reel.track.style.transition = 'none';
 			reel.track.style.transform = 'translate3d(0,0,0)';
 			void reel.track.offsetHeight;
 			reel.track.style.transition = '';
-			if (reel.counter) reel.counter.textContent = reelCountText(0, reel.count);
 		});
+		achReelsShow(0);
 
 		if (!achReels.length) return;
 		if (achRunReduced && achRunReduced.matches) return;
 
-		achReelTimer = window.setInterval(advanceAchReels, 3600);
+		achReelTimer = window.setTimeout(achReelTick, 2000);
 	}
 
 	function achEmpty(label, icon) {
@@ -1766,6 +1790,16 @@
 
 		achievBoard.style.setProperty('--ach-steps', String(Math.max(1, achSchools.length)));
 		if (achievSummit) achievSummit.style.setProperty('--ach-col', String(achSchools.length));
+
+		/* Every reel steps on the same beat; the longest card sets it so all
+		   the graduation shots land together. */
+		var achSlots = 1;
+		achSchools.forEach(function (school, index) {
+			if (index === achSchools.length - 1) return;
+			var folder = achFolder(school.folder);
+			achSlots = Math.max(achSlots, folder.certs.length + folder.featured.length - 1);
+		});
+		achReelSlots = Math.max(1, achSlots);
 
 		achSchools.forEach(function (school, index) {
 			var data = achFolder(school.folder);

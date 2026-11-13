@@ -61,9 +61,11 @@ window.ACHIEVEMENT_CONTENT = {
 			folder: 'SHS',
 			bg: 'achievements-images/bg/bis-bg.jpg',
 			photo: 'profiles/thumbs/shs-vernon.jpg',
+			grad: 'SHS/17-katibayan-diploma.jpg',
 			awards: [
 				'With High Honors — Grade 11',
 				'With Highest Honors — Grade 12',
+				'Graduation — Rank 2',
 				'Makabansa Awardee',
 				'Makatao Awardee',
 				'Outstanding Performance in Quantitative Research',

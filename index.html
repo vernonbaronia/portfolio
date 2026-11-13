@@ -17,7 +17,7 @@
 				var stored = window.localStorage.getItem('jvb-theme');
 				theme = (stored === 'dark' || stored === 'light')
 					? stored
-					: (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+					: 'dark';
 			} catch (e) {
 				theme = 'light';
 			}
@@ -25,14 +25,14 @@
 		})();
 	</script>
 
-	<link rel="stylesheet" href="fonts.css?v=20261114-12">
+	<link rel="stylesheet" href="fonts.css?v=20261115-4">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	<link rel="stylesheet" href="style.css?v=20261114-12">
+	<link rel="stylesheet" href="style.css?v=20261115-4">
 </head>
 <body class="is-intro is-home">
 
@@ -268,12 +268,16 @@
 								<dd>18</dd>
 							</div>
 							<div class="fact">
-								<dt>Gender</dt>
+								<dt>Sex</dt>
 								<dd>Male</dd>
 							</div>
 							<div class="fact">
 								<dt>Civil status</dt>
 								<dd>Single</dd>
+							</div>
+							<div class="fact">
+								<dt>Weight</dt>
+								<dd>76 kg</dd>
 							</div>
 						</dl>
 					</div>
@@ -451,8 +455,8 @@
 		</figure>
 	</div>
 
-	<script src="achievements-data.js?v=20261114-12"></script>
+	<script src="achievements-data.js?v=20261115-4"></script>
 	<script src="achievements-images.js?v=20261114-2"></script>
-	<script src="script.js?v=20261114-12"></script>
+	<script src="script.js?v=20261115-4"></script>
 </body>
 </html>

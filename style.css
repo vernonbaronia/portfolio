@@ -2820,21 +2820,20 @@ body.is-achievements::before {
 	gap: clamp(0.5rem, 0.9vw, 0.9rem);
 }
 
-/* Top-left line, sitting right under the clock (achievements only) */
+/* Top-left line, sitting under the clock (achievements only) */
 .nav-journey {
 	display: none;
 	position: absolute;
-	top: calc(50% + 2.05rem);
+	top: calc(50% + 3.05rem);
 	left: clamp(1rem, 2.5vw, 2rem);
 	z-index: 1;
 	max-width: 15ch;
 	margin: 0;
-	font-family: var(--font-growth);
+	font-family: var(--font-display);
 	font-size: clamp(1.35rem, 2.35vw, 2.35rem);
-	font-weight: 600;
+	font-weight: 700;
 	line-height: 1.02;
-	letter-spacing: 0.005em;
-	text-transform: uppercase;
+	letter-spacing: -0.035em;
 	white-space: normal;
 	color: var(--ink);
 }
@@ -2880,9 +2879,9 @@ body.is-achievements .nav-journey {
 	justify-content: center;
 	flex: 1 1 auto;
 	margin: 0.9rem 0 0;
-	font-family: var(--font-journey);
+	font-family: 'Transcity', 'Shooting Star', cursive;
 	font-size: clamp(1.4rem, 2.3vw, 2.4rem);
-	font-weight: 700;
+	font-weight: 400;
 	line-height: 1.35;
 	letter-spacing: 0.005em;
 	text-align: center;
