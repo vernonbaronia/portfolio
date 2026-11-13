@@ -1360,10 +1360,13 @@
 			indexBySrc[item.src] = items.length;
 			items.push({ src: item.src, title: item.title, school: school.school });
 
-			/* Warm the cache so a swipe never waits on the network. */
+			/* Warm the cache and decode, so a swipe never waits on either. */
 			var preload = new Image();
 			preload.decoding = 'async';
 			preload.src = item.thumb || item.src;
+			if (preload.decode) {
+				preload.decode().catch(function () {});
+			}
 		});
 
 		/* The graduation shot leads and comes back every ninth slide; the
@@ -2103,6 +2106,14 @@
 						window.requestAnimationFrame(applyAchievementFit);
 					});
 					resetAchReels();
+
+					/* Web fonts and photos settle just after the section opens;
+					   re-measure so the fit is not left scaled down. */
+					if (document.fonts && document.fonts.ready) {
+						document.fonts.ready.then(scheduleAchievementFit);
+					}
+					window.clearTimeout(achFitTimer);
+					achFitTimer = window.setTimeout(scheduleAchievementFit, 650);
 				}
 			}).observe(achSectionEl, { attributes: true, attributeFilter: ['aria-hidden'] });
 		}
