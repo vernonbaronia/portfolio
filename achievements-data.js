@@ -14,7 +14,8 @@ window.ACHIEVEMENT_CONTENT = {
 		level: 'Day care & kindergarten',
 		status: 'Graduate',
 		logo: 'kaj',
-		logoText: 'KAJ'
+		logoText: 'KAJ',
+		photo: 'profiles/thumbs/kindergarten-vernon.jpg'
 	},
 	schools: [
 		{
@@ -23,6 +24,8 @@ window.ACHIEVEMENT_CONTENT = {
 			school: 'Bolinao Christian School',
 			logo: 'bcs',
 			folder: 'ELEM',
+			bg: 'achievements-images/bg/bcs-bg.jpg',
+			photo: 'profiles/thumbs/elem-vernon.jpg',
 			awards: [
 				'Consistent Honor Student',
 				'1st place Nutrition Month Poster Making Contest (2017)',
@@ -36,6 +39,8 @@ window.ACHIEVEMENT_CONTENT = {
 			school: 'Bolinao Integrated School',
 			logo: 'bis',
 			folder: 'JHS',
+			bg: 'achievements-images/bg/bis-bg.jpg',
+			photo: 'profiles/thumbs/jhs-vernon.jpg',
 			awards: [
 				'With Honors — Grade 9',
 				'With High Honors — Grade 10',
@@ -54,6 +59,8 @@ window.ACHIEVEMENT_CONTENT = {
 			school: 'Bolinao Integrated School',
 			logo: 'bis',
 			folder: 'SHS',
+			bg: 'achievements-images/bg/bis-bg.jpg',
+			photo: 'profiles/thumbs/shs-vernon.jpg',
 			awards: [
 				'With High Honors — Grade 11',
 				'With Highest Honors — Grade 12',
@@ -76,6 +83,7 @@ window.ACHIEVEMENT_CONTENT = {
 			school: 'University of the Cordilleras',
 			logo: 'uc',
 			folder: 'COLLEGE',
+			bg: 'achievements-images/bg/uc-bg.jpg',
 			awards: ['Bagong Pilipinas Merit Scholarship Awardee'],
 			status: 'Ongoing',
 			emptyLabel: 'Scholar photo coming soon'

@@ -1352,6 +1352,16 @@
 		return (achievMedia.folders && achievMedia.folders[folder]) || { certs: [], featured: [] };
 	}
 
+	function achPhoto(src, label) {
+		var img = document.createElement('img');
+		img.className = 'ach-photo';
+		img.src = src;
+		img.alt = label + ' portrait';
+		img.loading = 'lazy';
+		img.decoding = 'async';
+		return img;
+	}
+
 	/* An auto-rolling, one-at-a-time photo presentation. */
 	var achReels = [];
 
@@ -1393,6 +1403,15 @@
 			});
 		});
 
+		/* A copy of the first slide makes the loop swipe onward instead of
+		   rolling all the way back. */
+		if (photos.length > 1 && track.firstChild) {
+			var clone = track.firstChild.cloneNode(true);
+			clone.setAttribute('aria-hidden', 'true');
+			clone.setAttribute('tabindex', '-1');
+			track.appendChild(clone);
+		}
+
 		reel.appendChild(track);
 
 		var counter = null;
@@ -1406,7 +1425,9 @@
 			track: track,
 			count: photos.length,
 			index: 0,
-			counter: counter
+			counter: counter,
+			looping: false,
+			timer: 0
 		});
 
 		return reel;
@@ -1421,10 +1442,27 @@
 
 	function advanceAchReels() {
 		achReels.forEach(function (reel) {
-			if (reel.count < 2) return;
-			reel.index = (reel.index + 1) % reel.count;
+			if (reel.count < 2 || reel.looping) return;
+
+			reel.index += 1;
 			reel.track.style.transform = 'translate3d(0,' + (-100 * reel.index) + '%,0)';
-			if (reel.counter) reel.counter.textContent = reelCountText(reel.index, reel.count);
+			if (reel.counter) {
+				reel.counter.textContent = reelCountText(reel.index % reel.count, reel.count);
+			}
+
+			/* We are on the clone now: snap back to the real first slide
+			   while it looks exactly the same, so the loop never rewinds. */
+			if (reel.index >= reel.count) {
+				reel.looping = true;
+				reel.timer = window.setTimeout(function () {
+					reel.track.style.transition = 'none';
+					reel.track.style.transform = 'translate3d(0,0,0)';
+					void reel.track.offsetHeight;
+					reel.track.style.transition = '';
+					reel.index = 0;
+					reel.looping = false;
+				}, 820);
+			}
 		});
 	}
 
@@ -1433,8 +1471,14 @@
 		achReelTimer = 0;
 
 		achReels.forEach(function (reel) {
+			window.clearTimeout(reel.timer);
+			reel.timer = 0;
+			reel.looping = false;
 			reel.index = 0;
+			reel.track.style.transition = 'none';
 			reel.track.style.transform = 'translate3d(0,0,0)';
+			void reel.track.offsetHeight;
+			reel.track.style.transition = '';
 			if (reel.counter) reel.counter.textContent = reelCountText(0, reel.count);
 		});
 
@@ -1459,17 +1503,16 @@
 		var card = achEl('article', 'ach-card');
 		card.setAttribute('data-school', school.id || school.folder || '');
 		card.setAttribute('data-step', String(index + 1));
+		if (school.bg) card.style.setProperty('--ach-card-bg', 'url("' + school.bg + '")');
 
 		var head = achEl('header', 'ach-card-head');
 		var headTop = achEl('div', 'ach-head-top');
 		headTop.appendChild(achEl('p', 'ach-stage', school.stage || ''));
-		var stepNo = achEl('span', 'ach-step', String(index + 1 < 10 ? '0' + (index + 1) : index + 1));
-		stepNo.setAttribute('aria-hidden', 'true');
-		headTop.appendChild(stepNo);
 		head.appendChild(headTop);
 		var row = achEl('div', 'ach-school');
 		row.appendChild(achLogo(school.logo, school.school, school.logoText));
 		row.appendChild(achEl('h3', 'ach-school-name', school.school));
+		if (school.photo) row.appendChild(achPhoto(school.photo, school.school));
 		head.appendChild(row);
 		card.appendChild(head);
 
@@ -1538,6 +1581,7 @@
 
 		var card = achEl('article', 'ach-card ach-card--start');
 		card.setAttribute('data-start', 'true');
+		card.setAttribute('data-step', '0');
 
 		var row = achEl('div', 'ach-start-row');
 		row.appendChild(achLogo(start.logo, start.school, start.logoText));
@@ -1546,6 +1590,8 @@
 		copy.appendChild(achEl('p', 'ach-stage', start.level || 'Day care'));
 		copy.appendChild(achEl('h3', 'ach-school-name', start.school));
 		row.appendChild(copy);
+
+		if (start.photo) row.appendChild(achPhoto(start.photo, start.school));
 
 		if (start.status) {
 			var status = achEl('span', 'ach-status');
@@ -1757,6 +1803,8 @@
 	   ===================================================== */
 	var achRunnerEl = document.getElementById('ach-runner');
 	var achRunAnim = null;
+	var achWaveOn = 0;
+	var achWaveOff = 0;
 	var achRunReduced = window.matchMedia
 		? window.matchMedia('(prefers-reduced-motion: reduce)')
 		: null;
@@ -1771,7 +1819,8 @@
 		var found = [];
 		for (var i = 0; i < cards.length; i++) {
 			var card = cards[i];
-			var stepNo = Number(card.getAttribute('data-step')) || i + 1;
+			var stepNo = Number(card.getAttribute('data-step'));
+			if (isNaN(stepNo)) stepNo = i + 1;
 			/* Cards are laid out across the stair, so order them by step
 			   number rather than by the order they sit in the DOM. */
 			if (!card.offsetHeight) return null;
@@ -1785,8 +1834,18 @@
 
 		found.sort(function (a, b) { return a.order - b.order; });
 
+		/* Keep only steps that keep climbing; a card tucked under another
+		   one (the day care tag sits on top of the first column) is not a
+		   tread the climber should stand on. */
+		var steps = [];
+		found.forEach(function (step) {
+			var prev = steps[steps.length - 1];
+			if (prev && step.y > prev.y + 6) return;
+			steps.push(step);
+		});
+
 		return {
-			steps: found,
+			steps: steps,
 			width: achRunnerEl.offsetWidth || 30,
 			height: achRunnerEl.offsetHeight || 40
 		};
@@ -1885,18 +1944,15 @@
 			y = jumpToY;
 		});
 
-		/* At the top: one small hop, then fade away and start again. */
-		var hop = Math.max(0, Math.min(14, (achievBoard.offsetHeight + y) - figureH - headLimit));
-		for (var h = 1; h <= 4; h++) {
-			var hp = h / 4;
-			push(150, x, y - Math.sin(Math.PI * hp) * hop, 0, 1);
-		}
-		push(520, x, y, 0, 1);
+		/* At the top: stop, wave, then fade away and walk again. */
+		var holdAt = time;
+		push(1750, x, y, 0, 1);
 		push(320, x, y, 0, 0);
 
 		var total = time;
 		return {
 			duration: total,
+			holdAt: holdAt,
 			keyframes: frames.map(function (frame) {
 				var key = frame.style;
 				key.offset = total ? frame.time / total : 0;
@@ -1914,6 +1970,10 @@
 			achRunAnim = null;
 		}
 
+		window.clearTimeout(achWaveOn);
+		window.clearTimeout(achWaveOff);
+		achRunnerEl.classList.remove('is-waving');
+
 		if (achRunReduced && achRunReduced.matches) return;
 		if (!achievBoard || !achievBoard.offsetHeight) return;
 
@@ -1925,6 +1985,23 @@
 			iterations: Infinity,
 			easing: 'linear'
 		});
+
+		/* Wave while he rests at the top, then walk again next loop. */
+		var waveOnAt = run.holdAt + 140;
+		var waveOffAt = run.duration - 420;
+
+		function cycleWave() {
+			achWaveOn = window.setTimeout(function () {
+				achRunnerEl.classList.add('is-waving');
+			}, waveOnAt);
+
+			achWaveOff = window.setTimeout(function () {
+				achRunnerEl.classList.remove('is-waving');
+				cycleWave();
+			}, waveOffAt);
+		}
+
+		cycleWave();
 	}
 
 	function scheduleAchRunner() {

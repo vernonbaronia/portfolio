@@ -2953,6 +2953,31 @@ body.is-achievements .nav-journey {
 	to { transform: rotate(19deg); }
 }
 
+/* Standing on the last step, waving */
+.ach-runner.is-waving .ach-runner-arm-front {
+	animation: ach-wave 0.62s ease-in-out infinite;
+}
+
+.ach-runner.is-waving .ach-runner-arm-back {
+	animation: none;
+	transform: rotate(-6deg);
+}
+
+.ach-runner.is-waving .ach-runner-leg-front {
+	animation: none;
+	transform: rotate(8deg);
+}
+
+.ach-runner.is-waving .ach-runner-leg-back {
+	animation: none;
+	transform: rotate(-8deg);
+}
+
+@keyframes ach-wave {
+	0%, 100% { transform: rotate(-18deg); }
+	50% { transform: rotate(-48deg); }
+}
+
 /* ---------- School grid ---------- */
 
 .ach-card {
@@ -2963,7 +2988,13 @@ body.is-achievements .nav-journey {
 	min-width: 0;
 	padding: clamp(0.55rem, 0.75vw, 0.7rem) clamp(0.6rem, 0.8vw, 0.75rem)
 		clamp(0.65rem, 0.85vw, 0.8rem);
-	background: var(--surface);
+	background-color: var(--surface);
+	background-image:
+		linear-gradient(rgba(255, 252, 247, 0.9), rgba(255, 252, 247, 0.9)),
+		var(--ach-card-bg, none);
+	background-size: cover, cover;
+	background-position: center, center;
+	background-repeat: no-repeat, no-repeat;
 	-webkit-backdrop-filter: blur(16px) saturate(1.35);
 	backdrop-filter: blur(16px) saturate(1.35);
 	border: 1px solid var(--line);
@@ -2991,6 +3022,42 @@ body.is-achievements .nav-journey {
 	width: 26px;
 	height: 26px;
 	border-radius: 7px;
+}
+
+.ach-photo {
+	flex: 0 0 auto;
+	width: 62px;
+	height: 70px;
+	margin-left: auto;
+	object-fit: cover;
+	object-position: 50% 15%;
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	background: var(--surface-sunken);
+}
+
+.ach-start-row .ach-photo {
+	width: 40px;
+	height: 40px;
+	border-radius: 9px;
+}
+
+[data-theme="dark"] .ach-card {
+	background-image:
+		linear-gradient(180deg,
+			rgba(9, 9, 11, 0.94) 0%,
+			rgba(9, 9, 11, 0.82) 45%,
+			rgba(9, 9, 11, 0.72) 100%),
+		var(--ach-card-bg, none);
+	border-color: rgba(235, 235, 242, 0.18);
+	box-shadow:
+		0 20px 44px -26px rgba(0, 0, 0, 0.95),
+		inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+[data-theme="dark"] .ach-reel {
+	background: rgba(6, 6, 8, 0.55);
+	border-color: rgba(235, 235, 242, 0.16);
 }
 
 .ach-start-copy {
@@ -3031,16 +3098,6 @@ body.is-achievements .nav-journey {
 	gap: 0.55rem;
 }
 
-.ach-step {
-	font-family: var(--font-display);
-	font-size: 0.62rem;
-	font-weight: 700;
-	letter-spacing: 0.14em;
-	font-variant-numeric: tabular-nums;
-	color: var(--accent-deep);
-	opacity: 0.4;
-}
-
 .ach-stage {
 	margin: 0;
 	font-size: 0.58rem;
@@ -3059,12 +3116,12 @@ body.is-achievements .nav-journey {
 .ach-school-name {
 	margin: 0;
 	font-family: var(--font-navi);
-	font-size: clamp(0.78rem, 0.9vw, 0.98rem);
-	font-weight: 600;
+	font-size: clamp(0.82rem, 0.95vw, 1.04rem);
+	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
-	color: var(--accent-deep);
+	color: var(--ink);
 }
 
 /* ---------- Award list ---------- */
@@ -3085,7 +3142,7 @@ body.is-achievements .nav-journey {
 	font-size: clamp(0.8rem, 0.88vw, 1rem);
 	font-weight: 500;
 	line-height: 1.32;
-	color: var(--ink-soft);
+	color: var(--ink);
 }
 
 .ach-awards li::before {
@@ -3106,7 +3163,7 @@ body.is-achievements .nav-journey {
 	position: relative;
 	overflow: hidden;
 	width: 100%;
-	height: clamp(150px, 21vh, 250px);
+	height: clamp(170px, 23.5vh, 280px);
 	margin-top: 0.15rem;
 	background: var(--surface-sunken);
 	border: 1px solid var(--line);
