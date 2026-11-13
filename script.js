@@ -1352,31 +1352,96 @@
 		return (achievMedia.folders && achievMedia.folders[folder]) || { certs: [], featured: [] };
 	}
 
-	function achPhotoButton(className, item, label, items, triggerLabel) {
-		var button = achEl('button', className);
-		button.type = 'button';
-		button.setAttribute('aria-label', triggerLabel);
-		button.setAttribute('data-ach-index', String(items.length));
+	/* An auto-rolling, one-at-a-time photo presentation. */
+	var achReels = [];
 
-		var img = document.createElement('img');
-		img.src = item.thumb || item.src;
-		img.alt = '';
-		img.loading = 'lazy';
-		img.decoding = 'async';
-		if (item.width && item.height) {
-			img.width = item.width;
-			img.height = item.height;
-			img.style.aspectRatio = item.width + ' / ' + item.height;
-		}
+	function buildAchReel(data, school, items) {
+		var photos = data.certs.concat(data.featured);
+		var reel = achEl('div', 'ach-reel');
+		reel.setAttribute('role', 'group');
+		reel.setAttribute('aria-label', school.school + ' photos');
 
-		button.appendChild(img);
-		items.push({
-			src: item.src,
-			title: item.title,
-			school: label
+		var track = achEl('div', 'ach-reel-track');
+
+		photos.forEach(function (item, i) {
+			var slide = achEl('button', 'ach-reel-slide');
+			slide.type = 'button';
+			slide.setAttribute('data-ach-index', String(items.length));
+			slide.setAttribute(
+				'aria-label',
+				'Open photo ' + (i + 1) + ' of ' + photos.length + ': ' + item.title
+			);
+
+			var img = document.createElement('img');
+			img.src = item.thumb || item.src;
+			img.alt = '';
+			img.loading = i < 2 ? 'eager' : 'lazy';
+			img.decoding = 'async';
+			if (item.width && item.height) {
+				img.width = item.width;
+				img.height = item.height;
+				img.style.aspectRatio = item.width + ' / ' + item.height;
+			}
+
+			slide.appendChild(img);
+			track.appendChild(slide);
+
+			items.push({
+				src: item.src,
+				title: item.title,
+				school: school.school
+			});
 		});
 
-		return button;
+		reel.appendChild(track);
+
+		var counter = null;
+		if (photos.length > 1) {
+			counter = achEl('span', 'ach-reel-count', reelCountText(0, photos.length));
+			counter.setAttribute('aria-hidden', 'true');
+			reel.appendChild(counter);
+		}
+
+		achReels.push({
+			track: track,
+			count: photos.length,
+			index: 0,
+			counter: counter
+		});
+
+		return reel;
+	}
+
+	function reelCountText(index, total) {
+		var pad = function (n) { return n < 10 ? '0' + n : String(n); };
+		return pad(index + 1) + ' / ' + pad(total);
+	}
+
+	var achReelTimer = 0;
+
+	function advanceAchReels() {
+		achReels.forEach(function (reel) {
+			if (reel.count < 2) return;
+			reel.index = (reel.index + 1) % reel.count;
+			reel.track.style.transform = 'translate3d(0,' + (-100 * reel.index) + '%,0)';
+			if (reel.counter) reel.counter.textContent = reelCountText(reel.index, reel.count);
+		});
+	}
+
+	function resetAchReels() {
+		window.clearInterval(achReelTimer);
+		achReelTimer = 0;
+
+		achReels.forEach(function (reel) {
+			reel.index = 0;
+			reel.track.style.transform = 'translate3d(0,0,0)';
+			if (reel.counter) reel.counter.textContent = reelCountText(0, reel.count);
+		});
+
+		if (!achReels.length) return;
+		if (achRunReduced && achRunReduced.matches) return;
+
+		achReelTimer = window.setInterval(advanceAchReels, 3600);
 	}
 
 	function achEmpty(label, icon) {
@@ -1388,7 +1453,7 @@
 		return box;
 	}
 
-	function buildAchievementCard(school, index) {
+	function buildAchievementCard(school, index, still) {
 		var data = achFolder(school.folder);
 		var items = [];
 		var card = achEl('article', 'ach-card');
@@ -1416,42 +1481,35 @@
 			card.appendChild(list);
 		}
 
-		if (data.certs.length) {
-			var certs = achEl('div', 'ach-certs');
-			certs.setAttribute('aria-label', school.school + ' certificates');
+		if (data.certs.length || data.featured.length) {
+			if (still) {
+				var stills = achEl('div', 'ach-still-grid');
+				stills.setAttribute('aria-label', school.school + ' photos');
+				data.certs.concat(data.featured).forEach(function (item, i) {
+					var shot = achEl('button', 'ach-still');
+					shot.type = 'button';
+					shot.setAttribute('data-ach-index', String(items.length));
+					shot.setAttribute('aria-label', 'Open ' + item.title);
 
-			data.certs.forEach(function (item) {
-				var button = achPhotoButton(
-					'ach-thumb',
-					item,
-					school.school,
-					items,
-					'Open certificate: ' + item.title
-				);
-				certs.appendChild(button);
-			});
+					var shotImg = document.createElement('img');
+					shotImg.src = item.thumb || item.src;
+					shotImg.alt = '';
+					shotImg.loading = i < 2 ? 'eager' : 'lazy';
+					shotImg.decoding = 'async';
+					if (item.width && item.height) {
+						shotImg.style.aspectRatio = item.width + ' / ' + item.height;
+					}
 
-			card.appendChild(certs);
-		} else if (!data.featured.length) {
+					shot.appendChild(shotImg);
+					stills.appendChild(shot);
+					items.push({ src: item.src, title: item.title, school: school.school });
+				});
+				card.appendChild(stills);
+			} else {
+				card.appendChild(buildAchReel(data, school, items));
+			}
+		} else {
 			card.appendChild(achEmpty(school.emptyLabel || 'Photos coming soon'));
-		}
-
-		if (data.featured.length) {
-			var featured = achEl('div', 'ach-feature-grid');
-			featured.setAttribute('aria-label', school.school + ' graduation and award photos');
-
-			data.featured.forEach(function (item) {
-				var button = achPhotoButton(
-					'ach-feature',
-					item,
-					school.school,
-					items,
-					'Open ' + item.title
-				);
-				featured.appendChild(button);
-			});
-
-			card.appendChild(featured);
 		}
 
 		if (school.status) {
@@ -1464,7 +1522,7 @@
 		}
 
 		card.addEventListener('click', function (event) {
-			var button = event.target.closest ? event.target.closest('.ach-thumb, .ach-feature') : null;
+			var button = event.target.closest ? event.target.closest('.ach-reel-slide') : null;
 			if (!button) return;
 			var index = Number(button.getAttribute('data-ach-index'));
 			if (isNaN(index) || !items[index]) return;
@@ -1667,8 +1725,8 @@
 			var data = achFolder(school.folder);
 			achTotal += data.certs.length + data.featured.length;
 
-			var card = buildAchievementCard(school, index);
 			var isSummit = index === achSchools.length - 1;
+			var card = buildAchievementCard(school, index, isSummit);
 
 			if (isSummit && achievSummitCard) {
 				achievSummitCard.appendChild(card);
@@ -1945,6 +2003,7 @@
 					window.requestAnimationFrame(function () {
 						window.requestAnimationFrame(applyAchievementFit);
 					});
+					resetAchReels();
 				}
 			}).observe(achSectionEl, { attributes: true, attributeFilter: ['aria-hidden'] });
 		}

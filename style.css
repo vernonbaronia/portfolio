@@ -2779,20 +2779,20 @@ body.is-achievements::before {
 	display: grid;
 	place-items: center;
 	flex: 0 0 auto;
-	width: 34px;
-	height: 34px;
-	overflow: hidden;
-	background: rgba(255, 255, 255, 0.55);
-	border: 1px solid var(--line);
-	border-radius: 9px;
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+	width: 36px;
+	height: 36px;
+	overflow: visible;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
 }
 
 .ach-logo img {
 	display: block;
 	width: 100%;
 	height: 100%;
-	padding: 5px;
+	padding: 0;
 	object-fit: contain;
 }
 
@@ -2805,9 +2805,9 @@ body.is-achievements::before {
 }
 
 [data-theme="dark"] .ach-logo {
-	background: rgba(255, 255, 255, 0.07);
-	border-color: var(--line);
-	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+	background: none;
+	border-color: transparent;
+	box-shadow: none;
 }
 
 /* ---------- The stair ---------- */
@@ -2820,24 +2820,30 @@ body.is-achievements::before {
 	gap: clamp(0.5rem, 0.9vw, 0.9rem);
 }
 
-/* Top-left line, sitting under the clock */
-.ach-journey {
+/* Top-left line, sitting right under the clock (achievements only) */
+.nav-journey {
+	display: none;
 	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 2;
-	max-width: 14ch;
+	top: calc(50% + 0.95rem);
+	left: clamp(1rem, 2.5vw, 2rem);
+	z-index: 1;
+	max-width: 15ch;
 	margin: 0;
 	font-family: var(--font-growth);
-	font-size: clamp(1.2rem, 2.05vw, 2.1rem);
+	font-size: clamp(1.35rem, 2.35vw, 2.35rem);
 	font-weight: 600;
-	line-height: 1.04;
-	letter-spacing: 0.01em;
+	line-height: 1.02;
+	letter-spacing: 0.005em;
 	text-transform: uppercase;
+	white-space: normal;
 	color: var(--ink);
 }
 
-.ach-journey span {
+body.is-achievements .nav-journey {
+	display: block;
+}
+
+.nav-journey span {
 	color: var(--accent-soft);
 }
 
@@ -2869,13 +2875,18 @@ body.is-achievements::before {
 }
 
 .ach-summit-quote {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 1 1 auto;
 	margin: 0.9rem 0 0;
 	font-family: var(--font-journey);
-	font-size: clamp(0.92rem, 1.12vw, 1.24rem);
+	font-size: clamp(1.4rem, 2.3vw, 2.4rem);
 	font-weight: 700;
-	line-height: 1.4;
-	letter-spacing: 0.01em;
+	line-height: 1.35;
+	letter-spacing: 0.005em;
 	text-align: center;
+	text-wrap: balance;
 	color: var(--ink-soft);
 }
 
@@ -3089,100 +3100,100 @@ body.is-achievements::before {
 	opacity: 0.55;
 }
 
-/* ---------- Certificate thumbnails ---------- */
+/* ---------- Rolling photo presentation ---------- */
 
-/* A contact strip: every thumbnail keeps its own aspect ratio, so a
-   landscape certificate is never forced into a portrait frame. */
-.ach-certs {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-start;
-	gap: 0.22rem;
+.ach-reel {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	height: clamp(150px, 21vh, 250px);
+	margin-top: 0.15rem;
+	background: var(--surface-sunken);
+	border: 1px solid var(--line);
+	border-radius: 10px;
 }
 
-.ach-thumb {
-	display: block;
-	flex: 0 0 auto;
-	width: auto;
-	max-width: 100%;
+.ach-reel-track {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: transform;
+}
+
+.ach-reel-slide {
+	display: grid;
+	place-items: center;
+	flex: 0 0 100%;
+	width: 100%;
+	height: 100%;
 	margin: 0;
-	padding: 0;
-	line-height: 0;
+	padding: 0.35rem;
 	background: none;
 	border: 0;
-	border-radius: 3px;
 	cursor: zoom-in;
-	transition: transform 0.2s ease, filter 0.2s ease;
 }
 
-.ach-thumb img {
+.ach-reel-slide img {
 	display: block;
-	width: auto;
 	max-width: 100%;
-	height: clamp(30px, 3.9vh, 44px);
+	max-height: 100%;
+	width: auto;
+	height: auto;
 	object-fit: contain;
 	border-radius: 3px;
-	box-shadow: none;
 }
 
-.ach-thumb:hover,
-.ach-thumb:focus-visible {
-	transform: translateY(-2px);
-	filter: brightness(1.03);
-	outline: none;
-}
-
-.ach-thumb:focus-visible {
+.ach-reel-slide:focus-visible {
 	outline: 2px solid var(--accent);
-	outline-offset: 2px;
+	outline-offset: -2px;
 }
 
-/* ---------- Graduation / scholarship images ---------- */
+.ach-reel-count {
+	position: absolute;
+	right: 0.45rem;
+	bottom: 0.4rem;
+	padding: 0.08rem 0.4rem;
+	font-size: 0.5rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	font-variant-numeric: tabular-nums;
+	color: var(--ink-faint);
+	background: var(--surface-strong);
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	pointer-events: none;
+}
 
-.ach-feature-grid {
+/* College keeps a plain still, no rolling */
+.ach-still-grid {
 	display: flex;
-	flex-wrap: wrap;
-	align-items: flex-end;
 	justify-content: center;
-	gap: 0.55rem;
-	margin-top: 0.1rem;
+	margin-top: 0.2rem;
 }
 
-.ach-feature {
+.ach-still {
 	display: block;
-	flex: 0 0 auto;
-	width: auto;
-	max-width: 100%;
 	margin: 0;
 	padding: 0;
-	line-height: 0;
 	background: none;
 	border: 0;
-	border-radius: 0;
 	cursor: zoom-in;
-	transition: transform 0.2s ease, filter 0.2s ease;
+	line-height: 0;
 }
 
-.ach-feature img {
+.ach-still img {
 	display: block;
-	width: auto;
 	max-width: 100%;
-	height: clamp(70px, 10.6vh, 124px);
+	height: clamp(120px, 20vh, 210px);
+	width: auto;
 	object-fit: contain;
 	border-radius: 4px;
-	box-shadow: none;
 }
 
-.ach-feature:hover,
-.ach-feature:focus-visible {
-	transform: translateY(-2px);
-	filter: brightness(1.03);
-	outline: none;
-}
-
-.ach-feature:focus-visible {
+.ach-still:focus-visible {
 	outline: 2px solid var(--accent);
-	outline-offset: 2px;
+	outline-offset: 3px;
 }
 
 /* ---------- Empty state + ongoing badge ---------- */
@@ -3473,7 +3484,7 @@ body.is-lightbox-open #achievements.section {
 
 @media (max-width: 1024px) {
 	#achievements.section {
-		padding-top: 2.1rem;
+		padding-top: 5.4rem;
 	}
 
 	.ach-board {
@@ -3487,12 +3498,11 @@ body.is-lightbox-open #achievements.section {
 		grid-column: auto;
 	}
 
-	.ach-journey {
-		position: static;
-		order: 0;
-		max-width: none;
-		margin: 0 0 0.7rem;
-		font-size: clamp(1.35rem, 4.6vw, 1.9rem);
+	.nav-journey {
+		top: calc(var(--nav-h) + 1.3rem);
+		left: clamp(1rem, 4vw, 1.6rem);
+		max-width: 22ch;
+		font-size: clamp(1.05rem, 4.3vw, 1.5rem);
 	}
 
 	.ach-base {
@@ -3557,9 +3567,7 @@ body.is-lightbox-open #achievements.section {
 		display: none;
 	}
 
-	.ach-thumb,
-	.ach-thumb img,
-	.ach-feature,
+	.ach-reel-track,
 	.ach-lightbox,
 	.ach-lightbox-img {
 		transition: none !important;
