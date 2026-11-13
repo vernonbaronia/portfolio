@@ -991,6 +991,16 @@
 	var counter = document.getElementById('current-num');
 	var main = document.querySelector('main');
 	var navHome = document.getElementById('nav-home');
+	var prevNameEl = document.getElementById('prev-name');
+	var nextNameEl = document.getElementById('next-name');
+	var pagerDots = Array.prototype.slice.call(document.querySelectorAll('.pager-dot[data-section]'));
+
+	pagerDots.forEach(function (dot) {
+		dot.addEventListener('click', function () {
+			var idx = sectionIndexForId(dot.getAttribute('data-section'));
+			if (idx !== -1) goToSection(idx);
+		});
+	});
 	var navPageTitle = document.getElementById('nav-page-title');
 	var irisEl = document.getElementById('iris');
 	var categoryButtons = Array.prototype.slice.call(document.querySelectorAll('.category-dock-btn'));
@@ -1065,24 +1075,24 @@
 			counter.classList.add('pop');
 		}
 
-		var atStart = currentIndex <= 1;
-		var prevName = atStart ? '' : sectionTitle(currentIndex - 1);
+		var hasPrev = currentIndex > 0;
+		var prevName = hasPrev ? sectionTitle(currentIndex - 1) : '';
 		var nextIndex = currentIndex >= sections.length - 1 ? 1 : currentIndex + 1;
 		var nextName = sectionTitle(nextIndex);
 
 		if (prevBtn) {
-			prevBtn.classList.toggle('disabled', atStart);
-			prevBtn.disabled = atStart;
-			prevBtn.setAttribute('data-label', prevName ? 'Previous — ' + prevName : '');
+			prevBtn.classList.toggle('disabled', !hasPrev);
+			prevBtn.disabled = !hasPrev;
 			prevBtn.setAttribute('aria-label', prevName ? 'Previous: ' + prevName : 'Previous section');
 		}
+		if (prevNameEl) prevNameEl.textContent = prevName;
 
 		if (nextBtn) {
 			nextBtn.classList.remove('disabled');
 			nextBtn.disabled = false;
-			nextBtn.setAttribute('data-label', nextName ? 'Next — ' + nextName : '');
 			nextBtn.setAttribute('aria-label', nextName ? 'Next: ' + nextName : 'Next section');
 		}
+		if (nextNameEl) nextNameEl.textContent = nextName;
 
 		categoryButtons.forEach(function (button) {
 			var isActive = sectionIndexForId(button.getAttribute('data-section')) === currentIndex;
@@ -1091,6 +1101,16 @@
 				button.setAttribute('aria-current', 'page');
 			} else {
 				button.removeAttribute('aria-current');
+			}
+		});
+
+		pagerDots.forEach(function (dot) {
+			var isActive = sectionIndexForId(dot.getAttribute('data-section')) === currentIndex;
+			dot.classList.toggle('active', isActive);
+			if (isActive) {
+				dot.setAttribute('aria-current', 'page');
+			} else {
+				dot.removeAttribute('aria-current');
 			}
 		});
 
@@ -1350,12 +1370,10 @@
 		return img;
 	}
 
-	/* An auto-rolling photo presentation. Every card steps in lockstep so
-	   the graduation shots always arrive together. */
+	/* An auto-rolling photo presentation: the graduation shot leads, then
+	   returns every seven certificates without breaking their order. */
 	var achReels = [];
-	var achReelSlots = 1;
 	var achReelTimer = 0;
-	var achReelStep = 0;
 
 	function achReelSlide(item, index, eager) {
 		var slide = achEl('button', 'ach-reel-slide');
@@ -1385,41 +1403,47 @@
 		reel.setAttribute('role', 'group');
 		reel.setAttribute('aria-label', school.school + ' photos');
 
-		var track = achEl('div', 'ach-reel-track');
-
 		/* Register every photo once; repeated slides point at the same
 		   lightbox entry. */
 		var indexBySrc = {};
-		photos.forEach(function (item, i) {
+		photos.forEach(function (item) {
 			indexBySrc[item.src] = items.length;
 			items.push({ src: item.src, title: item.title, school: school.school });
 		});
 
-		/* The graduation shot can be pinned to a specific photo so all the
-		   cards finish on a certificate. */
-		var finaleAt = total - 1;
+		/* The graduation shot leads, then returns after every seven
+		   certificates, and the certificates keep their own order. */
+		var gradAt = photos.length - 1;
 		if (school.grad) {
-			for (var g = 0; g < total; g++) {
+			for (var g = 0; g < photos.length; g++) {
 				if (photos[g].src.indexOf(school.grad) !== -1) {
-					finaleAt = g;
+					gradAt = g;
 					break;
 				}
 			}
 		}
 
-		var finale = photos[finaleAt];
-		var rest = photos.filter(function (item, i) { return i !== finaleAt; });
-		var normal = Math.max(1, rest.length);
+		var seq = [gradAt];
+		var sinceGrad = 0;
+		var certs = 0;
+		photos.forEach(function (item, i) {
+			if (i === gradAt) return;
+			certs += 1;
+			seq.push(i);
+			sinceGrad += 1;
+			if (sinceGrad === 7 && certs < total - 1) {
+				seq.push(gradAt);
+				sinceGrad = 0;
+			}
+		});
 
-		for (var i = 0; i < achReelSlots; i++) {
-			var pick = rest.length ? rest[i % normal] : finale;
-			track.appendChild(achReelSlide(pick, indexBySrc[pick.src], i < 2));
-		}
-		track.appendChild(achReelSlide(finale, indexBySrc[finale.src], false));
+		var track = achEl('div', 'ach-reel-track');
+		seq.forEach(function (photoAt, i) {
+			track.appendChild(achReelSlide(photos[photoAt], indexBySrc[photos[photoAt].src], i < 2));
+		});
 
 		/* A copy of the first slide so the loop keeps swiping onward. */
-		var first = rest.length ? rest[0] : finale;
-		var clone = achReelSlide(first, indexBySrc[first.src], false);
+		var clone = achReelSlide(photos[seq[0]], indexBySrc[photos[seq[0]].src], false);
 		clone.setAttribute('aria-hidden', 'true');
 		clone.setAttribute('tabindex', '-1');
 		track.appendChild(clone);
@@ -1427,19 +1451,23 @@
 		reel.appendChild(track);
 
 		var counter = null;
-		if (total > 1) {
-			counter = achEl('span', 'ach-reel-count', reelCountText(0, total));
+		if (seq.length > 1) {
+			counter = achEl('span', 'ach-reel-count', reelCountText(seq[0], total));
 			counter.setAttribute('aria-hidden', 'true');
 			reel.appendChild(counter);
 		}
 
-		achReels.push({
+		var entry = {
 			track: track,
-			normal: normal,
+			seq: seq,
+			finale: gradAt,
 			total: total,
-			counter: counter
-		});
+			counter: counter,
+			index: 0,
+			timer: 0
+		};
 
+		achReels.push(entry);
 		return reel;
 	}
 
@@ -1448,70 +1476,52 @@
 		return pad(index + 1) + ' / ' + pad(total);
 	}
 
-	function achReelsShow(step) {
-		achReels.forEach(function (reel) {
-			reel.track.style.transform = 'translate3d(0,' + (-100 * step) + '%,0)';
-			if (!reel.counter) return;
+	function achReelRun(reel) {
+		reel.index += 1;
 
-			var at;
-			if (step === achReelSlots) at = reel.total - 1;
-			else if (step > achReelSlots) at = 0;
-			else at = step % reel.normal;
+		var at = reel.index < reel.seq.length ? reel.seq[reel.index] : reel.seq[0];
+		reel.track.style.transform = 'translate3d(0,' + (-100 * reel.index) + '%,0)';
+		if (reel.counter) reel.counter.textContent = reelCountText(at, reel.total);
 
-			reel.counter.textContent = reelCountText(at, reel.total);
-		});
-	}
+		/* The graduation shot rests a little longer than a certificate. */
+		var dwell = at === reel.finale ? 3000 : 2000;
 
-	function achReelTick() {
-		achReelStep += 1;
-
-		if (achReelStep < achReelSlots) {
-			achReelsShow(achReelStep);
-			achReelTimer = window.setTimeout(achReelTick, 2000);
-			return;
-		}
-
-		if (achReelStep === achReelSlots) {
-			/* The graduation shot: shown on every card, and for longer. */
-			achReelsShow(achReelStep);
-			achReelTimer = window.setTimeout(achReelTick, 3000);
-			return;
-		}
-
-		/* Slide onto the copy, then snap back unseen and start over. */
-		achReelsShow(achReelStep);
-		achReelTimer = window.setTimeout(function () {
-			achReels.forEach(function (reel) {
+		if (reel.index >= reel.seq.length) {
+			window.setTimeout(function () {
 				reel.track.style.transition = 'none';
 				reel.track.style.transform = 'translate3d(0,0,0)';
 				void reel.track.offsetHeight;
 				reel.track.style.transition = '';
-			});
-			achReelStep = 0;
-			achReelsShow(0);
-			achReelTimer = window.setTimeout(achReelTick, 2000);
-		}, 820);
+				reel.index = 0;
+			}, 820);
+		}
+
+		reel.timer = window.setTimeout(function () {
+			achReelRun(reel);
+		}, dwell);
 	}
 
 	function resetAchReels() {
-		window.clearTimeout(achReelTimer);
-		achReelTimer = 0;
-		achReelStep = 0;
-
 		achReels.forEach(function (reel) {
+			window.clearTimeout(reel.timer);
+			reel.timer = 0;
+			reel.index = 0;
 			reel.track.style.transition = 'none';
 			reel.track.style.transform = 'translate3d(0,0,0)';
 			void reel.track.offsetHeight;
 			reel.track.style.transition = '';
+			if (reel.counter) reel.counter.textContent = reelCountText(reel.seq[0], reel.total);
 		});
-		achReelsShow(0);
 
 		if (!achReels.length) return;
 		if (achRunReduced && achRunReduced.matches) return;
 
-		achReelTimer = window.setTimeout(achReelTick, 2000);
+		achReels.forEach(function (reel) {
+			reel.timer = window.setTimeout(function () {
+				achReelRun(reel);
+			}, 3000);
+		});
 	}
-
 	function achEmpty(label, icon) {
 		var box = achEl('div', 'ach-empty');
 		var symbol = achEl('i', icon || 'fa-regular fa-image');
@@ -1790,16 +1800,6 @@
 
 		achievBoard.style.setProperty('--ach-steps', String(Math.max(1, achSchools.length)));
 		if (achievSummit) achievSummit.style.setProperty('--ach-col', String(achSchools.length));
-
-		/* Every reel steps on the same beat; the longest card sets it so all
-		   the graduation shots land together. */
-		var achSlots = 1;
-		achSchools.forEach(function (school, index) {
-			if (index === achSchools.length - 1) return;
-			var folder = achFolder(school.folder);
-			achSlots = Math.max(achSlots, folder.certs.length + folder.featured.length - 1);
-		});
-		achReelSlots = Math.max(1, achSlots);
 
 		achSchools.forEach(function (school, index) {
 			var data = achFolder(school.folder);

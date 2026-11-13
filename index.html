@@ -25,14 +25,14 @@
 		})();
 	</script>
 
-	<link rel="stylesheet" href="fonts.css?v=20261115-4">
+	<link rel="stylesheet" href="fonts.css?v=20261115-7">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	<link rel="stylesheet" href="style.css?v=20261115-4">
+	<link rel="stylesheet" href="style.css?v=20261115-7">
 </head>
 <body class="is-intro is-home">
 
@@ -176,12 +176,12 @@
 					</button>
 					<button class="home-menu-item" type="button" data-section="family">
 						<span class="home-menu-num" aria-hidden="true">03</span>
-						<span class="home-menu-label">Family</span>
+						<span class="home-menu-label">Family and Friends</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="batchmates">
 						<span class="home-menu-num" aria-hidden="true">04</span>
-						<span class="home-menu-label">Batchmates</span>
+						<span class="home-menu-label">Upcoming</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					</div>
@@ -360,7 +360,7 @@
 		</section>
 
 		<!-- ===== MY FAMILY (content coming soon) ===== -->
-		<section id="family" class="section" role="region" aria-label="Family" aria-hidden="true" data-title="Family">
+		<section id="family" class="section" role="region" aria-label="Family and Friends" aria-hidden="true" data-title="Family and Friends">
 			<div class="coming-soon" data-index="03">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-people-group" aria-hidden="true"></i>
@@ -380,7 +380,7 @@
 		</section>
 
 		<!-- ===== MY BATCHMATES (content coming soon) ===== -->
-		<section id="batchmates" class="section" role="region" aria-label="Batchmates" aria-hidden="true" data-title="Batchmates">
+		<section id="batchmates" class="section" role="region" aria-label="Upcoming" aria-hidden="true" data-title="Upcoming">
 			<div class="coming-soon" data-index="04">
 				<div class="coming-soon-icon">
 					<i class="fa-solid fa-users" aria-hidden="true"></i>
@@ -400,19 +400,21 @@
 		</section>
 	</main>
 
-	<!-- ===== Category dock ===== -->
-	<div class="category-dock" role="group" aria-label="Portfolio categories">
-		<button class="category-dock-btn" type="button" data-section="about" data-label="Personal Information" aria-label="Go to Personal Information">
-			<i class="fa-solid fa-user" aria-hidden="true"></i>
+	<!-- ===== Deck pager ===== -->
+	<div class="deck-pager" role="navigation" aria-label="Portfolio sections">
+		<button class="pager-btn pager-prev" id="prev-btn" type="button" aria-label="Previous section" disabled>
+			<span class="pager-arrow" aria-hidden="true">&larr;</span>
+			<span class="pager-name" id="prev-name"></span>
 		</button>
-		<button class="category-dock-btn" type="button" data-section="achievements" data-label="Achievements" aria-label="Go to Achievements">
-			<i class="fa-solid fa-medal" aria-hidden="true"></i>
-		</button>
-		<button class="category-dock-btn" type="button" data-section="family" data-label="Family" aria-label="Go to Family">
-			<i class="fa-solid fa-people-group" aria-hidden="true"></i>
-		</button>
-		<button class="category-dock-btn" type="button" data-section="batchmates" data-label="Batchmates" aria-label="Go to Batchmates">
-			<i class="fa-solid fa-user-group" aria-hidden="true"></i>
+		<div class="pager-dots" role="group" aria-label="Sections">
+			<button class="pager-dot" type="button" data-section="about" aria-label="Personal Information"></button>
+			<button class="pager-dot" type="button" data-section="achievements" aria-label="Achievements"></button>
+			<button class="pager-dot" type="button" data-section="family" aria-label="Family and Friends"></button>
+			<button class="pager-dot" type="button" data-section="batchmates" aria-label="Upcoming"></button>
+		</div>
+		<button class="pager-btn pager-next" id="next-btn" type="button" aria-label="Next section">
+			<span class="pager-name" id="next-name"></span>
+			<span class="pager-arrow" aria-hidden="true">&rarr;</span>
 		</button>
 	</div>
 
@@ -455,8 +457,8 @@
 		</figure>
 	</div>
 
-	<script src="achievements-data.js?v=20261115-4"></script>
+	<script src="achievements-data.js?v=20261115-7"></script>
 	<script src="achievements-images.js?v=20261114-2"></script>
-	<script src="script.js?v=20261115-4"></script>
+	<script src="script.js?v=20261115-7"></script>
 </body>
 </html>
