@@ -1226,6 +1226,7 @@
 	/* Arrow keys move between sections (Home/End jump to the ends) */
 	document.addEventListener('keydown', function (event) {
 		if (!entered) return;
+		if (document.body.classList.contains('is-lightbox-open')) return;
 
 		var direction = 0;
 		var target = currentIndex;
@@ -1290,64 +1291,676 @@
 	}
 
 	/* =====================================================
-	   Achievements: show a coming soon notice for categories
-	   whose entries have not been published yet.
+	   Achievements: build the school record board from
+	   achievements-data.js + achievements-images.js.
+	   Photos are added through the build script, never by
+	   editing this file.
 	   ===================================================== */
-	var achievementCategories = Array.prototype.slice.call(
-		document.querySelectorAll('.achievement-category')
-	);
-	var achievementToast = document.getElementById('achievement-toast');
-	var achievementToastTimer = null;
+	var achievContent = window.ACHIEVEMENT_CONTENT;
+	var achievMedia = window.ACHIEVEMENT_MEDIA || { logos: {}, folders: {} };
+	var achievBoard = document.getElementById('ach-board');
+	var achievBase = document.getElementById('ach-base');
+	var achievSummitCard = document.getElementById('ach-summit-card');
+	var achievSummit = document.querySelector('.ach-summit');
+	var achievNote = document.getElementById('ach-note');
+	var achLightbox = document.getElementById('ach-lightbox');
 
-	if (achievementToast) {
-		achievementCategories.forEach(function (button) {
-			button.addEventListener('click', function () {
-				var label = button.getAttribute('data-category') || 'These achievements';
-				achievementToast.textContent = label + ' achievements are coming soon.';
-				achievementToast.classList.add('is-visible');
-				window.clearTimeout(achievementToastTimer);
-				achievementToastTimer = window.setTimeout(function () {
-					achievementToast.classList.remove('is-visible');
-				}, 2600);
+	function achEl(tag, className, text) {
+		var node = document.createElement(tag);
+		if (className) node.className = className;
+		if (text != null) node.textContent = text;
+		return node;
+	}
+
+	var ACH_STOP_WORDS = {
+		of: true, the: true, and: true, for: true, de: true, la: true, ng: true
+	};
+
+	function achInitials(name) {
+		var parts = String(name || '').split(/\s+/).filter(Boolean);
+		var letters = '';
+
+		parts.forEach(function (part) {
+			if (!ACH_STOP_WORDS[part.toLowerCase()]) letters += part.charAt(0);
+		});
+
+		return (letters || (parts[0] || '?').charAt(0)).slice(0, 4).toUpperCase();
+	}
+
+	function achLogo(key, label, fallbackText) {
+		var wrap = achEl('span', 'ach-logo');
+		var logo = achievMedia.logos && achievMedia.logos[key];
+		var src = logo && (logo.thumb || logo.src);
+
+		if (src) {
+			var img = document.createElement('img');
+			img.src = src;
+			img.alt = label + ' logo';
+			img.loading = 'lazy';
+			img.decoding = 'async';
+			wrap.appendChild(img);
+		} else {
+			var fallback = achEl('span', 'ach-logo-fallback', fallbackText || achInitials(label));
+			fallback.setAttribute('aria-hidden', 'true');
+			wrap.appendChild(fallback);
+		}
+
+		return wrap;
+	}
+
+	function achFolder(folder) {
+		return (achievMedia.folders && achievMedia.folders[folder]) || { certs: [], featured: [] };
+	}
+
+	function achPhotoButton(className, item, label, items, triggerLabel) {
+		var button = achEl('button', className);
+		button.type = 'button';
+		button.setAttribute('aria-label', triggerLabel);
+		button.setAttribute('data-ach-index', String(items.length));
+
+		var img = document.createElement('img');
+		img.src = item.thumb || item.src;
+		img.alt = '';
+		img.loading = 'lazy';
+		img.decoding = 'async';
+		if (item.width && item.height) {
+			img.width = item.width;
+			img.height = item.height;
+			img.style.aspectRatio = item.width + ' / ' + item.height;
+		}
+
+		button.appendChild(img);
+		items.push({
+			src: item.src,
+			title: item.title,
+			school: label
+		});
+
+		return button;
+	}
+
+	function achEmpty(label, icon) {
+		var box = achEl('div', 'ach-empty');
+		var symbol = achEl('i', icon || 'fa-regular fa-image');
+		symbol.setAttribute('aria-hidden', 'true');
+		box.appendChild(symbol);
+		box.appendChild(achEl('span', null, label));
+		return box;
+	}
+
+	function buildAchievementCard(school, index) {
+		var data = achFolder(school.folder);
+		var items = [];
+		var card = achEl('article', 'ach-card');
+		card.setAttribute('data-school', school.id || school.folder || '');
+		card.setAttribute('data-step', String(index + 1));
+
+		var head = achEl('header', 'ach-card-head');
+		var headTop = achEl('div', 'ach-head-top');
+		headTop.appendChild(achEl('p', 'ach-stage', school.stage || ''));
+		var stepNo = achEl('span', 'ach-step', String(index + 1 < 10 ? '0' + (index + 1) : index + 1));
+		stepNo.setAttribute('aria-hidden', 'true');
+		headTop.appendChild(stepNo);
+		head.appendChild(headTop);
+		var row = achEl('div', 'ach-school');
+		row.appendChild(achLogo(school.logo, school.school, school.logoText));
+		row.appendChild(achEl('h3', 'ach-school-name', school.school));
+		head.appendChild(row);
+		card.appendChild(head);
+
+		if (school.awards && school.awards.length) {
+			var list = achEl('ul', 'ach-awards');
+			school.awards.forEach(function (award) {
+				list.appendChild(achEl('li', null, award));
 			});
+			card.appendChild(list);
+		}
+
+		if (data.certs.length) {
+			var certs = achEl('div', 'ach-certs');
+			certs.setAttribute('aria-label', school.school + ' certificates');
+
+			data.certs.forEach(function (item) {
+				var button = achPhotoButton(
+					'ach-thumb',
+					item,
+					school.school,
+					items,
+					'Open certificate: ' + item.title
+				);
+				certs.appendChild(button);
+			});
+
+			card.appendChild(certs);
+		} else if (!data.featured.length) {
+			card.appendChild(achEmpty(school.emptyLabel || 'Photos coming soon'));
+		}
+
+		if (data.featured.length) {
+			var featured = achEl('div', 'ach-feature-grid');
+			featured.setAttribute('aria-label', school.school + ' graduation and award photos');
+
+			data.featured.forEach(function (item) {
+				var button = achPhotoButton(
+					'ach-feature',
+					item,
+					school.school,
+					items,
+					'Open ' + item.title
+				);
+				featured.appendChild(button);
+			});
+
+			card.appendChild(featured);
+		}
+
+		if (school.status) {
+			var status = achEl('p', 'ach-status');
+			var dot = achEl('span', 'ach-status-dot');
+			dot.setAttribute('aria-hidden', 'true');
+			status.appendChild(dot);
+			status.appendChild(document.createTextNode(school.status));
+			card.appendChild(status);
+		}
+
+		card.addEventListener('click', function (event) {
+			var button = event.target.closest ? event.target.closest('.ach-thumb, .ach-feature') : null;
+			if (!button) return;
+			var index = Number(button.getAttribute('data-ach-index'));
+			if (isNaN(index) || !items[index]) return;
+			openAchLightbox(items, index, button);
+		});
+
+		return card;
+	}
+
+	/* A skinny block for the day care / kindergarten stage. */
+	function buildAchievementStart(start) {
+		if (!start || !start.school) return null;
+
+		var card = achEl('article', 'ach-card ach-card--start');
+		card.setAttribute('data-start', 'true');
+
+		var row = achEl('div', 'ach-start-row');
+		row.appendChild(achLogo(start.logo, start.school, start.logoText));
+
+		var copy = achEl('div', 'ach-start-copy');
+		copy.appendChild(achEl('p', 'ach-stage', start.level || 'Day care'));
+		copy.appendChild(achEl('h3', 'ach-school-name', start.school));
+		row.appendChild(copy);
+
+		if (start.status) {
+			var status = achEl('span', 'ach-status');
+			var dot = achEl('span', 'ach-status-dot');
+			dot.setAttribute('aria-hidden', 'true');
+			status.appendChild(dot);
+			status.appendChild(document.createTextNode(start.status));
+			row.appendChild(status);
+		}
+
+		card.appendChild(row);
+		return card;
+	}
+
+	/* ---------- Lightbox ---------- */
+	var lbImg = document.getElementById('ach-lightbox-img');
+	var lbStage = document.getElementById('ach-lightbox-stage');
+	var lbTitle = document.getElementById('ach-lightbox-title');
+	var lbMeta = document.getElementById('ach-lightbox-meta');
+	var lbCount = document.getElementById('ach-lightbox-count');
+	var lbFull = document.getElementById('ach-lightbox-open-full');
+	var lbPrev = achLightbox ? achLightbox.querySelector('[data-ach-prev]') : null;
+	var lbNext = achLightbox ? achLightbox.querySelector('[data-ach-next]') : null;
+	var lbItems = [];
+	var lbIndex = 0;
+	var lbTrigger = null;
+	var lbOpen = false;
+	var lbCloseTimer = null;
+
+	function renderAchLightbox() {
+		var item = lbItems[lbIndex];
+		if (!item) return;
+
+		lbImg.classList.remove('is-loaded');
+		lbImg.onload = function () {
+			lbImg.classList.add('is-loaded');
+		};
+		lbImg.src = item.src;
+		lbImg.alt = item.title + ' — ' + item.school;
+
+		lbTitle.textContent = item.title;
+		lbMeta.textContent = item.school;
+		lbCount.textContent = (lbIndex + 1) + ' / ' + lbItems.length;
+		lbFull.href = item.src;
+
+		if (lbPrev) lbPrev.disabled = lbIndex === 0;
+		if (lbNext) lbNext.disabled = lbIndex === lbItems.length - 1;
+
+		[lbIndex - 1, lbIndex + 1].forEach(function (neighbour) {
+			if (!lbItems[neighbour]) return;
+			var preload = new Image();
+			preload.src = lbItems[neighbour].src;
+		});
+	}
+
+	function openAchLightbox(items, index, trigger) {
+		if (!achLightbox || !items.length) return;
+
+		window.clearTimeout(lbCloseTimer);
+		lbItems = items;
+		lbIndex = index;
+		lbTrigger = trigger || null;
+		lbOpen = true;
+
+		achLightbox.hidden = false;
+		achLightbox.setAttribute('aria-hidden', 'false');
+		document.body.classList.add('is-lightbox-open');
+		renderAchLightbox();
+
+		window.requestAnimationFrame(function () {
+			achLightbox.classList.add('is-open');
+		});
+
+		window.setTimeout(function () {
+			if (lbOpen && achLightbox.querySelector('.ach-lightbox-close')) {
+				achLightbox.querySelector('.ach-lightbox-close').focus();
+			}
+		}, 80);
+	}
+
+	function closeAchLightbox() {
+		if (!lbOpen) return;
+		lbOpen = false;
+
+		achLightbox.classList.remove('is-open');
+		document.body.classList.remove('is-lightbox-open');
+
+		if (lbTrigger && lbTrigger.focus) lbTrigger.focus();
+		achLightbox.setAttribute('aria-hidden', 'true');
+
+		lbCloseTimer = window.setTimeout(function () {
+			if (lbOpen) return;
+			achLightbox.hidden = true;
+			lbImg.removeAttribute('src');
+			lbImg.classList.remove('is-loaded');
+		}, 300);
+	}
+
+	function stepAchLightbox(delta) {
+		if (!lbOpen) return;
+		var next = lbIndex + delta;
+		if (next < 0 || next >= lbItems.length) return;
+		lbIndex = next;
+		renderAchLightbox();
+	}
+
+	if (achLightbox) {
+		Array.prototype.forEach.call(
+			achLightbox.querySelectorAll('[data-ach-close]'),
+			function (control) {
+				control.addEventListener('click', closeAchLightbox);
+			}
+		);
+
+		if (lbPrev) lbPrev.addEventListener('click', function () { stepAchLightbox(-1); });
+		if (lbNext) lbNext.addEventListener('click', function () { stepAchLightbox(1); });
+
+		document.addEventListener('keydown', function (event) {
+			if (!lbOpen) return;
+
+			if (event.key === 'Escape' || event.key === 'Esc') {
+				event.preventDefault();
+				closeAchLightbox();
+			} else if (event.key === 'ArrowLeft') {
+				event.preventDefault();
+				stepAchLightbox(-1);
+			} else if (event.key === 'ArrowRight') {
+				event.preventDefault();
+				stepAchLightbox(1);
+			} else if (event.key === 'Tab') {
+				var focusable = achLightbox.querySelectorAll('button:not([disabled]), a[href]');
+				if (!focusable.length) return;
+				var first = focusable[0];
+				var last = focusable[focusable.length - 1];
+
+				if (event.shiftKey && document.activeElement === first) {
+					event.preventDefault();
+					last.focus();
+				} else if (!event.shiftKey && document.activeElement === last) {
+					event.preventDefault();
+					first.focus();
+				}
+			}
+		});
+
+		var touchStartX = null;
+		var touchStartY = null;
+
+		lbStage.addEventListener('touchstart', function (event) {
+			if (event.touches.length !== 1) return;
+			touchStartX = event.touches[0].clientX;
+			touchStartY = event.touches[0].clientY;
+		}, { passive: true });
+
+		lbStage.addEventListener('touchend', function (event) {
+			if (touchStartX === null) return;
+			var dx = event.changedTouches[0].clientX - touchStartX;
+			var dy = event.changedTouches[0].clientY - touchStartY;
+			touchStartX = null;
+			touchStartY = null;
+
+			if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+				stepAchLightbox(dx < 0 ? 1 : -1);
+			}
+		}, { passive: true });
+	}
+
+	/* ---------- Render ---------- */
+	if (achievContent && achievBoard) {
+		var achSchools = achievContent.schools || [];
+		var achTotal = 0;
+
+		achievBoard.style.setProperty('--ach-steps', String(Math.max(1, achSchools.length)));
+		if (achievSummit) achievSummit.style.setProperty('--ach-col', String(achSchools.length));
+
+		achSchools.forEach(function (school, index) {
+			var data = achFolder(school.folder);
+			achTotal += data.certs.length + data.featured.length;
+
+			var card = buildAchievementCard(school, index);
+			var isSummit = index === achSchools.length - 1;
+
+			if (isSummit && achievSummitCard) {
+				achievSummitCard.appendChild(card);
+			} else if (index === 0 && achievBase) {
+				/* The first step is stacked on top of the day care block. */
+				achievBase.appendChild(card);
+				var startCard = buildAchievementStart(achievContent.start);
+				if (startCard) achievBase.appendChild(startCard);
+			} else {
+				card.style.setProperty('--ach-col', String(index + 1));
+				achievBoard.appendChild(card);
+			}
+		});
+
+		if (achievNote) {
+			if (!achTotal) {
+				achievNote.hidden = false;
+				achievNote.textContent = 'Photos are on the way — they will appear here soon.';
+			} else {
+				achievNote.hidden = true;
+			}
+		}
+	}
+
+	/* =====================================================
+	   Achievements: a little stickman runs along each step
+	   and jumps up to the next school card.
+	   ===================================================== */
+	var achRunnerEl = document.getElementById('ach-runner');
+	var achRunAnim = null;
+	var achRunReduced = window.matchMedia
+		? window.matchMedia('(prefers-reduced-motion: reduce)')
+		: null;
+
+	function achRunnerSteps() {
+		if (!achievBoard || !achRunnerEl) return null;
+
+		var cards = Array.prototype.slice.call(achievBoard.querySelectorAll('.ach-card[data-step]'));
+		var boardH = achievBoard.offsetHeight;
+		if (cards.length < 2 || !boardH) return null;
+
+		var found = [];
+		for (var i = 0; i < cards.length; i++) {
+			var card = cards[i];
+			var stepNo = Number(card.getAttribute('data-step')) || i + 1;
+			/* Cards are laid out across the stair, so order them by step
+			   number rather than by the order they sit in the DOM. */
+			if (!card.offsetHeight) return null;
+			found.push({
+				order: stepNo,
+				left: card.offsetLeft,
+				right: card.offsetLeft + card.offsetWidth,
+				y: card.offsetTop - boardH
+			});
+		}
+
+		found.sort(function (a, b) { return a.order - b.order; });
+
+		return {
+			steps: found,
+			width: achRunnerEl.offsetWidth || 30,
+			height: achRunnerEl.offsetHeight || 40
+		};
+	}
+
+	function achRunnerKeyframes() {
+		var geo = achRunnerSteps();
+		if (!geo) return null;
+
+		var steps = geo.steps;
+		var figureW = geo.width;
+		var figureH = geo.height;
+		var inset = Math.max(2, figureW * 0.18);
+		var frames = [];
+		var time = 0;
+
+		/* The top of the board sits just under the page title, so the
+		   climber's head must never rise into that strip. Work out how many
+		   pixels of clear air there are above the board. */
+		var boardRect = achievBoard.getBoundingClientRect();
+		var zoom = achievBoard.offsetHeight ? boardRect.height / achievBoard.offsetHeight : 1;
+		var navH = parseFloat(
+			window.getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
+		) || 92;
+		var safeHead = navH + 34;
+		var headLimit = (safeHead - boardRect.top) / (zoom || 1);
+
+		function style(x, y, rot, opacity) {
+			return {
+				transform: 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg)',
+				opacity: opacity
+			};
+		}
+
+		function push(delay, x, y, rot, opacity) {
+			time += delay;
+			frames.push({ time: time, style: style(x, y, rot, opacity) });
+		}
+
+		var x = steps[0].left + inset;
+		var y = steps[0].y;
+
+		/* A quiet beat before the climb starts. */
+		push(0, x, y, 0, 0);
+		push(300, x, y, 0, 0);
+		push(240, x, y, 0, 1);
+
+		steps.forEach(function (step, i) {
+			var lastStep = i === steps.length - 1;
+			/* On the final step the climber pulls up near the middle of the
+			   card instead of running all the way to the edge. */
+			var runTo = lastStep
+				? step.left + (step.right - step.left - figureW) * 0.62
+				: Math.max(step.left + inset, step.right - figureW - inset);
+			var distance = runTo - x;
+
+			if (distance > 4) {
+				/* Constant-ish running speed, in px per millisecond. */
+				var runTime = Math.max(340, Math.min(1100, distance / 0.46));
+				push(runTime, runTo, step.y, 0, 1);
+			}
+
+			x = runTo;
+			y = step.y;
+
+			var next = steps[i + 1];
+			if (!next) return;
+
+			var jumpToX = next.left + inset;
+			var jumpToY = next.y;
+			var rise = Math.abs(jumpToY - step.y);
+			var arc = Math.max(30, Math.min(84, rise * 0.45 + 28));
+			/* Never let the leap carry the climber's head into the title. */
+			var arcRoom = (achievBoard.offsetHeight + jumpToY) - figureH - headLimit;
+			arc = Math.max(0, Math.min(arc, arcRoom));
+			var flight = 540;
+			var slices = 8;
+
+			for (var k = 1; k <= slices; k++) {
+				var t = k / slices;
+				/* Ease the flight so take-off and landing feel quick and the
+				   middle of the leap floats. */
+				var p = t * t * (3 - 2 * t);
+				var arcOffset = Math.sin(Math.PI * t);
+
+				push(
+					flight / slices,
+					x + (jumpToX - x) * p,
+					step.y + (jumpToY - step.y) * p - arcOffset * arc,
+					arcOffset * 14,
+					1
+				);
+			}
+
+			x = jumpToX;
+			y = jumpToY;
+		});
+
+		/* At the top: one small hop, then fade away and start again. */
+		var hop = Math.max(0, Math.min(14, (achievBoard.offsetHeight + y) - figureH - headLimit));
+		for (var h = 1; h <= 4; h++) {
+			var hp = h / 4;
+			push(150, x, y - Math.sin(Math.PI * hp) * hop, 0, 1);
+		}
+		push(520, x, y, 0, 1);
+		push(320, x, y, 0, 0);
+
+		var total = time;
+		return {
+			duration: total,
+			keyframes: frames.map(function (frame) {
+				var key = frame.style;
+				key.offset = total ? frame.time / total : 0;
+				key.easing = 'linear';
+				return key;
+			})
+		};
+	}
+
+	function restartAchRunner() {
+		if (!achRunnerEl) return;
+
+		if (achRunAnim) {
+			achRunAnim.cancel();
+			achRunAnim = null;
+		}
+
+		if (achRunReduced && achRunReduced.matches) return;
+		if (!achievBoard || !achievBoard.offsetHeight) return;
+
+		var run = achRunnerKeyframes();
+		if (!run || !run.duration) return;
+
+		achRunAnim = achRunnerEl.animate(run.keyframes, {
+			duration: run.duration,
+			iterations: Infinity,
+			easing: 'linear'
+		});
+	}
+
+	function scheduleAchRunner() {
+		window.requestAnimationFrame(function () {
+			window.requestAnimationFrame(restartAchRunner);
 		});
 	}
 
 	/* =====================================================
-	   Achievements: show the matching photo on hover/click.
-	   Cards are added later via [data-image] attributes.
+	   Achievements: scale the board so the whole section fits
+	   the viewport without a scrollbar.
 	   ===================================================== */
-	var achievementCards = Array.prototype.slice.call(
-		document.querySelectorAll('.achievement-card')
-	);
-	var photoDisplay = document.getElementById('achievement-display-photo');
+	var achSectionEl = document.getElementById('achievements');
+	var achPageEl = document.querySelector('.achievements-page');
+	var achFitFrame = 0;
+	var achFitTimer = 0;
 
-	if (photoDisplay) {
-		achievementCards.forEach(function (card) {
-			card.addEventListener('mouseenter', function () {
-				var imageSrc = card.getAttribute('data-image');
-				if (!imageSrc) return;
-				photoDisplay.src = imageSrc;
-				photoDisplay.classList.add('active');
-				card.classList.add('active');
-			});
+	function applyAchievementFit() {
+		if (!achSectionEl || !achPageEl) return;
+		if (!achSectionEl.classList.contains('active')) return;
 
-			card.addEventListener('mouseleave', function () {
-				photoDisplay.classList.remove('active');
-				card.classList.remove('active');
-			});
+		achPageEl.style.zoom = '';
+		achSectionEl.classList.remove('is-fit');
 
-			card.addEventListener('click', function () {
-				var imageSrc = card.getAttribute('data-image');
-				if (!imageSrc) return;
-				photoDisplay.src = imageSrc;
-				photoDisplay.classList.add('active');
-				achievementCards.forEach(function (other) {
-					other.classList.remove('active');
-				});
-				card.classList.add('active');
-			});
+		/* Below this width the cards become too tall; scrolling is the
+		   only readable option. */
+		if (window.innerWidth <= 1024) {
+			scheduleAchRunner();
+			return;
+		}
+
+		var sectionStyles = window.getComputedStyle(achSectionEl);
+		var paddingY =
+			(parseFloat(sectionStyles.paddingTop) || 0) +
+			(parseFloat(sectionStyles.paddingBottom) || 0);
+		var available = achSectionEl.clientHeight - paddingY;
+		var natural = achPageEl.scrollHeight;
+		if (!natural || available <= 0) {
+			scheduleAchRunner();
+			return;
+		}
+
+		var scale = Math.min(1, (available - 4) / natural);
+		if (scale >= 0.995) {
+			achSectionEl.classList.add('is-fit');
+			scheduleAchRunner();
+			return;
+		}
+
+		/* Zoom changes how text wraps, so measure the rendered result and
+		   correct once or twice until the board really fits. */
+		for (var attempt = 0; attempt < 5; attempt += 1) {
+			achPageEl.style.zoom = String(scale);
+			var rendered = achPageEl.getBoundingClientRect().height;
+			if (rendered <= available - 4) break;
+			scale *= (available - 5) / rendered;
+		}
+
+		achPageEl.style.zoom = String(scale);
+		achSectionEl.classList.add('is-fit');
+		scheduleAchRunner();
+	}
+
+	function scheduleAchievementFit() {
+		window.cancelAnimationFrame(achFitFrame);
+		achFitFrame = window.requestAnimationFrame(applyAchievementFit);
+	}
+
+	if (achSectionEl) {
+		if (window.MutationObserver) {
+			/* aria-hidden flips when the deck changes section. Watching this
+			   instead of the class avoids re-triggering the fit when the
+			   is-fit class is toggled below. */
+			new MutationObserver(function () {
+				if (achSectionEl.getAttribute('aria-hidden') === 'false') {
+					window.requestAnimationFrame(function () {
+						window.requestAnimationFrame(applyAchievementFit);
+					});
+				}
+			}).observe(achSectionEl, { attributes: true, attributeFilter: ['aria-hidden'] });
+		}
+
+		window.addEventListener('resize', function () {
+			window.clearTimeout(achFitTimer);
+			achFitTimer = window.setTimeout(scheduleAchievementFit, 120);
 		});
+
+		window.addEventListener('load', scheduleAchievementFit);
+
+		if (document.fonts && document.fonts.ready) {
+			document.fonts.ready.then(scheduleAchievementFit);
+		}
+
+		scheduleAchievementFit();
 	}
 
 	/* =====================================================

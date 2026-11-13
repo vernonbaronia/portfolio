@@ -1,0 +1,13 @@
+{
+	"name": "jvb-portfolio",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Static portfolio site for Jade Vernon A. Baronia.",
+	"scripts": {
+		"achievements": "node tools/build-achievements.mjs"
+	},
+	"devDependencies": {
+		"sharp": "^0.34.0"
+	}
+}
