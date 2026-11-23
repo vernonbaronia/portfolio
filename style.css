@@ -9502,7 +9502,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 
 .family-page {
 	width: 100%;
-	max-width: 1400px;
+	max-width: 1700px;
 	margin: 0 auto;
 	padding: 0 clamp(1rem, 3vw, 2.2rem) 0.5rem;
 	font-family: 'Poppins', 'Inter', sans-serif;
@@ -9511,7 +9511,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 .ff-title {
 	margin: 0;
 	font-family: 'Milker', var(--font-big);
-	font-size: clamp(1.75rem, 3.1vw, 2.7rem);
+	font-size: clamp(1.75rem, 3.1vw, 3.6rem);
 	font-weight: 400;
 	line-height: 0.95;
 	letter-spacing: 0.01em;
@@ -9535,7 +9535,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	display: grid;
 	grid-template-columns: 1.3fr 1.3fr 1.7fr;
 	gap: clamp(0.6rem, 1.2vw, 0.95rem);
-	height: clamp(350px, 47vh, 440px);
+	height: clamp(350px, 47vh, 560px);
 	align-items: stretch;
 }
 
@@ -9549,7 +9549,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 
 /* Bottom band: friends photos + friends text in one card */
 .ff-bottom {
-	height: clamp(235px, 30vh, 280px);
+	height: clamp(235px, 30vh, 360px);
 }
 
 /* Cards */
@@ -9696,7 +9696,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	right: 0;
 	bottom: 0;
 	padding: 0.28rem 0.4rem 0.32rem;
-	font-size: clamp(0.68rem, 0.78vw, 0.8rem);
+	font-size: clamp(0.68rem, 0.78vw, 0.95rem);
 	font-weight: 600;
 	line-height: 1.2;
 	text-align: center;
@@ -9728,7 +9728,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 .ff-role {
 	margin: 0 0 0.18rem;
 	font-family: 'Bebas Neue', var(--font-big);
-	font-size: clamp(1.28rem, 1.55vw, 1.6rem);
+	font-size: clamp(1.28rem, 1.55vw, 2rem);
 	font-weight: 400;
 	line-height: 1;
 	letter-spacing: 0.02em;
@@ -9739,7 +9739,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 
 .ff-meta {
 	margin: 0 0 0.2rem;
-	font-size: clamp(0.82rem, 0.92vw, 0.94rem);
+	font-size: clamp(0.82rem, 0.92vw, 1.1rem);
 	font-weight: 600;
 	line-height: 1.3;
 	color: #8fd3d8;
@@ -9747,7 +9747,7 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 
 .ff-desc {
 	margin: 0;
-	font-size: clamp(0.82rem, 0.92vw, 0.94rem);
+	font-size: clamp(0.82rem, 0.92vw, 1.1rem);
 	font-weight: 500;
 	line-height: 1.45;
 	color: rgba(240, 237, 238, 0.8);
