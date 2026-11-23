@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -6,8 +6,8 @@
 	<title>Jade Vernon A. Baronia | Portfolio</title>
 	<meta name="description" content="Portfolio of Jade Vernon A. Baronia, a 1st Year Computer Science Student.">
 	<meta name="color-scheme" content="light dark">
-	<meta name="theme-color" content="#111113" id="meta-theme">
-	<link rel="icon" href="./favicon.svg?v=20261107-16" type="image/svg+xml">
+	<meta name="theme-color" content="#050505" id="meta-theme">
+	<link rel="icon" href="./favicon.svg?v=20261122-2" type="image/svg+xml">
 
 	<!-- Set the theme before first paint so there is no flash -->
 	<script>
@@ -17,14 +17,14 @@
 		})();
 	</script>
 
-	<link rel="stylesheet" href="fonts.css?v=20261115-26">
+	<link rel="stylesheet" href="fonts.css?v=20261123-2">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-	<link rel="stylesheet" href="style.css?v=20261115-26">
+	<link rel="stylesheet" href="style.css?v=20261124-205">
 </head>
 <body class="is-intro is-home">
 
@@ -41,20 +41,14 @@
 
 	<!-- ===== Opening page ===== -->
 	<div class="intro" id="intro" role="button" tabindex="0" aria-label="Enter the portfolio">
-		<div class="intro-orbit" aria-hidden="true"></div>
 		<div class="intro-shutter" aria-hidden="true"></div>
 		<div class="intro-ripple" id="intro-ripple" aria-hidden="true"></div>
-		<div class="intro-content">
-			<div class="intro-copy">
-				<h2 class="intro-name">
-					<span class="intro-title">Jade Vernon</span>
-					<span class="intro-title">A. Baronia's</span>
-				</h2>
-				<p class="intro-portfolio">Portfolio</p>
-				<div class="intro-rail" aria-hidden="true">
-					<span class="intro-rail-fill"></span>
-				</div>
-			</div>
+		<div class="intro-greeting" aria-hidden="true">
+			<p class="intro-greeting-hello">Hello,</p>
+			<p class="intro-greeting-words">
+				<span id="intro-greeting-lead">Good</span>
+				<span id="intro-greeting-tail">Afternoon</span>
+			</p>
 		</div>
 		<div class="intro-controls" role="group" aria-label="Appearance"></div>
 		<div class="intro-progress" aria-hidden="true"><span class="intro-progress-fill"></span></div>
@@ -112,282 +106,381 @@
 		<div class="nav-meta nav-meta--time">
 			<div class="nav-id">
 				<button class="nav-logo" id="nav-logo" type="button" aria-label="Go to Home" title="Home">JB</button>
-				<span class="pulse-dot nav-pulse" aria-hidden="true"></span>
-				<time id="live-time" datetime="">--:--</time>
 			</div>
-			<span class="nav-greeting" id="greeting" aria-live="polite"><span id="greeting-text">a pleasant evening</span><i class="fa-solid fa-moon nav-greeting-icon" id="greeting-icon" aria-hidden="true"></i></span>
-			<p class="nav-journey">A Journey of Growth <span>&amp;</span> Achievement</p>
 		</div>
 
 		<button class="nav-home" id="nav-home" type="button" aria-label="Go to Home" hidden>Home</button>
 		<span class="nav-page-title" id="nav-page-title" aria-hidden="true">Personal Information</span>
-
-		<div class="nav-meta nav-meta--date">
-			<span class="nav-weekday" id="live-weekday">Friday</span>
-			<time id="live-date" datetime="">--</time>
-		</div>
 	</nav>
+
+	<!-- ===== Home hero background ===== -->
+	<div class="home-hero-bg" aria-hidden="true">
+		<div class="home-hero-parallax">
+			<div class="home-hero-layer"></div>
+		</div>
+	</div>
+
+	<!-- ===== Entry curtain: navy sheet that parks on the left ===== -->
+	<div class="home-curtain" aria-hidden="true">
+		<img class="home-curtain-photo" src="image/profile-suit.png?v=20261124-3" alt="">
+	</div>
+
+	<!-- Folder tabs that peek out of the panel's right edge -->
+	<div class="home-curtain-tabs" aria-hidden="true">
+		<span class="home-curtain-tab"></span>
+		<span class="home-curtain-tab"></span>
+		<span class="home-curtain-tab"></span>
+		<span class="home-curtain-tab"></span>
+		<span class="home-curtain-tab"></span>
+		<span class="home-curtain-tab"></span>
+	</div>
 
 	<main>
 		<!-- ===== HOME ===== -->
 		<section id="home" class="section active" role="region" aria-label="Home" data-title="Home">
 			<div class="home-watermark" aria-hidden="true"><span>JVB</span></div>
 			<div class="home-stage">
-				<div class="home-portrait-wrap">
-					<figure class="home-portrait">
-						<img src="profile.png?v=20261107-16" alt="Jade Vernon A. Baronia">
-					</figure>
-				</div>
-
 				<div class="home-right">
 					<div class="home-identity">
-						<h1>Jade Vernon A. Baronia</h1>
-						<p class="subheader">
-							<span class="pulse-dot" aria-hidden="true"></span>
-							<span class="role-line" aria-hidden="true">
-								<span class="role-prefix">Aspiring</span>
-								<span class="role-text"><span class="typed-role">Software Engineer</span><span class="type-caret"></span></span>
-							</span>
-							<span class="sr-only">Aspiring Software Engineer, Embedded Systems Engineer, Cloud / Infrastructure Engineer, and Systems Architect.</span>
-						</p>
+						<h1>
+							<span>Jade Vernon</span>
+							<span>A. Baronia</span>
+						</h1>
 						<span class="name-flourish" aria-hidden="true"></span>
+						<p class="home-role">IT Business Analyst / Product Analyst</p>
 					</div>
 
 					<div class="home-menu" role="navigation" aria-label="Portfolio sections">
 					<button class="home-menu-item" id="home-menu-about" type="button" data-section="about">
 						<span class="home-menu-num" aria-hidden="true">01</span>
-						<span class="home-menu-label">Personal Information</span>
+						<span class="home-menu-label">
+							<span class="home-menu-title">Personal Information</span>
+							<span class="home-menu-script" aria-hidden="true">personal information</span>
+						</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="achievements">
 						<span class="home-menu-num" aria-hidden="true">02</span>
-						<span class="home-menu-label">Achievements</span>
+						<span class="home-menu-label">
+							<span class="home-menu-title">Achievements</span>
+							<span class="home-menu-script" aria-hidden="true">achievements</span>
+						</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					<button class="home-menu-item" type="button" data-section="family">
 						<span class="home-menu-num" aria-hidden="true">03</span>
-						<span class="home-menu-label">Family and Friends</span>
-						<span class="home-menu-arrow" aria-hidden="true"></span>
-					</button>
-					<button class="home-menu-item" type="button" data-section="batchmates">
-						<span class="home-menu-num" aria-hidden="true">04</span>
-						<span class="home-menu-label">Upcoming</span>
+						<span class="home-menu-label">
+							<span class="home-menu-title">Family and Friends</span>
+							<span class="home-menu-script" aria-hidden="true">family and friends</span>
+						</span>
 						<span class="home-menu-arrow" aria-hidden="true"></span>
 					</button>
 					</div>
 				</div>
+			</div>
+
+			<div class="home-signoff">
+				<span class="home-signoff-status"><span class="home-signoff-dot" aria-hidden="true"></span>Open to opportunities</span>
+				<span class="home-signoff-rule" aria-hidden="true"></span>
+				<a class="home-signoff-link" href="mailto:baroniajade27@gmail.com">Let&rsquo;s talk <span aria-hidden="true">&nearr;</span></a>
 			</div>
 		</section>
 
 		<!-- ===== PERSONAL INFORMATION ===== -->
 		<section id="about" class="section" role="region" aria-label="Personal Information" aria-hidden="true" data-title="Personal Information">
-			<div class="about-container">
-				<div class="about-hero">
-					<div class="about-visual">
-						<div class="about-portrait">
-							<div class="orbit-badge" aria-hidden="true">
-								<span class="orbit-word">learn</span>
-								<span class="orbit-word">build</span>
-								<span class="orbit-word">enjoy</span>
-								<span class="orbit-word">explore</span>
-							</div>
-							<div class="photo-frame" id="photo-frame">
-								<img src="profile.png?v=20261107-16" alt="Jade Vernon A. Baronia" class="profile-img">
-							</div>
-						</div>
+			<div class="pi-page">
+				<div class="pi-visual">
+					<img class="pi-photo" src="image/halfbody.png?v=20261124-3" alt="Jade Vernon A. Baronia">
+				</div>
 
-						<div class="about-links about-links--social" aria-label="Social links">
-							<a href="mailto:baroniajade27@gmail.com" class="icon-btn" data-label="Gmail" title="baroniajade27@gmail.com" aria-label="Email baroniajade27@gmail.com">
-								<i class="fa-solid fa-envelope"></i>
-							</a>
-							<a href="https://github.com/vernonbaronia" class="icon-btn" data-label="GitHub" title="GitHub" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
-								<i class="fa-brands fa-github"></i>
-							</a>
-							<a href="https://www.facebook.com/vernon.baronia" class="icon-btn" data-label="Facebook" title="Facebook" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
-								<i class="fa-brands fa-facebook"></i>
-							</a>
-							<a href="https://www.instagram.com/vrnon27/" class="icon-btn" data-label="Instagram" title="Instagram" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-								<i class="fa-brands fa-instagram"></i>
-							</a>
-						</div>
-					</div>
+				<div class="pi-main">
+					<p class="pi-kicker">Personal Information</p>
+					<h1 class="pi-name"><span>Jade Vernon</span> <span>A. Baronia</span></h1>
 
-					<div class="about-info">
-						<p class="about-eyebrow">Hi, I am</p>
-						<h1>Jade Vernon A. Baronia</h1>
-						<span class="name-flourish" aria-hidden="true"></span>
+					<div class="info-panel">
+							<section class="info-col info-col--profile" aria-labelledby="info-profile">
+								<h2 class="info-col-title" id="info-profile">Profile</h2>
+								<div class="info-list">
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Gender</span>
+											<span class="fact-value">Male</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Birthday</span>
+											<span class="fact-value">November 27, 2007</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Age</span>
+											<span class="fact-value">18</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Civil Status</span>
+											<span class="fact-value">Single</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Citizenship</span>
+											<span class="fact-value">Filipino</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Nationality</span>
+											<span class="fact-value">Filipino</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Place of Birth</span>
+											<span class="fact-value">Germinal, Bolinao, Pangasinan</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Religion</span>
+											<span class="fact-value">Roman Catholic</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Blood Type</span>
+											<span class="fact-value">O+</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Height</span>
+											<span class="fact-value">180 cm</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Weight</span>
+											<span class="fact-value">76 kg</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Languages</span>
+											<span class="fact-value">Filipino, English</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Zodiac Sign</span>
+											<span class="fact-value">Sagittarius</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">BMI</span>
+											<span class="fact-value">Normal</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Hair Color</span>
+											<span class="fact-value">Black</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Type of Birth</span>
+											<span class="fact-value">Single</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Disabilities</span>
+											<span class="fact-value">None</span>
+										</div>
+										<div class="fact">
+											<span class="fact-label">Location</span>
+											<span class="fact-value">Baguio City, Benguet</span>
+										</div>
+									</div>
+								</div>
+							</section>
 
-						<div class="bio">
-							<p>Driven by a deep curiosity for low-level systems and hardware-software integration, I am actively exploring pathways across software engineering, embedded systems, cloud infrastructure, and systems architecture. Inspired by technology’s rapid evolution, I am dedicated to growing into a computer scientist who builds high-impact solutions for the future.</p>
-						</div>
+							<section class="info-col" aria-labelledby="info-contact">
+								<h2 class="info-col-title" id="info-contact">Contact</h2>
+								<div class="info-list">
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Email</span>
+											<span class="fact-value"><a href="mailto:baroniajade27@gmail.com">baroniajade27@gmail.com</a></span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Phone</span>
+											<span class="fact-value"><a href="tel:+639283786725">0928 378 6725</a></span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Current Address</span>
+											<span class="fact-value">City Camp Alley, Baguio, Benguet</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Permanent Address</span>
+											<span class="fact-value">Concordia, Bolinao, Pangasinan</span>
+										</div>
+									</div>
+								</div>
 
-						<div class="about-tags">
-							<div class="about-tag-row">
-								<span class="about-tag-label">Hobbies</span>
-								<ul class="about-chips">
-									<li class="about-chip">Exercising</li>
-									<li class="about-chip">Learning</li>
-									<li class="about-chip">Reading</li>
-								</ul>
-							</div>
-							<div class="about-tag-row">
-								<span class="about-tag-label">Skills</span>
-								<ul class="about-chips">
-									<li class="about-chip">Coding</li>
-									<li class="about-chip">Solving</li>
-									<li class="about-chip">Managing</li>
-								</ul>
-							</div>
+								<div class="info-sub">
+									<h3 class="info-sub-title">Hobbies</h3>
+									<p class="info-sub-value">Table tennis, Basketball, Reading, Cooking</p>
+								</div>
+							</section>
+
+							<section class="info-col" aria-labelledby="info-education">
+								<h2 class="info-col-title" id="info-education">Education &amp; Family</h2>
+								<div class="info-list">
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">College</span>
+											<span class="fact-value">University of the Cordilleras</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Course</span>
+											<span class="fact-value">Bachelor of Science in Computer Science</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Year Level</span>
+											<span class="fact-value">1st Year</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Father</span>
+											<span class="fact-value">Arnel C. Baronia</span>
+										</div>
+									</div>
+									<div class="info-row">
+										<div class="fact">
+											<span class="fact-label">Mother</span>
+											<span class="fact-value">Glenda D. Adano</span>
+										</div>
+									</div>
+								</div>
+
+								<div class="info-sub">
+									<h3 class="info-sub-title">Skills for Work</h3>
+									<p class="info-sub-value">Research, Paperworks, Requirements Gathering, AI-assisted Prototyping</p>
+								</div>
+							</section>
 						</div>
 					</div>
 				</div>
-
-				<div class="about-facts-grid">
-					<div class="facts-group" role="group" aria-labelledby="facts-personal">
-						<div class="facts-group-head">
-							<span class="facts-group-icon" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
-							<h2 class="facts-group-title" id="facts-personal">Personal</h2>
-						</div>
-						<dl class="facts-list">
-							<div class="fact">
-								<dt>Birthday</dt>
-								<dd>November 27, 2007</dd>
-							</div>
-							<div class="fact">
-								<dt>Age</dt>
-								<dd>18</dd>
-							</div>
-							<div class="fact">
-								<dt>Sex</dt>
-								<dd>Male</dd>
-							</div>
-							<div class="fact">
-								<dt>Civil status</dt>
-								<dd>Single</dd>
-							</div>
-							<div class="fact">
-								<dt>Weight</dt>
-								<dd>76 kg</dd>
-							</div>
-						</dl>
-					</div>
-
-					<div class="facts-group" role="group" aria-labelledby="facts-studies">
-						<div class="facts-group-head">
-							<span class="facts-group-icon" aria-hidden="true"><i class="fa-solid fa-graduation-cap"></i></span>
-							<h2 class="facts-group-title" id="facts-studies">Studies</h2>
-						</div>
-						<dl class="facts-list">
-							<div class="fact">
-								<dt>Year level</dt>
-								<dd>1st Year</dd>
-							</div>
-							<div class="fact">
-								<dt>Program</dt>
-								<dd>Computer Science</dd>
-							</div>
-							<div class="fact">
-								<dt>College</dt>
-								<dd>University of the Cordilleras</dd>
-							</div>
-						</dl>
-					</div>
-
-					<div class="facts-group" role="group" aria-labelledby="facts-contact">
-						<div class="facts-group-head">
-							<span class="facts-group-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
-							<h2 class="facts-group-title" id="facts-contact">Contact &amp; location</h2>
-						</div>
-						<dl class="facts-list">
-							<div class="fact">
-								<dt>Current location</dt>
-								<dd>City Camp Alley, Baguio, Benguet</dd>
-							</div>
-							<div class="fact">
-								<dt>Permanent location</dt>
-								<dd>Concordia, Bolinao, Pangasinan</dd>
-							</div>
-							<div class="fact">
-								<dt>Phone</dt>
-								<dd><a href="tel:+639283786725">0928 378 6725</a></dd>
-							</div>
-						</dl>
-					</div>
-				</div>
-			</div>
 		</section>
 
 		<!-- ===== ACHIEVEMENTS ===== -->
 		<section id="achievements" class="section" role="region" aria-label="Achievements" aria-hidden="true" data-title="Achievements">
 			<div class="achievements-page">
-				<div class="ach-board" id="ach-board">
-					<div class="ach-runner" id="ach-runner" aria-hidden="true">
-						<svg class="ach-runner-figure" viewBox="0 0 34 43" focusable="false" aria-hidden="true">
-							<circle class="ach-runner-head" cx="17.6" cy="7.2" r="4" />
-							<path class="ach-runner-spine" d="M17.4 11.6 L16.8 27.6" />
-							<g class="ach-runner-limb ach-runner-arm ach-runner-arm-back">
-								<path d="M17.4 15.6 L12.6 19.6 L10.8 25.2" />
-							</g>
-							<g class="ach-runner-limb ach-runner-arm ach-runner-arm-front">
-								<path d="M17.4 15.6 L22.2 18.6 L24.8 14.4" />
-							</g>
-							<g class="ach-runner-limb ach-runner-leg ach-runner-leg-back">
-								<path d="M16.8 27.4 L14.6 33.4 L11.8 41" />
-							</g>
-							<g class="ach-runner-limb ach-runner-leg ach-runner-leg-front">
-								<path d="M16.8 27.4 L19.2 33.6 L22.4 41.2" />
-							</g>
-						</svg>
-					</div>
-					<div class="ach-base" id="ach-base"></div>
-					<div class="ach-summit">
-						<div class="ach-summit-card" id="ach-summit-card"></div>
-						<p class="ach-summit-quote">Growth is a continuous journey, where every milestone is just a stepping stone to the next peak</p>
+				<h2 class="ach-page-title">Achievements</h2>
+
+				<div class="ach-block ach-block--certs">
+					<h2 class="ach-kicker">Certificates</h2>
+					<div class="ach-marquee">
+						<div class="ach-marquee-track" id="ach-cert-track"></div>
 					</div>
 				</div>
+
+				<div class="ach-block ach-block--stages">
+					<h2 class="ach-kicker">Educational <span>stages</span></h2>
+					<div class="ach-stage-grid" id="ach-stage-grid"></div>
+				</div>
+
 				<p class="ach-note" id="ach-note" role="status" hidden></p>
 			</div>
 		</section>
 
-		<!-- ===== MY FAMILY (content coming soon) ===== -->
+		<!-- ===== FAMILY & FRIENDS ===== -->
 		<section id="family" class="section" role="region" aria-label="Family and Friends" aria-hidden="true" data-title="Family and Friends">
-			<div class="coming-soon" data-index="03">
-				<div class="coming-soon-icon">
-					<i class="fa-solid fa-people-group" aria-hidden="true"></i>
-					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
-					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
+			<div class="family-page">
+				<h1 class="ff-title">Family <span>&amp;</span> Friends</h1>
+
+				<div class="ff-grid">
+					<div class="ff-top">
+						<!-- Father -->
+						<article class="ff-card ff-parent-card">
+							<figure class="ff-media ff-media--contain">
+								<img src="image/father.jpg?v=20261124-2" alt="Father">
+							</figure>
+							<div class="ff-card-body">
+								<h2 class="ff-role">Father</h2>
+								<p class="ff-meta">Arnel C. Baronia</p>
+								<p class="ff-desc">The family&rsquo;s designated driver, spider-catcher, and &ldquo;ask your mother&rdquo; specialist.</p>
+							</div>
+						</article>
+
+						<!-- Mother -->
+						<article class="ff-card ff-parent-card">
+							<figure class="ff-media ff-media--contain">
+								<img src="image/mother.jpg?v=20261124-2" alt="Mother">
+							</figure>
+							<div class="ff-card-body">
+								<h2 class="ff-role">Mother</h2>
+								<p class="ff-meta">Glenda D. Adano</p>
+								<p class="ff-desc">The household CEO who can find lost items just by looking at them.</p>
+							</div>
+						</article>
+
+						<!-- Siblings + best friend -->
+						<div class="ff-side">
+							<article class="ff-card ff-side-card">
+								<figure class="ff-media ff-media--sib">
+									<div class="ff-sib-collage">
+										<span class="ff-sib-big"><img src="image/siblings-1.jpg?v=20261124-2" alt="Sibling"></span>
+										<span class="ff-sib-sm"><img src="image/siblings-2.jpg?v=20261124-2" alt="Sibling"></span>
+										<span class="ff-sib-sm"><img src="image/siblings-3.jpg?v=20261124-2" alt="Sibling"></span>
+									</div>
+								</figure>
+								<div class="ff-card-body">
+									<h2 class="ff-role">Siblings</h2>
+									<p class="ff-meta">Rachelle | Catherine | Bernard</p>
+									<p class="ff-desc">Not with each other as we grew up, but I&rsquo;d take a bullet for them.</p>
+								</div>
+							</article>
+
+							<article class="ff-card ff-side-card">
+								<figure class="ff-media ff-media--contain">
+									<img src="image/bestfriend.jpg?v=20261124-2" alt="Best friend">
+								</figure>
+								<div class="ff-card-body">
+									<h2 class="ff-role">Best friend</h2>
+									<p class="ff-meta">Julie Ann</p>
+									<p class="ff-desc">Knows far too much about you to ever be allowed to leave.</p>
+								</div>
+							</article>
+						</div>
+					</div>
+
+					<div class="ff-bottom">
+						<article class="ff-card ff-bottom-card">
+							<div class="ff-friends-photos">
+								<figure class="ff-friend-photo ff-friend-photo--contain">
+									<img src="image/highschool friends.jpg?v=20261124-5" alt="High school friends">
+									<span>High School Friends</span>
+								</figure>
+								<figure class="ff-friend-photo">
+									<img src="image/college friends.jpg?v=20261124-2" alt="College friends">
+									<span>College Friends</span>
+								</figure>
+							</div>
+							<div class="ff-card-body">
+								<h2 class="ff-role">Friends</h2>
+								<p class="ff-desc">The chosen family who enables your worst ideas and celebrates your best.</p>
+							</div>
+						</article>
+					</div>
 				</div>
-				<p class="soon-kicker">coming soon</p>
-				<h2 class="coming-soon-title">My family</h2>
-				<span class="coming-soon-text">Portraits and little stories about the people who matter.</span>
-				<div class="soon-chips" aria-hidden="true">
-					<span class="soon-chip">Members</span>
-					<span class="soon-chip">Photos</span>
-					<span class="soon-chip">Stories</span>
-				</div>
-				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
 			</div>
 		</section>
 
-		<!-- ===== MY BATCHMATES (content coming soon) ===== -->
-		<section id="batchmates" class="section" role="region" aria-label="Upcoming" aria-hidden="true" data-title="Upcoming">
-			<div class="coming-soon" data-index="04">
-				<div class="coming-soon-icon">
-					<i class="fa-solid fa-users" aria-hidden="true"></i>
-					<span class="soon-ring soon-ring--b" aria-hidden="true"></span>
-					<span class="soon-orbit" aria-hidden="true"><i class="soon-dot"></i></span>
-				</div>
-				<p class="soon-kicker">coming soon</p>
-				<h2 class="coming-soon-title">My batchmates</h2>
-				<span class="coming-soon-text">Faces and names from my section will be listed here.</span>
-				<div class="soon-chips" aria-hidden="true">
-					<span class="soon-chip">Classmates</span>
-					<span class="soon-chip">Photos</span>
-					<span class="soon-chip">Reunions</span>
-				</div>
-				<span class="coming-soon-pill"><i class="pill-dot" aria-hidden="true"></i>in progress</span>
-			</div>
-		</section>
+
+
+
 	</main>
 
 	<!-- ===== Deck pager ===== -->
@@ -400,7 +493,6 @@
 			<button class="pager-dot" type="button" data-section="about" aria-label="Personal Information"></button>
 			<button class="pager-dot" type="button" data-section="achievements" aria-label="Achievements"></button>
 			<button class="pager-dot" type="button" data-section="family" aria-label="Family and Friends"></button>
-			<button class="pager-dot" type="button" data-section="batchmates" aria-label="Upcoming"></button>
 		</div>
 		<button class="pager-btn pager-next" id="next-btn" type="button" aria-label="Next section">
 			<span class="pager-name" id="next-name"></span>
@@ -444,8 +536,11 @@
 		</figure>
 	</div>
 
-	<script src="achievements-data.js?v=20261115-26"></script>
+	<script src="achievements-data.js?v=20261122-1"></script>
 	<script src="achievements-images.js?v=20261114-2"></script>
-	<script src="script.js?v=20261115-26"></script>
+	<script src="script.js?v=20261123-34"></script>
 </body>
 </html>
+
+
+

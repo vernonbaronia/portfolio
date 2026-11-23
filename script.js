@@ -51,9 +51,9 @@
 			var dark = current() === 'dark';
 			var value;
 			if (dark) {
-				value = getComputedStyle(docEl).getPropertyValue('--body-bg').trim() || '#08080a';
+				value = getComputedStyle(docEl).getPropertyValue('--body-bg').trim() || '#050505';
 			} else {
-				value = getComputedStyle(docEl).getPropertyValue('--accent').trim() || '#1a1a1c';
+				value = getComputedStyle(docEl).getPropertyValue('--accent').trim() || '#2c666e';
 			}
 			meta.setAttribute('content', value);
 		}
@@ -276,6 +276,9 @@
 			'600 1em "Space Grotesk"',
 			'700 1em "Space Grotesk"',
 			'400 1em Euphoria',
+			'400 1em Milker',
+			'400 1em "Cocogoose Pro"',
+			'400 1em "Californian Signature"',
 			'400 1em Francy',
 			'400 1em Gendy',
 			'400 1em "ID Grotesk"',
@@ -305,20 +308,17 @@
 		var autoEnterStarted = 0;
 		var autoEnterQueued = false;
 
-		var railFill = introEl.querySelector('.intro-rail-fill');
 		var progressFill = introEl.querySelector('.intro-progress-fill');
 		var barAnimations = [];
 
 		var startBarAnimations = function (anchorTime) {
-			if (!railFill || !progressFill || !railFill.animate) return;
+			if (!progressFill || !progressFill.animate) return;
 			if (barAnimations.length) {
 				barAnimations.forEach(function (anim) { anim.play(); });
 				return;
 			}
-			/* The rail carries a glowing head, so it animates its width; the
-			   bottom bar is a plain fill, so it can scale on the compositor. */
+			/* The bottom bar is a plain fill, so it can scale on the compositor. */
 			barAnimations = [
-				{ el: railFill, id: 'intro-rail-fill', frames: [{ width: '0%' }, { width: '100%' }] },
 				{ el: progressFill, id: 'intro-progress-fill', frames: [{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }] }
 			].map(function (item) {
 				var anim = item.el.animate(item.frames, {
@@ -377,7 +377,7 @@
 			startAutoEnter();
 		};
 
-		var enterSite = function (fromKeyboard, originX, originY) {
+		var enterSite = function (fromKeyboard) {
 			if (entered) return;
 			entered = true;
 
@@ -386,22 +386,18 @@
 
 			Sound.click();
 
-			var x = typeof originX === 'number' ? originX : window.innerWidth / 2;
-			var y = typeof originY === 'number' ? originY : window.innerHeight / 2;
-
 			var reveal = function () {
-				/* Swirled shutter: the opening page spirals shut, then
-				   opens onto the homepage. */
-				var iris = document.getElementById('iris');
-				if (iris) {
-					iris.classList.remove('is-playing', 'is-swirl');
-					void iris.offsetWidth;
-					iris.classList.add('is-swirl');
-				}
-				document.body.classList.add('is-section-changing');
-				sectionTransitioning = true;
+				/* The navy panel slides in from the right and erases the
+				   opening page as it travels; the intro is clipped from the
+				   right in step with the panel's leading edge. */
+				introEl.classList.add('is-erasing');
+				document.body.classList.add('is-transitioning-home');
+				document.body.classList.add('is-curtain-opening');
 
-				/* Swap intro → homepage at the midpoint (screen is fully black). */
+				window.setTimeout(function () {
+					document.body.classList.remove('is-curtain-opening');
+				}, 2000);
+
 				window.setTimeout(function () {
 					introEl.hidden = true;
 					document.body.classList.remove('is-intro');
@@ -410,20 +406,19 @@
 						el.inert = false;
 					});
 					document.dispatchEvent(new CustomEvent('jvb:entered'));
-				}, 500);
+				}, 1330);
 
 				window.setTimeout(function () {
-					if (iris) iris.classList.remove('is-swirl');
-					document.body.classList.remove('is-section-changing');
-					sectionTransitioning = false;
-				}, 1180);
+					document.body.classList.remove('is-transitioning-home');
+					introEl.classList.remove('is-erasing');
+				}, 2300);
 
 				window.setTimeout(function () {
 					if (fromKeyboard) {
 						var firstTab = document.getElementById('home-menu-about');
 						if (firstTab) firstTab.focus({ preventScroll: true });
 					}
-				}, 1220);
+				}, 1450);
 			};
 
 			/* If a font is still in flight, let it land first (with
@@ -451,7 +446,7 @@
 
 		introEl.addEventListener('click', function (event) {
 			if (event.target && event.target.closest && event.target.closest('.intro-controls')) return;
-			enterSite(false, event.clientX, event.clientY);
+			enterSite(false);
 		});
 
 		/* Any key press on the intro page enters, not just a click */
@@ -736,6 +731,40 @@
 	}
 
 	/* =====================================================
+	   Opening-page greeting — the visitor's local hour picks
+	   the pair of words that sits under "Hello,".
+	   6–11:59 Good Morning · 12–17:59 Good Afternoon ·
+	   18–23:59 Good Evening · 0–5:59 Still Up?
+	   ===================================================== */
+	(function paintIntroGreeting() {
+		var lead = document.getElementById('intro-greeting-lead');
+		var tail = document.getElementById('intro-greeting-tail');
+		if (!lead || !tail) return;
+
+		var hour = new Date().getHours();
+		var words;
+
+		/* Temporary preview: pin the greeting so its length can be judged.
+		   Set to null to restore the time-aware wording below. */
+		var preview = ['Good', 'Morning'];
+
+		if (preview) {
+			words = preview;
+		} else if (hour >= 6 && hour < 12) {
+			words = ['Good', 'Morning'];
+		} else if (hour >= 12 && hour < 18) {
+			words = ['Good', 'Afternoon'];
+		} else if (hour >= 18) {
+			words = ['Good', 'Evening'];
+		} else {
+			words = ['Still', 'Up?'];
+		}
+
+		lead.textContent = words[0];
+		tail.textContent = words[1];
+	})();
+
+	/* =====================================================
 	   Live clock (nav left) and date (nav right)
 	   Only touches the DOM when the visible text changes.
 	   ===================================================== */
@@ -1004,6 +1033,7 @@
 		document.body.classList.toggle('is-home', currentIndex === 0);
 		document.body.classList.toggle('is-about', currentIndex === 1);
 		document.body.classList.toggle('is-achievements', currentIndex === 2);
+		document.body.classList.toggle('is-family', currentIndex === 3);
 
 		if (navPageTitle) {
 			navPageTitle.textContent = sections[currentIndex].getAttribute('data-title') || '';
@@ -1251,17 +1281,15 @@
 	}
 
 	/* =====================================================
-	   Achievements: build the school record board from
-	   achievements-data.js + achievements-images.js.
-	   Photos are added through the build script, never by
-	   editing this file.
+	   Achievements: the certificate strip and the educational
+	   stage cards, built from achievements-data.js +
+	   achievements-images.js. Photos are added through the
+	   build script, never by editing this file.
 	   ===================================================== */
 	var achievContent = window.ACHIEVEMENT_CONTENT;
 	var achievMedia = window.ACHIEVEMENT_MEDIA || { logos: {}, folders: {} };
-	var achievBoard = document.getElementById('ach-board');
-	var achievBase = document.getElementById('ach-base');
-	var achievSummitCard = document.getElementById('ach-summit-card');
-	var achievSummit = document.querySelector('.ach-summit');
+	var achievCertTrack = document.getElementById('ach-cert-track');
+	var achievStageGrid = document.getElementById('ach-stage-grid');
 	var achievNote = document.getElementById('ach-note');
 	var achLightbox = document.getElementById('ach-lightbox');
 
@@ -1312,9 +1340,9 @@
 		return (achievMedia.folders && achievMedia.folders[folder]) || { certs: [], featured: [] };
 	}
 
-	function achPhoto(src, label) {
+	function achPhoto(src, label, className) {
 		var img = document.createElement('img');
-		img.className = 'ach-photo';
+		img.className = className || 'ach-photo';
 		img.src = src;
 		img.alt = label + ' portrait';
 		img.loading = 'lazy';
@@ -1322,187 +1350,47 @@
 		return img;
 	}
 
-	/* An auto-rolling photo presentation: the graduation shot leads, then
-	   returns every seven certificates without breaking their order. */
-	var achReels = [];
-	var achReelTimer = 0;
+	var ACH_GROUP_ICONS = {
+		academic: 'fa-graduation-cap',
+		competition: 'fa-trophy',
+		leadership: 'fa-user-tie',
+		extracurricular: 'fa-star'
+	};
 
-	function achReelSlide(item, index, eager) {
-		var slide = achEl('button', 'ach-reel-slide');
-		slide.type = 'button';
-		slide.setAttribute('data-ach-index', String(index));
-		slide.setAttribute('aria-label', 'Open ' + item.title);
+	function achGroupList(school) {
+		var groups = school.groups;
 
-		var img = document.createElement('img');
-		img.src = item.thumb || item.src;
-		img.alt = '';
-		img.loading = eager ? 'eager' : 'lazy';
-		img.decoding = 'async';
-		if (item.width && item.height) {
-			img.width = item.width;
-			img.height = item.height;
-			img.style.aspectRatio = item.width + ' / ' + item.height;
+		if (!groups || !groups.length) {
+			groups = [{ label: 'Academic', icon: 'academic', items: school.awards || [] }];
 		}
 
-		slide.appendChild(img);
-		return slide;
-	}
+		groups = groups.filter(function (group) {
+			return group && group.items && group.items.length;
+		});
+		if (!groups.length) return null;
 
-	function buildAchReel(data, school, items) {
-		var photos = data.certs.concat(data.featured);
-		var reel = achEl('div', 'ach-reel');
-		reel.setAttribute('role', 'group');
-		reel.setAttribute('aria-label', school.school + ' photos');
+		var wrap = achEl('div', 'ach-groups');
 
-		/* Register every photo once; the lightbox uses this list. */
-		var indexBySrc = {};
-		photos.forEach(function (item) {
-			indexBySrc[item.src] = items.length;
-			items.push({ src: item.src, title: item.title, school: school.school });
+		groups.forEach(function (group) {
+			var section = achEl('section', 'ach-group');
+			var head = achEl('h4', 'ach-group-title');
+			var icon = achEl('i', 'fa-solid ' + (ACH_GROUP_ICONS[group.icon] || 'fa-award'));
+			icon.setAttribute('aria-hidden', 'true');
+			head.appendChild(icon);
+			head.appendChild(document.createTextNode(group.label + ':'));
+			section.appendChild(head);
 
-			/* Warm the cache and decode, so a swipe never waits on either. */
-			var preload = new Image();
-			preload.decoding = 'async';
-			preload.src = item.thumb || item.src;
-			if (preload.decode) {
-				preload.decode().catch(function () {});
-			}
+			var list = achEl('ul', 'ach-group-items');
+			group.items.forEach(function (item) {
+				list.appendChild(achEl('li', null, item));
+			});
+			section.appendChild(list);
+			wrap.appendChild(section);
 		});
 
-		/* The graduation shot leads and comes back every ninth slide; the
-		   certificates keep rolling in their own order in between. */
-		var gradAt = photos.length - 1;
-		if (school.grad) {
-			for (var g = 0; g < photos.length; g++) {
-				if (photos[g].src.indexOf(school.grad) !== -1) {
-					gradAt = g;
-					break;
-				}
-			}
-		}
-
-		var grad = photos[gradAt];
-		var certs = photos.filter(function (item, i) { return i !== gradAt; });
-		if (!certs.length) certs = [grad];
-
-		/* Two stacked frames: one on screen, one waiting to swipe in. */
-		var track = achEl('div', 'ach-reel-track');
-		var slots = [];
-		for (var s = 0; s < 2; s++) {
-			var slide = achEl('button', 'ach-reel-slide');
-			slide.type = 'button';
-			var img = document.createElement('img');
-			img.alt = '';
-			img.decoding = 'async';
-			slide.appendChild(img);
-			track.appendChild(slide);
-			slots.push({ button: slide, img: img });
-		}
-		reel.appendChild(track);
-
-		var counter = null;
-		if (certs.length > 1) {
-			counter = achEl('span', 'ach-reel-count', reelCountText(0, certs.length));
-			counter.setAttribute('aria-hidden', 'true');
-			reel.appendChild(counter);
-		}
-
-		var entry = {
-			track: track,
-			slots: slots,
-			grad: grad,
-			certs: certs,
-			certIndex: 0,
-			indexOf: indexBySrc,
-			counter: counter
-		};
-
-		achReelPaint(entry, grad, 0);
-		achReels.push(entry);
-		return reel;
+		return wrap;
 	}
 
-	function achReelPaint(reel, photo, slot) {
-		var frame = reel.slots[slot];
-		if (!frame) return;
-
-		frame.img.src = photo.thumb || photo.src;
-		if (photo.width && photo.height) {
-			frame.img.style.aspectRatio = photo.width + ' / ' + photo.height;
-		}
-		frame.button.setAttribute('data-ach-index', String(reel.indexOf[photo.src]));
-		frame.button.setAttribute('aria-label', 'Open ' + photo.title);
-	}
-
-	function reelCountText(index, total) {
-		var pad = function (n) { return n < 10 ? '0' + n : String(n); };
-		return pad(index + 1) + ' / ' + pad(total);
-	}
-
-	function achReelSwap(reel, photo, certNumber) {
-		/* Park the incoming photo in the second frame, then swipe up. */
-		achReelPaint(reel, photo, 1);
-		reel.track.style.transition = '';
-		reel.track.style.transform = 'translate3d(0,-100%,0)';
-
-		window.setTimeout(function () {
-			achReelPaint(reel, photo, 0);
-			reel.track.style.transition = 'none';
-			reel.track.style.transform = 'translate3d(0,0,0)';
-			void reel.track.offsetHeight;
-			reel.track.style.transition = '';
-		}, 800);
-
-		if (reel.counter && certNumber != null) {
-			reel.counter.textContent = reelCountText(certNumber, reel.certs.length);
-		}
-	}
-
-	var achSlide = 0;
-
-	function achReelTick() {
-		achSlide += 1;
-
-		var isGrad = achSlide % 9 === 0;
-
-		achReels.forEach(function (reel) {
-			if (isGrad) {
-				/* Not counted: the number stays where the certificates left it. */
-				achReelSwap(reel, reel.grad, null);
-				return;
-			}
-
-			var photo = reel.certs[reel.certIndex % reel.certs.length];
-			var number = reel.certIndex % reel.certs.length;
-			reel.certIndex += 1;
-			achReelSwap(reel, photo, number);
-		});
-
-		achReelTimer = window.setTimeout(achReelTick, isGrad ? 3000 : 2000);
-	}
-
-	function resetAchReels() {
-		window.clearTimeout(achReelTimer);
-		achReelTimer = 0;
-		achSlide = 0;
-
-		achReels.forEach(function (reel) {
-			reel.certIndex = 0;
-			reel.track.style.transition = 'none';
-			reel.track.style.transform = 'translate3d(0,0,0)';
-			void reel.track.offsetHeight;
-			reel.track.style.transition = '';
-			achReelPaint(reel, reel.grad, 0);
-			achReelPaint(reel, reel.certs[0], 1);
-			if (reel.counter) reel.counter.textContent = reelCountText(0, reel.certs.length);
-		});
-
-		if (!achReels.length) return;
-		if (achRunReduced && achRunReduced.matches) return;
-
-		/* Everyone opens on the graduation shot. */
-		achReelTimer = window.setTimeout(achReelTick, 3000);
-	}
 	function achEmpty(label, icon) {
 		var box = achEl('div', 'ach-empty');
 		var symbol = achEl('i', icon || 'fa-regular fa-image');
@@ -1512,114 +1400,189 @@
 		return box;
 	}
 
-	function buildAchievementCard(school, index, still) {
-		var data = achFolder(school.folder);
-		var items = [];
-		var card = achEl('article', 'ach-card');
-		card.setAttribute('data-school', school.id || school.folder || '');
-		card.setAttribute('data-step', String(index + 1));
-		if (school.bg) card.style.setProperty('--ach-card-bg', 'url("' + school.bg + '")');
+	function achStatus(status) {
+		var pill = achEl('p', 'ach-status');
+		var dot = achEl('span', 'ach-status-dot');
+		dot.setAttribute('aria-hidden', 'true');
+		pill.appendChild(dot);
+		pill.appendChild(document.createTextNode(status));
+		return pill;
+	}
 
-		var head = achEl('header', 'ach-card-head');
-		var headTop = achEl('div', 'ach-head-top');
-		headTop.appendChild(achEl('p', 'ach-stage', school.stage || ''));
-		head.appendChild(headTop);
-		var row = achEl('div', 'ach-school');
-		row.appendChild(achLogo(school.logo, school.school, school.logoText));
-		row.appendChild(achEl('h3', 'ach-school-name', school.school));
-		if (school.photo) row.appendChild(achPhoto(school.photo, school.school));
-		head.appendChild(row);
-		card.appendChild(head);
+	function achPickMedia(school, data) {
+		var pool = data.certs.concat(data.featured);
+		if (!pool.length) return null;
 
-		if (school.awards && school.awards.length) {
-			var list = achEl('ul', 'ach-awards');
-			school.awards.forEach(function (award) {
-				list.appendChild(achEl('li', null, award));
-			});
-			card.appendChild(list);
-		}
-
-		if (data.certs.length || data.featured.length) {
-			if (still) {
-				var stills = achEl('div', 'ach-still-grid');
-				stills.setAttribute('aria-label', school.school + ' photos');
-				data.certs.concat(data.featured).forEach(function (item, i) {
-					var shot = achEl('button', 'ach-still');
-					shot.type = 'button';
-					shot.setAttribute('data-ach-index', String(items.length));
-					shot.setAttribute('aria-label', 'Open ' + item.title);
-
-					var shotImg = document.createElement('img');
-					shotImg.src = item.thumb || item.src;
-					shotImg.alt = '';
-					shotImg.loading = i < 2 ? 'eager' : 'lazy';
-					shotImg.decoding = 'async';
-					if (item.width && item.height) {
-						shotImg.style.aspectRatio = item.width + ' / ' + item.height;
-					}
-
-					shot.appendChild(shotImg);
-					stills.appendChild(shot);
-					items.push({ src: item.src, title: item.title, school: school.school });
-				});
-				card.appendChild(stills);
-			} else {
-				card.appendChild(buildAchReel(data, school, items));
+		if (school.grad) {
+			for (var i = 0; i < pool.length; i++) {
+				if (pool[i].src.indexOf(school.grad) !== -1) return pool[i];
 			}
+		}
+
+		if (data.featured.length) return data.featured[data.featured.length - 1];
+		return pool[0];
+	}
+
+	/* A certificate card for the rolling strip at the top. */
+	function achCertCard(item, index, items, clone) {
+		var card = achEl('button', 'ach-cert-card');
+		card.type = 'button';
+
+		var img = document.createElement('img');
+		img.src = item.thumb || item.src;
+		img.alt = '';
+		img.loading = index < 8 ? 'eager' : 'lazy';
+		img.decoding = 'async';
+		card.appendChild(img);
+
+		if (clone) {
+			card.setAttribute('aria-hidden', 'true');
+			card.tabIndex = -1;
 		} else {
-			card.appendChild(achEmpty(school.emptyLabel || 'Photos coming soon'));
+			card.setAttribute('aria-label', 'Open ' + item.title);
+			card.addEventListener('click', function () {
+				openAchLightbox(items, index, card);
+			});
 		}
 
-		if (school.status) {
-			var status = achEl('p', 'ach-status');
-			var dot = achEl('span', 'ach-status-dot');
-			dot.setAttribute('aria-hidden', 'true');
-			status.appendChild(dot);
-			status.appendChild(document.createTextNode(school.status));
-			card.appendChild(status);
-		}
+		return card;
+	}
 
-		card.addEventListener('click', function (event) {
-			var button = event.target.closest ? event.target.closest('.ach-reel-slide') : null;
-			if (!button) return;
-			var index = Number(button.getAttribute('data-ach-index'));
-			if (isNaN(index) || !items[index]) return;
-			openAchLightbox(items, index, button);
+	function buildCertificateStrip() {
+		if (!achievCertTrack) return [];
+
+		var entries = [];
+		var items = [];
+
+		(achievContent.schools || []).forEach(function (school) {
+			var data = achFolder(school.folder);
+			var list = data.certs.length ? data.certs : data.featured;
+
+			list.forEach(function (photo) {
+				items.push({ src: photo.src, title: photo.title, school: school.school });
+				entries.push({ photo: photo, index: items.length - 1 });
+			});
 		});
 
-		return card;
+		var groupA = achEl('div', 'ach-cert-group');
+		var groupB = achEl('div', 'ach-cert-group');
+		groupB.setAttribute('aria-hidden', 'true');
+
+		entries.forEach(function (entry) {
+			groupA.appendChild(achCertCard(entry.photo, entry.index, items, false));
+		});
+		entries.forEach(function (entry) {
+			groupB.appendChild(achCertCard(entry.photo, entry.index, items, true));
+		});
+
+		achievCertTrack.appendChild(groupA);
+		achievCertTrack.appendChild(groupB);
+
+		return items;
 	}
 
-	/* A skinny block for the day care / kindergarten stage. */
-	function buildAchievementStart(start) {
-		if (!start || !start.school) return null;
+	/* One tall card per school. `variant` is 'college' for the wide
+	   campus card, or 'start' for the small kindergarten card. */
+	function buildStageCard(school, variant, step) {
+		var data = achFolder(school.folder);
+		var photos = data.certs.concat(data.featured);
+		var items = photos.map(function (photo) {
+			return { src: photo.src, title: photo.title, school: school.school };
+		});
 
-		var card = achEl('article', 'ach-card ach-card--start');
-		card.setAttribute('data-start', 'true');
-		card.setAttribute('data-step', '0');
+		var media = achPickMedia(school, data);
+		var mediaIndex = media ? photos.indexOf(media) : -1;
+		var isCollege = variant === 'college';
+		var mediaSrc = isCollege ? '' : (media ? (media.thumb || media.src) : (variant === 'start' ? school.photo : ''));
 
-		var row = achEl('div', 'ach-start-row');
-		row.appendChild(achLogo(start.logo, start.school, start.logoText));
+		var card = achEl('article', 'ach-stage-card' + (variant ? ' ach-stage-card--' + variant : ''));
+		card.setAttribute('data-school', school.id || school.folder || '');
+		card.setAttribute('data-step', String(step || 0));
+		if (school.bg) card.style.setProperty('--ach-card-bg', 'url("' + school.bg + '")');
 
-		var copy = achEl('div', 'ach-start-copy');
-		copy.appendChild(achEl('p', 'ach-stage', start.level || 'Day care'));
-		copy.appendChild(achEl('h3', 'ach-school-name', start.school));
-		row.appendChild(copy);
+		var mediaWrap = achEl('div', 'ach-stage-media');
 
-		if (start.photo) row.appendChild(achPhoto(start.photo, start.school));
+		if (mediaSrc) {
+			var shot = mediaIndex >= 0 ? achEl('button', 'ach-stage-shot') : achEl('div', 'ach-stage-shot');
+			if (mediaIndex >= 0) {
+				shot.type = 'button';
+				shot.setAttribute('aria-label', 'Open ' + media.title);
+				shot.addEventListener('click', function () {
+					openAchLightbox(items, mediaIndex, shot);
+				});
+			}
 
-		if (start.status) {
-			var status = achEl('span', 'ach-status');
-			var dot = achEl('span', 'ach-status-dot');
-			dot.setAttribute('aria-hidden', 'true');
-			status.appendChild(dot);
-			status.appendChild(document.createTextNode(start.status));
-			row.appendChild(status);
+			var shotImg = document.createElement('img');
+			shotImg.src = mediaSrc;
+			shotImg.alt = '';
+			shotImg.loading = 'lazy';
+			shotImg.decoding = 'async';
+			shot.appendChild(shotImg);
+			mediaWrap.appendChild(shot);
+		} else {
+			if (!isCollege) {
+				mediaWrap.appendChild(achEmpty(school.emptyLabel || 'Photo coming soon', 'fa-regular fa-image'));
+			}
 		}
 
-		card.appendChild(row);
+		if (!isCollege) {
+			mediaWrap.appendChild(achEl('span', 'ach-stage-tag', school.tag || 'Diploma'));
+		}
+
+		if (isCollege) {
+			var overlay = achEl('div', 'ach-stage-overlay');
+			var overlayCopy = achEl('div', 'ach-stage-overlay-copy');
+			overlayCopy.appendChild(achEl('p', 'ach-stage-kicker', school.stage || ''));
+			overlayCopy.appendChild(achEl('h3', 'ach-school-name', school.school));
+			if (school.status) overlayCopy.appendChild(achStatus(school.status));
+			overlay.appendChild(overlayCopy);
+
+			var overlayBadge = achEl('span', 'ach-stage-logo');
+			overlayBadge.appendChild(achLogo(school.logo, school.school, school.logoText));
+			overlay.appendChild(overlayBadge);
+
+			var overlayGroups = achGroupList(school);
+			if (overlayGroups) overlay.appendChild(overlayGroups);
+			mediaWrap.appendChild(overlay);
+		}
+
+		card.appendChild(mediaWrap);
+
+		if (!isCollege) {
+			var body = achEl('div', 'ach-stage-body');
+			var head = achEl('header', 'ach-stage-head');
+
+			if (school.photo && variant !== 'start') {
+				head.appendChild(achPhoto(school.photo, school.school, 'ach-stage-portrait'));
+			}
+
+			var title = achEl('div', 'ach-stage-title');
+			if (school.stage) title.appendChild(achEl('p', 'ach-stage-kicker', school.stage));
+			title.appendChild(achEl('h3', 'ach-school-name', school.school));
+			if (school.years) title.appendChild(achEl('p', 'ach-stage-years', school.years));
+			if (school.status) title.appendChild(achStatus(school.status));
+			head.appendChild(title);
+
+			var badge = achEl('span', 'ach-stage-logo');
+			badge.appendChild(achLogo(school.logo, school.school, school.logoText));
+			head.appendChild(badge);
+
+			body.appendChild(head);
+
+			var groups = achGroupList(school);
+			if (groups) {
+				body.appendChild(groups);
+			} else if (school.emptyLabel) {
+				body.appendChild(achEmpty(school.emptyLabel));
+			}
+
+			card.appendChild(body);
+		}
+
 		return card;
 	}
+
+	/* ---------- Lightbox ---------- */
 
 	/* ---------- Lightbox ---------- */
 	var lbImg = document.getElementById('ach-lightbox-img');
@@ -1775,32 +1738,62 @@
 	}
 
 	/* ---------- Render ---------- */
-	if (achievContent && achievBoard) {
+	if (achievContent && achievStageGrid) {
 		var achSchools = achievContent.schools || [];
-		var achTotal = 0;
+		var achTotal = buildCertificateStrip().length;
+		var schoolById = {};
 
-		achievBoard.style.setProperty('--ach-steps', String(Math.max(1, achSchools.length)));
-		if (achievSummit) achievSummit.style.setProperty('--ach-col', String(achSchools.length));
-
-		achSchools.forEach(function (school, index) {
+		achSchools.forEach(function (school) {
+			schoolById[school.id] = school;
 			var data = achFolder(school.folder);
 			achTotal += data.certs.length + data.featured.length;
-
-			var isSummit = index === achSchools.length - 1;
-			var card = buildAchievementCard(school, index, isSummit);
-
-			if (isSummit && achievSummitCard) {
-				achievSummitCard.appendChild(card);
-			} else if (index === 0 && achievBase) {
-				/* The day care block sits on top of the first step. */
-				var startCard = buildAchievementStart(achievContent.start);
-				if (startCard) achievBase.appendChild(startCard);
-				achievBase.appendChild(card);
-			} else {
-				card.style.setProperty('--ach-col', String(index + 1));
-				achievBoard.appendChild(card);
-			}
 		});
+
+		function buildPhotoCollage() {
+			var picks = [];
+			['SHS', 'JHS', 'ELEM', 'COLLEGE'].forEach(function (folder) {
+				var data = achFolder(folder);
+				(data.featured || []).forEach(function (photo) {
+					if (photo && photo.src) picks.push(photo);
+				});
+			});
+
+			var seen = {};
+			picks = picks.filter(function (photo) {
+				if (seen[photo.src]) return false;
+				seen[photo.src] = true;
+				return true;
+			}).slice(0, 4);
+
+			if (!picks.length) return null;
+
+			var wrap = achEl('div', 'ach-collage');
+			picks.forEach(function (photo) {
+				var item = achEl('figure', 'ach-collage-item');
+				var img = document.createElement('img');
+				img.src = photo.thumb || photo.src;
+				img.alt = photo.title || '';
+				img.loading = 'lazy';
+				img.decoding = 'async';
+				item.appendChild(img);
+				wrap.appendChild(item);
+			});
+			return wrap;
+		}
+
+		var achCollege = schoolById.college;
+		var achSenior = schoolById['senior-high'];
+		var achJunior = schoolById['junior-high'];
+		var achElementary = schoolById.elementary;
+
+		var achCollage = buildPhotoCollage();
+
+		if (achElementary) achievStageGrid.appendChild(buildStageCard(achElementary, 'elementary', 1));
+		if (achJunior) achievStageGrid.appendChild(buildStageCard(achJunior, 'junior', 2));
+		if (achSenior) achievStageGrid.appendChild(buildStageCard(achSenior, 'senior', 3));
+		if (achCollege) achievStageGrid.appendChild(buildStageCard(achCollege, 'college', 4));
+		if (achievContent.start) achievStageGrid.appendChild(buildStageCard(achievContent.start, 'start', 5));
+		if (achCollage) achievStageGrid.appendChild(achCollage);
 
 		if (achievNote) {
 			if (!achTotal) {
@@ -1810,229 +1803,6 @@
 				achievNote.hidden = true;
 			}
 		}
-	}
-
-	/* =====================================================
-	   Achievements: a little stickman runs along each step
-	   and jumps up to the next school card.
-	   ===================================================== */
-	var achRunnerEl = document.getElementById('ach-runner');
-	var achRunAnim = null;
-	var achWaveOn = 0;
-	var achWaveOff = 0;
-	var achRunReduced = window.matchMedia
-		? window.matchMedia('(prefers-reduced-motion: reduce)')
-		: null;
-
-	function achRunnerSteps() {
-		if (!achievBoard || !achRunnerEl) return null;
-
-		var cards = Array.prototype.slice.call(achievBoard.querySelectorAll('.ach-card[data-step]'));
-		var boardH = achievBoard.offsetHeight;
-		if (cards.length < 2 || !boardH) return null;
-
-		var found = [];
-		for (var i = 0; i < cards.length; i++) {
-			var card = cards[i];
-			var stepNo = Number(card.getAttribute('data-step'));
-			if (isNaN(stepNo)) stepNo = i + 1;
-			/* Cards are laid out across the stair, so order them by step
-			   number rather than by the order they sit in the DOM. */
-			if (!card.offsetHeight) return null;
-			found.push({
-				order: stepNo,
-				left: card.offsetLeft,
-				right: card.offsetLeft + card.offsetWidth,
-				y: card.offsetTop - boardH
-			});
-		}
-
-		found.sort(function (a, b) { return a.order - b.order; });
-
-		/* Keep only steps that keep climbing; a card tucked under another
-		   one (the day care tag sits on top of the first column) is not a
-		   tread the climber should stand on. */
-		var steps = [];
-		found.forEach(function (step) {
-			var prev = steps[steps.length - 1];
-			if (prev && step.y > prev.y + 6) return;
-			steps.push(step);
-		});
-
-		return {
-			steps: steps,
-			width: achRunnerEl.offsetWidth || 30,
-			height: achRunnerEl.offsetHeight || 40
-		};
-	}
-
-	function achRunnerKeyframes() {
-		var geo = achRunnerSteps();
-		if (!geo) return null;
-
-		var steps = geo.steps;
-		var figureW = geo.width;
-		var figureH = geo.height;
-		var inset = Math.max(2, figureW * 0.18);
-		var frames = [];
-		var time = 0;
-
-		/* The top of the board sits just under the page title, so the
-		   climber's head must never rise into that strip. Work out how many
-		   pixels of clear air there are above the board. */
-		var boardRect = achievBoard.getBoundingClientRect();
-		var zoom = achievBoard.offsetHeight ? boardRect.height / achievBoard.offsetHeight : 1;
-		var navH = parseFloat(
-			window.getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
-		) || 92;
-		var safeHead = navH + 34;
-		var headLimit = (safeHead - boardRect.top) / (zoom || 1);
-
-		function style(x, y, rot, opacity, scale) {
-			return {
-				transform: 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + scale.toFixed(3) + ')',
-				opacity: opacity
-			};
-		}
-
-		function push(delay, x, y, rot, opacity, scale) {
-			time += delay;
-			frames.push({ time: time, style: style(x, y, rot, opacity, scale) });
-		}
-
-		/* He starts tiny at the day-care step and grows as he climbs. */
-		function scaleAt(index) {
-			if (steps.length < 2) return 0.9;
-			return 0.7 + (index / (steps.length - 1)) * 0.55;
-		}
-
-		var x = steps[0].left + inset;
-		var y = steps[0].y;
-
-		/* A quiet beat before the climb starts. */
-		push(0, x, y, 0, 0, scaleAt(0));
-		push(300, x, y, 0, 0, scaleAt(0));
-		push(240, x, y, 0, 1, scaleAt(0));
-
-		steps.forEach(function (step, i) {
-			var lastStep = i === steps.length - 1;
-			var here = scaleAt(i);
-			var there = scaleAt(Math.min(i + 1, steps.length - 1));
-			/* On the final step the climber pulls up near the middle of the
-			   card instead of running all the way to the edge. */
-			var runTo = lastStep
-				? step.left + (step.right - step.left - figureW) * 0.62
-				: Math.max(step.left + inset, step.right - figureW - inset);
-			var distance = runTo - x;
-
-			if (distance > 4) {
-				/* Constant-ish running speed, in px per millisecond. */
-				var runTime = Math.max(560, Math.min(1700, distance / 0.3));
-				push(runTime, runTo, step.y, 0, 1, here);
-			}
-
-			x = runTo;
-			y = step.y;
-
-			var next = steps[i + 1];
-			if (!next) return;
-
-			var jumpToX = next.left + inset;
-			var jumpToY = next.y;
-			var rise = Math.abs(jumpToY - step.y);
-			var arc = Math.max(30, Math.min(84, rise * 0.45 + 28));
-			/* Never let the leap carry the climber's head into the title. */
-			var arcRoom = (achievBoard.offsetHeight + jumpToY) - figureH * there - headLimit;
-			arc = Math.max(0, Math.min(arc, arcRoom));
-			var flight = 780;
-			var slices = 8;
-
-			for (var k = 1; k <= slices; k++) {
-				var t = k / slices;
-				/* Ease the flight so take-off and landing feel quick and the
-				   middle of the leap floats. */
-				var p = t * t * (3 - 2 * t);
-				var arcOffset = Math.sin(Math.PI * t);
-
-				push(
-					flight / slices,
-					x + (jumpToX - x) * p,
-					step.y + (jumpToY - step.y) * p - arcOffset * arc,
-					arcOffset * 14,
-					1,
-					here + (there - here) * p
-				);
-			}
-
-			x = jumpToX;
-			y = jumpToY;
-		});
-
-		/* At the top: stop, wave, then fade away and walk again. */
-		var holdAt = time;
-		var top = scaleAt(steps.length - 1);
-		push(1750, x, y, 0, 1, top);
-		push(320, x, y, 0, 0, top);
-
-		var total = time;
-		return {
-			duration: total,
-			holdAt: holdAt,
-			keyframes: frames.map(function (frame) {
-				var key = frame.style;
-				key.offset = total ? frame.time / total : 0;
-				key.easing = 'linear';
-				return key;
-			})
-		};
-	}
-
-	function restartAchRunner() {
-		if (!achRunnerEl) return;
-
-		if (achRunAnim) {
-			achRunAnim.cancel();
-			achRunAnim = null;
-		}
-
-		window.clearTimeout(achWaveOn);
-		window.clearTimeout(achWaveOff);
-		achRunnerEl.classList.remove('is-waving');
-
-		if (achRunReduced && achRunReduced.matches) return;
-		if (!achievBoard || !achievBoard.offsetHeight) return;
-
-		var run = achRunnerKeyframes();
-		if (!run || !run.duration) return;
-
-		achRunAnim = achRunnerEl.animate(run.keyframes, {
-			duration: run.duration,
-			iterations: Infinity,
-			easing: 'linear'
-		});
-
-		/* Wave while he rests at the top, then walk again next loop. */
-		var waveOnAt = run.holdAt + 140;
-		var waveOffAt = run.duration - 420;
-
-		function cycleWave() {
-			achWaveOn = window.setTimeout(function () {
-				achRunnerEl.classList.add('is-waving');
-			}, waveOnAt);
-
-			achWaveOff = window.setTimeout(function () {
-				achRunnerEl.classList.remove('is-waving');
-				cycleWave();
-			}, waveOffAt);
-		}
-
-		cycleWave();
-	}
-
-	function scheduleAchRunner() {
-		window.requestAnimationFrame(function () {
-			window.requestAnimationFrame(restartAchRunner);
-		});
 	}
 
 	/* =====================================================
@@ -2048,13 +1818,16 @@
 		if (!achSectionEl || !achPageEl) return;
 		if (!achSectionEl.classList.contains('active')) return;
 
+		/* The reference board reads best at full size. Keep the natural
+		   type/certificate sizes and let the section scroll instead of
+		   shrinking the whole page to fit. */
 		achPageEl.style.zoom = '';
 		achSectionEl.classList.remove('is-fit');
+		return;
 
 		/* Below this width the cards become too tall; scrolling is the
 		   only readable option. */
 		if (window.innerWidth <= 1024) {
-			scheduleAchRunner();
 			return;
 		}
 
@@ -2065,14 +1838,12 @@
 		var available = achSectionEl.clientHeight - paddingY;
 		var natural = achPageEl.scrollHeight;
 		if (!natural || available <= 0) {
-			scheduleAchRunner();
 			return;
 		}
 
 		var scale = Math.min(1, (available - 4) / natural);
 		if (scale >= 0.995) {
 			achSectionEl.classList.add('is-fit');
-			scheduleAchRunner();
 			return;
 		}
 
@@ -2087,7 +1858,6 @@
 
 		achPageEl.style.zoom = String(scale);
 		achSectionEl.classList.add('is-fit');
-		scheduleAchRunner();
 	}
 
 	function scheduleAchievementFit() {
@@ -2105,7 +1875,6 @@
 					window.requestAnimationFrame(function () {
 						window.requestAnimationFrame(applyAchievementFit);
 					});
-					resetAchReels();
 
 					/* Web fonts and photos settle just after the section opens;
 					   re-measure so the fit is not left scaled down. */
@@ -2345,6 +2114,30 @@
 		} else {
 			start();
 		}
+	})();
+
+	/* ---------- Home hero parallax ---------- */
+	(function homeHeroParallax() {
+		var homeSection = document.getElementById('home');
+		var heroParallax = document.querySelector('.home-hero-parallax');
+		if (!homeSection || !heroParallax) return;
+
+		var queued = false;
+
+		function paint() {
+			var offset = (window.scrollY || 0) + (homeSection.scrollTop || 0);
+			heroParallax.style.transform = 'translate3d(0,' + (offset * 0.25).toFixed(2) + 'px,0)';
+			queued = false;
+		}
+
+		function queue() {
+			if (queued) return;
+			queued = true;
+			window.requestAnimationFrame(paint);
+		}
+
+		window.addEventListener('scroll', queue, { passive: true });
+		homeSection.addEventListener('scroll', queue, { passive: true });
 	})();
 
 	/* ---------- Start ---------- */
