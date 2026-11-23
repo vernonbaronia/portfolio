@@ -9630,14 +9630,14 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	position: absolute;
 	inset: 0;
 	display: grid;
-	grid-template-columns: 1.55fr 1fr;
-	grid-template-rows: 1fr 1fr;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-rows: minmax(0, 1fr);
 	gap: 3px;
 	min-height: 0;
 }
 
 .ff-sib-big {
-	grid-row: 1 / 3;
+	grid-row: auto;
 }
 
 .ff-sib-big,
