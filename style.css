@@ -2659,6 +2659,24 @@ body.is-intro .deck-pager {
 	box-shadow: none;
 }
 
+/* Small arrow so the bottom labels read as clickable. */
+.pager-dot::after {
+	content: "\2192";
+	display: inline-block;
+	margin-left: 0.42em;
+	font-family: 'Inter', sans-serif;
+	font-size: 0.9em;
+	line-height: 1;
+	opacity: 0.9;
+	transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.pager-dot:hover::after,
+.pager-dot:focus-visible::after {
+	opacity: 1;
+	transform: translateX(2px);
+}
+
 @media (max-width: 700px) {
 	.pager-dots {
 		gap: 0.8rem;
@@ -2684,6 +2702,10 @@ body.is-intro .deck-pager {
 	.pager-dot {
 		padding: 0.3rem 0.35rem;
 		font-size: 0.6rem;
+	}
+
+	.pager-dot::after {
+		display: none;
 	}
 }
 
