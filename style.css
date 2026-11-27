@@ -2545,11 +2545,11 @@ body.is-home .deck-controls {
 .deck-pager {
 	position: fixed;
 	left: 50%;
-	bottom: clamp(1rem, 2.5vw, 1.8rem);
+	bottom: clamp(0.8rem, 1.6vw, 1.2rem);
 	z-index: 30;
-	display: grid;
-	grid-template-columns: 1fr auto 1fr;
+	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: clamp(0.8rem, 2vw, 2.2rem);
 	transform: translateX(-50%);
 	transition: opacity 0.3s ease, visibility 0s linear 0.3s;
@@ -2621,23 +2621,29 @@ body.is-intro .deck-pager {
 .pager-dots {
 	display: flex;
 	align-items: center;
-	gap: 0.4rem;
+	gap: clamp(1.8rem, 3.2vw, 3.2rem);
 }
 
 .pager-dot {
-	width: 7px;
-	height: 7px;
+	width: auto;
+	height: auto;
 	flex: 0 0 auto;
 	margin: 0;
-	padding: 0;
-	background: var(--accent-soft);
+	padding: 0.32rem 0.62rem;
+	background: transparent;
 	border: 0;
-	border-radius: 50%;
-	cursor: pointer;
+	border-radius: 999px;
+	font-family: 'Milker', var(--font-big);
+	font-size: clamp(0.8rem, 0.95vw, 1rem);
+	font-weight: 400;
+	letter-spacing: 0.02em;
+	line-height: 1;
+	text-transform: none;
+	white-space: nowrap;
+	color: var(--ink-soft);
 	opacity: 0.55;
-	transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-		height 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-		opacity 0.3s ease, background 0.3s ease;
+	cursor: pointer;
+	transition: color 0.25s ease, background 0.25s ease, opacity 0.25s ease;
 }
 
 .pager-dot:hover {
@@ -2645,11 +2651,23 @@ body.is-intro .deck-pager {
 }
 
 .pager-dot.active {
-	width: 13px;
-	height: 13px;
-	background: var(--accent);
+	width: auto;
+	height: auto;
+	background: rgba(var(--accent-rgb), 0.12);
+	color: var(--accent-deep);
 	opacity: 1;
-	box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.14);
+	box-shadow: none;
+}
+
+@media (max-width: 700px) {
+	.pager-dots {
+		gap: 0.8rem;
+	}
+
+	.pager-dot {
+		padding: 0.28rem 0.4rem;
+		font-size: 0.66rem;
+	}
 }
 
 .pager-dot:focus-visible {
@@ -4241,6 +4259,10 @@ body.is-lightbox-open #achievements.section {
 
 	.fact-value {
 		font-size: 0.9rem;
+	}
+
+	.pi-visual {
+		width: clamp(250px, 27vw, 340px);
 	}
 }
 
@@ -6488,17 +6510,134 @@ body.is-home #home.section {
 	position: absolute;
 	left: 35vw;
 	right: 0;
-	bottom: clamp(1.4rem, 3.2vh, 2.4rem);
+	bottom: calc(clamp(1.4rem, 3.2vh, 2.4rem) + 10px);
 	z-index: 2;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: clamp(0.8rem, 2vw, 1.6rem);
 	pointer-events: none;
+	translate: 18px 0;
+	opacity: 0;
+	visibility: hidden;
+	will-change: opacity, transform;
+}
+
+body.is-entered .home-signoff {
+	visibility: visible;
+	animation: home-bottom-pop 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
 .home-signoff > * {
 	pointer-events: auto;
+}
+
+/* Small section navigation on the cream side of the homepage. */
+.home-bottom-nav {
+	position: absolute;
+	left: 35vw;
+	right: 0;
+	bottom: clamp(1.4rem, 3vh, 2rem);
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: clamp(0.9rem, 1.6vw, 1.6rem);
+	pointer-events: auto;
+	opacity: 0;
+	visibility: hidden;
+	will-change: opacity, transform;
+}
+
+@keyframes home-bottom-pop {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Keep it out of the scene until the cream side has taken over, then pop it in with the content. */
+body.is-entered .home-bottom-nav {
+	visibility: visible;
+	animation: home-bottom-pop 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+/* Keep the pop compositor-friendly so it stays smooth. */
+.home-identity h1,
+.home-identity .home-role,
+.home-menu-item,
+.home-bottom-nav {
+	will-change: opacity, translate, transform;
+}
+
+@media (min-width: 901px) {
+	.home-bottom-nav {
+		translate: clamp(8px, 1.5vw, 24px) 0;
+	}
+}
+
+.home-bottom-link {
+	position: relative;
+	margin: 0;
+	padding: 0 0 2px;
+	background: none;
+	border: 0;
+	font-family: 'Poppins', 'Inter', sans-serif;
+	font-size: clamp(1rem, 1.2vw, 1.3rem);
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	line-height: 1.2;
+	text-transform: none;
+	color: #0b1e3d;
+	cursor: pointer;
+	transition: color 0.3s ease, letter-spacing 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-bottom-link::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 1px;
+	background: currentColor;
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.home-bottom-link:hover,
+.home-bottom-link:focus-visible {
+	color: #2b5b9e;
+	letter-spacing: 0.04em;
+}
+
+.home-bottom-link:hover::after,
+.home-bottom-link:focus-visible::after {
+	transform: scaleX(1);
+}
+
+.home-bottom-link:focus-visible {
+	outline: 2px solid #2b5b9e;
+	outline-offset: 4px;
+	border-radius: 2px;
+}
+
+.home-bottom-sep {
+	width: 1px;
+	height: 16px;
+	background: rgba(11, 30, 61, 0.28);
+	opacity: 1;
+}
+
+@media (max-width: 640px) {
+	.home-bottom-nav {
+		display: none;
+	}
 }
 
 .home-signoff-status {
@@ -6506,15 +6645,15 @@ body.is-home #home.section {
 	align-items: center;
 	gap: 0.55rem;
 	font-family: var(--font-navi);
-	font-size: clamp(0.55rem, 0.65vw, 0.66rem);
+	font-size: clamp(0.66rem, 0.78vw, 0.82rem);
 	letter-spacing: 0.2em;
 	text-transform: uppercase;
 	color: var(--ink-faint);
 }
 
 .home-signoff-dot {
-	width: 6px;
-	height: 6px;
+	width: 7px;
+	height: 7px;
 	border-radius: 50%;
 	background: #2c666e;
 	animation: signoff-pulse 2.8s ease-out infinite;
@@ -7348,7 +7487,7 @@ body.is-achievements .nav-journey {
 .ach-group-items {
 	display: flex;
 	flex-direction: column;
-	gap: 0.04rem;
+	gap: 0.12rem;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -7992,8 +8131,8 @@ body.is-home .home-curtain {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-	object-position: center bottom;
-	padding: 2.2vh 0;
+	object-position: 40% bottom;
+	padding: 1.6vh 0;
 	pointer-events: none;
 	user-select: none;
 	opacity: 1;
@@ -8383,7 +8522,7 @@ body.is-achievements #achievements.section {
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
 	align-items: start;
-	gap: clamp(2rem, 4vw, 4rem);
+	gap: clamp(1.5rem, 2.6vw, 2.75rem);
 	width: 100%;
 	max-width: 1520px;
 	margin: 0 auto;
@@ -8392,16 +8531,24 @@ body.is-achievements #achievements.section {
 }
 
 .pi-visual {
-	width: clamp(240px, 23vw, 360px);
+	width: clamp(300px, 33vw, 500px);
+}
+
+@media (min-width: 981px) {
+	.pi-visual {
+		margin-top: -66px;
+	}
 }
 
 .pi-photo {
 	display: block;
 	width: 100%;
-	height: auto;
+	height: min(calc(100vh - 190px), 780px);
+	object-fit: contain;
+	object-position: center bottom;
 	filter: drop-shadow(0 26px 34px rgba(11, 30, 61, 0.16));
-	-webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
-	mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+	-webkit-mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
+	mask-image: linear-gradient(to bottom, #000 86%, transparent 100%);
 }
 
 body.is-about .nav-page-title {
@@ -8426,7 +8573,7 @@ body.is-about .nav-page-title {
 }
 
 .pi-name {
-	margin: 0 0 1.2rem;
+	margin: 0 0 0.45rem;
 	font-family: 'Milker', var(--font-big);
 	font-size: clamp(2rem, 3.2vw, 3rem);
 	font-weight: 400;
@@ -8452,17 +8599,25 @@ body.is-about .nav-page-title {
 	box-shadow: 0 40px 90px -50px rgba(4, 10, 28, 0.8);
 	-webkit-backdrop-filter: blur(12px);
 	backdrop-filter: blur(12px);
-	margin-top: 0;
+	margin-top: -8px;
 	font-family: 'Poppins', 'Inter', sans-serif;
 }
 
 #about .info-col {
-	padding: clamp(1.1rem, 1.7vw, 1.6rem) clamp(1rem, 1.5vw, 1.4rem);
+	padding: clamp(0.9rem, 1.25vh, 1rem) clamp(0.75rem, 0.95vw, 1rem);
+}
+
+#about .info-col--profile .info-row {
+	gap: 0 0.9rem;
+}
+
+#about .info-col--profile .info-row .fact + .fact {
+	padding-left: 0.9rem;
 }
 
 #about .info-row {
-	padding-top: clamp(0.4rem, 0.85vh, 0.55rem);
-	padding-bottom: clamp(0.4rem, 0.85vh, 0.55rem);
+	padding-top: clamp(0.2rem, 0.38vh, 0.28rem);
+	padding-bottom: clamp(0.2rem, 0.38vh, 0.28rem);
 }
 
 #about .info-sub {
@@ -8497,6 +8652,7 @@ body.is-about .nav-page-title {
 	letter-spacing: 0.06em;
 	text-transform: uppercase;
 	color: var(--accent);
+	margin-bottom: 0.5rem;
 }
 
 #about .fact-label {
@@ -8506,11 +8662,12 @@ body.is-about .nav-page-title {
 	letter-spacing: 0.01em;
 	text-transform: none;
 	color: var(--ink-faint);
+	margin-bottom: 0.2rem;
 }
 
 #about .fact-value {
 	font-family: 'Poppins', 'Inter', sans-serif;
-	font-size: clamp(0.95rem, 1vw, 1.02rem);
+	font-size: clamp(0.92rem, 0.98vw, 1rem);
 	font-weight: 500;
 	letter-spacing: 0;
 	color: var(--ink);
@@ -8550,6 +8707,10 @@ body.is-about .nav-page-title {
 		width: min(64vw, 300px);
 	}
 
+	.pi-photo {
+		height: auto;
+	}
+
 	.pi-main {
 		width: 100%;
 		max-width: 760px;
@@ -8575,6 +8736,10 @@ body.is-about .nav-page-title {
 		width: min(58vw, 220px);
 	}
 
+	.pi-photo {
+		height: auto;
+	}
+
 	.pi-title {
 		font-size: clamp(1.8rem, 8vw, 2.4rem);
 	}
@@ -8596,23 +8761,23 @@ body.is-about .nav-page-title {
 /* Desktop dossier fits exactly in the viewport — no scroll, even a hair. */
 @media (min-width: 981px) {
 	#about.section {
-		overflow-y: hidden;
+		overflow: visible;
 	}
 
 	.pi-page {
-		padding-top: 0.5rem;
+		padding-top: 0;
 	}
 }
 
 @media (min-width: 981px) and (max-height: 860px) {
 	.pi-page {
-		padding-top: 0.9rem;
+		padding-top: 0.4rem;
 		padding-bottom: 1rem;
 		gap: 1.2rem;
 	}
 
 	.pi-visual {
-		width: clamp(200px, 19vw, 270px);
+		width: clamp(220px, 22vw, 320px);
 	}
 
 	.pi-title {
@@ -8620,21 +8785,21 @@ body.is-about .nav-page-title {
 	}
 
 	#about .info-col {
-		padding: 0.85rem 0.9rem;
+		padding: 0.55rem 0.9rem;
 	}
 
 	#about .info-row {
-		padding-top: 0.3rem;
-		padding-bottom: 0.3rem;
+		padding-top: 0.15rem;
+		padding-bottom: 0.15rem;
 	}
 
 	#about .info-col-title {
-		margin-bottom: 0.45rem;
+		margin-bottom: 0.35rem;
 		font-size: 0.82rem;
 	}
 
 	#about .fact-label {
-		margin-bottom: 0.18rem;
+		margin-bottom: 0.1rem;
 		font-size: 0.64rem;
 	}
 
@@ -9486,32 +9651,29 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 }
 
 /* =========================================================
-   FAMILY & FRIENDS — layout from fam and friends layout.png
-   Photo and text share one card, separated by a hairline.
+   FAMILY & FRIENDS — 2x2 layout in the site's card style
+   Father, Mother, Myself and Friends; each card pairs a
+   photo with the existing navy note card.
    ========================================================= */
 #family.section {
 	align-items: flex-start;
 	overflow-y: auto;
 	background: transparent;
-	scrollbar-width: none;
-}
-
-#family.section::-webkit-scrollbar {
-	display: none;
+	scrollbar-width: thin;
 }
 
 .family-page {
 	width: 100%;
 	max-width: 1700px;
 	margin: 0 auto;
-	padding: 0 clamp(1rem, 3vw, 2.2rem) 0.5rem;
+	padding: clamp(0.35rem, 0.8vh, 0.6rem) clamp(1rem, 3vw, 2.2rem) clamp(3.5rem, 7vh, 5rem);
 	font-family: 'Poppins', 'Inter', sans-serif;
 }
 
 .ff-title {
-	margin: 0;
+	margin: 0 0 clamp(0.25rem, 0.55vh, 0.45rem);
 	font-family: 'Milker', var(--font-big);
-	font-size: clamp(1.75rem, 3.1vw, 3.6rem);
+	font-size: clamp(1.5rem, 2.6vw, 3rem);
 	font-weight: 400;
 	line-height: 0.95;
 	letter-spacing: 0.01em;
@@ -9524,77 +9686,33 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	color: #2b5b9e;
 }
 
+/* ---------- 2 x 2 board ---------- */
+
 .ff-grid {
-	display: flex;
-	flex-direction: column;
-	gap: 0.25rem;
-}
-
-/* Top band: father | mother | (siblings + best friend) */
-.ff-top {
 	display: grid;
-	grid-template-columns: 1.3fr 1.3fr 1.7fr;
-	gap: clamp(0.6rem, 1.2vw, 0.95rem);
-	height: clamp(350px, 47vh, 560px);
-	align-items: stretch;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: clamp(0.7rem, 1.2vw, 1.1rem);
 }
 
-.ff-side {
-	display: grid;
-	grid-template-rows: 0.82fr 1.18fr;
-	gap: clamp(0.45rem, 0.85vw, 0.7rem);
-	min-width: 0;
-	min-height: 0;
-}
-
-/* Bottom band: friends photos + friends text in one card */
-.ff-bottom {
-	height: clamp(235px, 30vh, 360px);
-}
-
-/* Cards */
 .ff-card {
 	position: relative;
-	isolation: isolate;
+	display: grid;
+	grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+	min-width: 0;
+	min-height: clamp(230px, 36.5vh, 415px);
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
+	isolation: isolate;
 	background: #0b1e3d;
 	border: 1px solid rgba(11, 30, 61, 0.72);
 	border-radius: 14px;
-	overflow: hidden;
 	box-shadow:
 		6px 6px 0 #2b5b9e,
 		0 22px 38px -30px rgba(11, 30, 61, 0.7);
 }
 
-.ff-parent-card {
-	display: grid;
-	grid-template-rows: minmax(0, 2.3fr) minmax(0, 0.9fr);
-	min-width: 0;
-	min-height: 0;
-}
-
-.ff-side-card {
-	display: grid;
-	grid-template-columns: 0.54fr 0.46fr;
-	min-width: 0;
-	min-height: 0;
-}
-
-.ff-side-card--siblings {
-	grid-template-columns: 0.7fr 0.3fr;
-}
-
-.ff-bottom-card {
-	display: grid;
-	grid-template-columns: 1.82fr 1fr;
-	width: 100%;
-	height: 100%;
-	min-width: 0;
-	min-height: 0;
-}
-
-/* Photo areas */
+/* Photo half */
 .ff-media {
 	position: relative;
 	margin: 0;
@@ -9604,71 +9722,100 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	background: #102a52;
 }
 
-.ff-media--contain {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 0.1rem;
-}
-
-.ff-media--contain > img {
-	display: block;
-	width: auto;
-	height: auto;
-	max-width: 100%;
-	max-height: 100%;
-	object-fit: contain;
-	border-radius: 8px;
-}
-
-/* Siblings collage */
-.ff-media--sib {
-	overflow: hidden;
-}
-
-.ff-sib-collage {
+.ff-media > img {
 	position: absolute;
 	inset: 0;
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	grid-template-rows: minmax(0, 1fr);
-	gap: 3px;
-	min-height: 0;
-}
-
-.ff-sib-big {
-	grid-row: auto;
-}
-
-.ff-sib-big,
-.ff-sib-sm {
-	display: block;
-	overflow: hidden;
-}
-
-.ff-sib-collage img {
 	display: block;
 	width: 100%;
 	height: 100%;
-	object-fit: contain;
-	object-position: center;
-	background: #102a52;
+	object-fit: cover;
+	object-position: 50% 18%;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Friends photos */
-.ff-friends-photos {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 4px;
+.ff-card--father .ff-media > img {
+	object-position: 50% 0%;
+}
+
+.ff-card--mother .ff-media > img {
+	object-position: 50% 0%;
+}
+
+.ff-card--me .ff-media > img {
+	object-position: 50% 16%;
+}
+
+.ff-card:hover .ff-media > img,
+.ff-card:hover .ff-friend-photo img {
+	transform: scale(1.035);
+}
+
+/* Give the parents a taller photo card than the lower row. */
+.ff-card--father,
+.ff-card--mother {
+	min-height: clamp(260px, 42vh, 470px);
+}
+
+.ff-card--me,
+.ff-card--friends {
+	min-height: clamp(220px, 33vh, 420px);
+}
+
+/* Text half */
+.ff-copy {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: clamp(0.22rem, 0.45vw, 0.4rem);
+	min-width: 0;
 	min-height: 0;
-	height: 100%;
 	overflow: hidden;
+	padding: clamp(0.8rem, 1.4vw, 1.3rem) clamp(0.9rem, 1.6vw, 1.4rem);
+	border-left: 1px solid rgba(255, 255, 255, 0.12);
+	text-align: left;
+}
+
+.ff-role {
+	margin: 0;
+	font-family: 'Poppins', 'Inter', sans-serif;
+	font-size: clamp(1.05rem, 1.3vw, 1.5rem);
+	font-weight: 700;
+	line-height: 1.1;
+	letter-spacing: 0.03em;
+	text-transform: uppercase;
+	color: #f0edee;
+}
+
+.ff-meta {
+	margin: 0;
+	font-family: 'Poppins', 'Inter', sans-serif;
+	font-size: clamp(0.92rem, 1vw, 1.12rem);
+	font-weight: 600;
+	line-height: 1.3;
+	color: #8fd3d8;
+}
+
+.ff-desc {
+	margin: 0;
+	font-family: 'Poppins', 'Inter', sans-serif;
+	font-size: clamp(0.9rem, 1.02vw, 1.14rem);
+	font-weight: 500;
+	line-height: 1.55;
+	color: rgba(240, 237, 238, 0.8);
+}
+
+/* Friends card: two group photos stacked in the photo half. */
+.ff-media--friends {
+	display: grid;
+	grid-template-rows: repeat(2, minmax(0, 1fr));
+	gap: 4px;
 	padding: 0.35rem;
+	background: #102a52;
 }
 
 .ff-friend-photo {
 	position: relative;
-	margin: 0;
+	display: block;
 	min-height: 0;
 	overflow: hidden;
 	border-radius: 8px;
@@ -9683,20 +9830,17 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	height: 100%;
 	object-fit: cover;
 	object-position: center top;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.ff-friend-photo--contain img {
-	object-fit: contain;
-	object-position: center;
-}
-
-.ff-friend-photo span {
+.ff-friend-photo > span {
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	padding: 0.28rem 0.4rem 0.32rem;
-	font-size: clamp(0.68rem, 0.78vw, 0.95rem);
+	font-family: 'Poppins', 'Inter', sans-serif;
+	font-size: clamp(0.66rem, 0.76vw, 0.92rem);
 	font-weight: 600;
 	line-height: 1.2;
 	text-align: center;
@@ -9704,56 +9848,8 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	background: linear-gradient(180deg, transparent 0%, rgba(4, 10, 22, 0.78) 70%);
 }
 
-/* Text areas */
-.ff-card-body {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	padding: 0.6rem 0.55rem;
-	text-align: center;
-	min-width: 0;
-	min-height: 0;
-	overflow: hidden;
-}
+/* ---------- Entrance ---------- */
 
-.ff-parent-card .ff-card-body {
-	border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.ff-side-card .ff-card-body,
-.ff-bottom-card .ff-card-body {
-	border-left: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.ff-role {
-	margin: 0 0 0.18rem;
-	font-family: 'Bebas Neue', var(--font-big);
-	font-size: clamp(1.28rem, 1.55vw, 2rem);
-	font-weight: 400;
-	line-height: 1;
-	letter-spacing: 0.02em;
-	text-align: center;
-	text-transform: uppercase;
-	color: #f0edee;
-}
-
-.ff-meta {
-	margin: 0 0 0.2rem;
-	font-size: clamp(0.82rem, 0.92vw, 1.1rem);
-	font-weight: 600;
-	line-height: 1.3;
-	color: #8fd3d8;
-}
-
-.ff-desc {
-	margin: 0;
-	font-size: clamp(0.82rem, 0.92vw, 1.1rem);
-	font-weight: 500;
-	line-height: 1.45;
-	color: rgba(240, 237, 238, 0.8);
-}
-
-/* Entrance */
 @keyframes ff-card-pop {
 	from {
 		opacity: 0;
@@ -9769,55 +9865,40 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 	animation: ff-card-pop 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-#family.section.active .ff-top > .ff-card:nth-child(1) { animation-delay: 0.05s; }
-#family.section.active .ff-top > .ff-card:nth-child(2) { animation-delay: 0.1s; }
-#family.section.active .ff-side > .ff-card:nth-child(1) { animation-delay: 0.15s; }
-#family.section.active .ff-side > .ff-card:nth-child(2) { animation-delay: 0.2s; }
-#family.section.active .ff-bottom-card { animation-delay: 0.25s; }
+#family.section.active .ff-card:nth-child(1) { animation-delay: 0.05s; }
+#family.section.active .ff-card:nth-child(2) { animation-delay: 0.11s; }
+#family.section.active .ff-card:nth-child(3) { animation-delay: 0.17s; }
+#family.section.active .ff-card:nth-child(4) { animation-delay: 0.23s; }
 
-@media (max-width: 1100px) {
-	.ff-top {
-		grid-template-columns: 1fr 1fr;
-		aspect-ratio: auto;
+/* ---------- Responsive ---------- */
+
+@media (max-width: 980px) {
+	.ff-grid {
+		grid-template-columns: minmax(0, 1fr);
 	}
 
-	.ff-parent-card {
-		grid-template-rows: auto auto;
+	.ff-card,
+	.ff-card--father,
+	.ff-card--mother,
+	.ff-card--me,
+	.ff-card--friends {
+		min-height: clamp(210px, 31vh, 330px);
+	}
+}
+
+@media (min-width: 641px) and (max-height: 820px) {
+	.ff-card--father,
+	.ff-card--mother {
+		min-height: clamp(240px, 37vh, 340px);
 	}
 
-	.ff-parent-card .ff-media {
-		aspect-ratio: 4 / 3;
+	.ff-card--me,
+	.ff-card--friends {
+		min-height: clamp(210px, 34vh, 300px);
 	}
 
-	.ff-side {
-		grid-column: 1 / -1;
-	}
-
-	.ff-side-card {
-		grid-template-columns: 0.54fr 0.46fr;
-	}
-
-	.ff-side-card .ff-media {
-		aspect-ratio: 4 / 3;
-	}
-
-	.ff-bottom {
-		aspect-ratio: auto;
-	}
-
-	.ff-bottom-card {
-		grid-template-columns: 1fr;
-		height: auto;
-	}
-
-	.ff-friends-photos {
-		aspect-ratio: 16 / 9;
-	}
-
-	.ff-bottom-card .ff-card-body {
-		border-left: 0;
-		border-top: 1px solid rgba(255, 255, 255, 0.12);
-		min-height: 110px;
+	.family-page {
+		padding-bottom: 4rem;
 	}
 }
 
@@ -9826,49 +9907,139 @@ body.is-achievements #achievements .ach-cert-card:focus-visible img {
 		padding: 1rem 1rem 4.5rem;
 	}
 
-	.ff-top {
+	.ff-title {
+		font-size: clamp(1.4rem, 6.5vw, 2.1rem);
+	}
+
+	.ff-grid {
+		gap: 0.8rem;
+	}
+
+	.ff-card {
 		grid-template-columns: minmax(0, 1fr);
+		min-height: 0;
 	}
 
-	.ff-side {
-		grid-column: auto;
+	.ff-card--father,
+	.ff-card--mother,
+	.ff-card--me,
+	.ff-card--friends {
+		min-height: 0;
 	}
 
-	.ff-side-card {
-		grid-template-columns: minmax(0, 1fr);
+	.ff-media {
+		aspect-ratio: 4 / 3;
 	}
 
-	.ff-side-card .ff-card-body {
+	.ff-media--friends {
+		aspect-ratio: 4 / 3;
+	}
+
+	.ff-copy {
 		border-left: 0;
 		border-top: 1px solid rgba(255, 255, 255, 0.12);
 	}
-
-	.ff-title {
-		font-size: clamp(1.8rem, 8vw, 2.5rem);
-	}
 }
 
-/* Keep the collage clear of the pager on shorter screens. */
-@media (max-height: 880px) {
-	.family-page {
-		zoom: 0.95;
-	}
+/* Daycare card uses the start slot in the mosaic. */
+#achievements .ach-stage-card--daycare {
+	grid-area: start;
 }
 
-@media (max-height: 820px) {
-	.family-page {
-		zoom: 0.89;
-	}
+/* Slightly larger portraits and school logos for elementary through senior high. */
+#achievements .ach-stage-card--daycare .ach-stage-head .ach-stage-portrait,
+#achievements .ach-stage-card--elementary .ach-stage-head .ach-stage-portrait,
+#achievements .ach-stage-card--junior .ach-stage-head .ach-stage-portrait,
+#achievements .ach-stage-card--senior .ach-stage-head .ach-stage-portrait {
+	width: clamp(62px, 5.8vw, 84px);
+	height: clamp(72px, 6.6vw, 96px);
 }
 
-@media (max-height: 760px) {
-	.family-page {
-		zoom: 0.82;
-	}
+#achievements .ach-stage-card--elementary .ach-stage-head .ach-stage-logo,
+#achievements .ach-stage-card--junior .ach-stage-head .ach-stage-logo,
+#achievements .ach-stage-card--senior .ach-stage-head .ach-stage-logo {
+	width: clamp(42px, 3.4vw, 52px);
+	height: clamp(42px, 3.4vw, 52px);
 }
 
-@media (max-height: 700px) {
-	.family-page {
-		zoom: 0.74;
+#achievements .ach-stage-kicker {
+	font-size: clamp(0.7rem, 0.82vw, 0.9rem);
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: #eaf6ff;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+#achievements .ach-stage-card--college .ach-stage-overlay .ach-status {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.4rem;
+	padding: 0.16rem 0.55rem;
+	font-size: clamp(0.6rem, 0.7vw, 0.72rem);
+	letter-spacing: 0.04em;
+}
+
+#achievements .ach-stage-card--college .ach-status-note {
+	font-size: 0.66em;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	opacity: 0.85;
+}
+
+#achievements .ach-stage-card--college .ach-status-note::before {
+	content: "·";
+	margin-right: 0.35em;
+}
+
+/* Brighter, larger award lines without growing the cards. */
+#achievements .ach-group-items li {
+	font-size: clamp(0.84rem, 0.94vw, 1rem);
+	line-height: 1.22;
+	font-weight: 500;
+	color: #ffffff;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+}
+
+#achievements .ach-group-items li::before {
+	width: 4px;
+	height: 4px;
+	opacity: 0.95;
+}
+
+/* Compact two-column records inside the personal-information card. */
+.info-records {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.35rem 0.7rem;
+	margin-top: 0.1rem;
+}
+
+.info-records .fact {
+	min-width: 0;
+}
+
+.info-records .fact-label {
+	margin-bottom: 0.12rem;
+	font-size: 0.62rem;
+}
+
+.info-records .fact-value {
+	font-size: clamp(0.68rem, 0.76vw, 0.8rem);
+	line-height: 1.3;
+}
+
+.info-row--pair {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0 0.9rem;
+}
+
+.info-row--pair .fact + .fact {
+	padding-left: 0.9rem;
+	border-left: 1px solid var(--line);
+}
+
+@media (max-width: 640px) {
+	.info-records {
+		grid-template-columns: minmax(0, 1fr);
 	}
 }

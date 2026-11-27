@@ -1134,8 +1134,8 @@
 		}, 1050);
 	}
 
-	/* Home menu links jump to their section */
-	var homeMenuItems = Array.prototype.slice.call(document.querySelectorAll('.home-menu-item'));
+	/* Home menu and bottom nav links jump to their section */
+	var homeMenuItems = Array.prototype.slice.call(document.querySelectorAll('.home-menu-item, .home-bottom-link'));
 	homeMenuItems.forEach(function (item) {
 		item.addEventListener('click', function () {
 			var idx = sectionIndexForId(item.getAttribute('data-section'));
@@ -1534,7 +1534,11 @@
 			var overlayCopy = achEl('div', 'ach-stage-overlay-copy');
 			overlayCopy.appendChild(achEl('p', 'ach-stage-kicker', school.stage || ''));
 			overlayCopy.appendChild(achEl('h3', 'ach-school-name', school.school));
-			if (school.status) overlayCopy.appendChild(achStatus(school.status));
+			if (school.status) {
+				var statusPill = achStatus(school.status);
+				if (school.statusNote) statusPill.appendChild(achEl('span', 'ach-status-note', school.statusNote));
+				overlayCopy.appendChild(statusPill);
+			}
 			overlay.appendChild(overlayCopy);
 
 			var overlayBadge = achEl('span', 'ach-stage-logo');
@@ -1557,7 +1561,7 @@
 			}
 
 			var title = achEl('div', 'ach-stage-title');
-			if (school.stage) title.appendChild(achEl('p', 'ach-stage-kicker', school.stage));
+			if (school.stage || school.level) title.appendChild(achEl('p', 'ach-stage-kicker', school.stage || school.level));
 			title.appendChild(achEl('h3', 'ach-school-name', school.school));
 			if (school.years) title.appendChild(achEl('p', 'ach-stage-years', school.years));
 			if (school.status) title.appendChild(achStatus(school.status));
@@ -1792,7 +1796,7 @@
 		if (achJunior) achievStageGrid.appendChild(buildStageCard(achJunior, 'junior', 2));
 		if (achSenior) achievStageGrid.appendChild(buildStageCard(achSenior, 'senior', 3));
 		if (achCollege) achievStageGrid.appendChild(buildStageCard(achCollege, 'college', 4));
-		if (achievContent.start) achievStageGrid.appendChild(buildStageCard(achievContent.start, 'start', 5));
+		if (achievContent.start) achievStageGrid.appendChild(buildStageCard(achievContent.start, 'daycare', 5));
 		if (achCollage) achievStageGrid.appendChild(achCollage);
 
 		if (achievNote) {

@@ -14,19 +14,19 @@
 window.ACHIEVEMENT_CONTENT = {
 	start: {
 		school: 'KAJ Play and Learn Center',
-		level: 'Day care & kindergarten',
-		status: 'Graduate',
-		years: '2012–2014',
+		level: 'Daycare & kindergarten',
+		years: '2012-2014',
 		logo: 'kaj',
 		logoText: 'KAJ',
-		photo: 'profiles/thumbs/kindergarten-vernon.jpg',
+		photo: 'profiles/KINDERGARTEN VERNON.jpg',
+		bg: 'image/kinderschool.jpg',
 		tag: 'Photo',
 		groups: [
 			{
 				label: 'Academic',
 				icon: 'academic',
 				items: [
-					'Completed the day care & kindergarten program'
+					'Graduated — Top 3'
 				]
 			}
 		]
@@ -146,7 +146,8 @@ window.ACHIEVEMENT_CONTENT = {
 			logo: 'uc',
 			folder: 'COLLEGE',
 			bg: 'achievements-images/bg/uc-bg.jpg',
-			status: 'Ongoing',
+			status: '2026 -',
+			statusNote: 'Ongoing',
 			tag: 'Campus',
 			groups: [
 				{
